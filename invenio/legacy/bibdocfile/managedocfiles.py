@@ -564,13 +564,13 @@ def create_file_upload_interface(recid,
             if minsize.isdigit() and os.path.getsize(uploaded_filepath) < int(minsize):
                 os.unlink(uploaded_filepath)
                 body += '<script>alert("%s");</script>' % \
-                       (_("The uploaded file is too small (<%i o) and has therefore not been considered") % \
-                        int(minsize)).replace('"', '\\"')
+                       (_("The uploaded file is too small (<%(x_size)i o) and has therefore not been considered",
+                            x_size=int(minsize))).replace('"', '\\"')
             elif maxsize.isdigit() and os.path.getsize(uploaded_filepath) > int(maxsize):
                 os.unlink(uploaded_filepath)
                 body += '<script>alert("%s");</script>' % \
-                       (_("The uploaded file is too big (>%i o) and has therefore not been considered") % \
-                        int(maxsize)).replace('"', '\\"')
+                       (_("The uploaded file is too big (>%(x_size)i o) and has therefore not been considered",
+                            x_size=int(maxsize))).replace('"', '\\"')
             elif len(filename) + len(extension) + 4 > 255:
                 # Max filename = 256, including extension and version that
                 # will be appended later by BibDoc
@@ -611,8 +611,8 @@ def create_file_upload_interface(recid,
                     # and tell user.
                     os.unlink(uploaded_filepath)
                     body += '<script>alert("%s");</script>' % \
-                           (_("A file named %s already exists. Please choose another name.") % \
-                            (file_rename or filename)).replace('"', '\\"')
+                           (_("A file named %(x_name)s already exists. Please choose another name.",
+                              x_name=(file_rename or filename))).replace('"', '\\"')
 
                 elif file_action == "revise" and \
                          file_rename != file_target and \
@@ -622,8 +622,8 @@ def create_file_upload_interface(recid,
                     # the same bibdocname
                     os.unlink(uploaded_filepath)
                     body += '<script>alert("%s");</script>' % \
-                           (_("A file named %s already exists. Please choose another name.") % \
-                            file_rename).replace('"', '\\"')
+                           (_("A file named %(x_name)s already exists. Please choose another name.",
+                             x_name=file_rename)).replace('"', '\\"')
 
                 elif file_action == "addFormat" and \
                          (extension in \
@@ -633,8 +633,8 @@ def create_file_upload_interface(recid,
                     # action and tell user.
                     os.unlink(uploaded_filepath)
                     body += '<script>alert("%s");</script>' % \
-                           (_("A file with format '%s' already exists. Please upload another format.") % \
-                            extension).replace('"', '\\"')
+                            (_("A file with format '%(x_name)s' already exists. Please upload another format.",
+                                x_name=extension)).replace('"', '\\"')
                 elif '.' in file_rename  or '/' in file_rename or "\\" in file_rename or \
                          not os.path.abspath(new_uploaded_filepath).startswith(os.path.join(working_dir, 'files', 'updated')):
                     # We forbid usage of a few characters, for the good of
@@ -732,8 +732,8 @@ def create_file_upload_interface(recid,
                 # A file different from the one to revise already has
                 # the same bibdocname
                 body += '<script>alert("%s");</script>' % \
-                       (_("A file named %s already exists. Please choose another name.") % \
-                        file_rename).replace('"', '\\"')
+                        (_("A file named %(x_name)s already exists. Please choose another name.",
+                            x_name=file_rename)).replace('"', '\\"')
             elif file_rename != file_target and \
                      ('.' in file_rename or '/' in file_rename or "\\" in file_rename):
                     # We forbid usage of a few characters, for the good of
