@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Invenio 1.9999\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-02-10 11:36+0100\n"
+"POT-Creation-Date: 2014-02-11 11:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -69,7 +69,7 @@ msgstr ""
 msgid "!Delete the entire request!"
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1377
+#: invenio/legacy/bibformat/adminlib.py:1376
 #, python-format
 msgid "\"default\" keyword must be lowercase in \"%(x_line)s\" at line %(x_col)s."
 msgstr ""
@@ -137,8 +137,8 @@ msgid ""
 "%(x_nb_seconds)s seconds."
 msgstr ""
 
+#: invenio/legacy/webcomment/templates.py:2344 invenio/legacy/webcomment/templates.py:2345
 #: invenio/legacy/webcomment/templates.py:2346 invenio/legacy/webcomment/templates.py:2347
-#: invenio/legacy/webcomment/templates.py:2348 invenio/legacy/webcomment/templates.py:2349
 #, python-format
 msgid "%(x_i)s items"
 msgstr ""
@@ -221,13 +221,13 @@ msgstr ""
 msgid "%(x_nb)i Comments for round \"%(x_name)s\""
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:247 invenio/legacy/webcomment/templates.py:733
-#: invenio/legacy/webcomment/templates.py:743
+#: invenio/legacy/webcomment/templates.py:247 invenio/legacy/webcomment/templates.py:731
+#: invenio/legacy/webcomment/templates.py:741
 #, python-format
 msgid "%(x_nb)i comments for round \"%(x_name)s\""
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:515
+#: invenio/legacy/webcomment/templates.py:513
 #, python-format
 msgid "%(x_nb_people)s out of %(x_nb_total)s people found this review useful"
 msgstr ""
@@ -237,7 +237,7 @@ msgstr ""
 msgid "%(x_notes)i notes"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2502
+#: invenio/legacy/webcomment/templates.py:2500
 #, python-format
 msgid "%(x_num)i comments found in total (not shown on this page)"
 msgstr ""
@@ -247,7 +247,7 @@ msgstr ""
 msgid "%(x_num)i items"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2504
+#: invenio/legacy/webcomment/templates.py:2502
 #, python-format
 msgid "%(x_num)i items found in total"
 msgstr ""
@@ -338,7 +338,7 @@ msgstr ""
 msgid "%(x_title)s, by %(x_name)s on %(x_date)s:"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2458
+#: invenio/legacy/webcomment/templates.py:2456
 msgid "(in reply to a comment)"
 msgstr ""
 
@@ -608,7 +608,7 @@ msgstr ""
 msgid "Add New Taxonomy"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1417 invenio/legacy/webcomment/webinterface.py:508
+#: invenio/legacy/webcomment/templates.py:1415 invenio/legacy/webcomment/webinterface.py:508
 msgid "Add Review"
 msgstr ""
 
@@ -638,7 +638,7 @@ msgstr ""
 msgid "Add an author list"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1278
+#: invenio/legacy/webcomment/templates.py:1276
 msgid "Add comment"
 msgstr ""
 
@@ -698,7 +698,7 @@ msgstr ""
 msgid "Add notes"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1407
+#: invenio/legacy/webcomment/templates.py:1405
 msgid "Add review"
 msgstr ""
 
@@ -839,7 +839,7 @@ msgstr ""
 msgid "All fields with %(x_fmt_open)s*%(x_fmt_close)s are mandatory"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2350
+#: invenio/legacy/webcomment/templates.py:2348
 msgid "All items"
 msgstr ""
 
@@ -1046,7 +1046,7 @@ msgstr ""
 msgid "Arrival date"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1276 invenio/legacy/webcomment/templates.py:1398
+#: invenio/legacy/webcomment/templates.py:1274 invenio/legacy/webcomment/templates.py:1396
 msgid "Article"
 msgstr ""
 
@@ -1080,11 +1080,11 @@ msgstr ""
 msgid "Assign to other person"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:430
+#: invenio/legacy/webcomment/templates.py:428
 msgid "Attached file"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:430
+#: invenio/legacy/webcomment/templates.py:428
 msgid "Attached files"
 msgstr ""
 
@@ -1149,8 +1149,8 @@ msgstr ""
 msgid "Average citations per paper:"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:288 invenio/legacy/webcomment/templates.py:902
-#: invenio/legacy/webcomment/templates.py:2118
+#: invenio/legacy/webcomment/templates.py:288 invenio/legacy/webcomment/templates.py:900
+#: invenio/legacy/webcomment/templates.py:2116
 #, python-format
 msgid "Average review score: %(x_nb_score)s based on %(x_nb_reviews)s reviews"
 msgstr ""
@@ -1235,7 +1235,7 @@ msgstr ""
 msgid "Back to main menu"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1444
+#: invenio/legacy/webcomment/templates.py:1442
 msgid "Back to record"
 msgstr ""
 
@@ -1244,7 +1244,7 @@ msgstr ""
 msgid "Back to search"
 msgstr ""
 
-#: invenio/legacy/webbasket/templates.py:2186 invenio/legacy/webcomment/templates.py:939
+#: invenio/legacy/webbasket/templates.py:2186 invenio/legacy/webcomment/templates.py:937
 msgid "Back to search results"
 msgstr ""
 
@@ -1293,11 +1293,11 @@ msgstr ""
 msgid "Batch Uploader: Daemon monitor"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:926
+#: invenio/legacy/webcomment/templates.py:924
 msgid "Be the first to review this document."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:337
+#: invenio/legacy/webcomment/templates.py:335
 msgid "Be the first to review this document.</div>"
 msgstr ""
 
@@ -1308,7 +1308,7 @@ msgid ""
 " integrated and searchable.\n"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2353
+#: invenio/legacy/webcomment/templates.py:2351
 msgid "Below is the list of the comments you have submitted so far."
 msgstr ""
 
@@ -1439,7 +1439,7 @@ msgstr ""
 msgid "Breakdown of papers by citations:"
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:5597 invenio/legacy/websearch/templates.py:803
+#: invenio/legacy/search_engine/__init__.py:5595 invenio/legacy/websearch/templates.py:803
 #: invenio/legacy/websearch/templates.py:881 invenio/legacy/websearch/templates.py:1004
 #: invenio/legacy/websearch/templates.py:1986 invenio/legacy/websearch/templates.py:2077
 #: invenio/legacy/websearch/templates.py:2134 invenio/legacy/websearch/templates.py:2191
@@ -1554,7 +1554,7 @@ msgid ""
 "/RELEASE-NOTES"
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1471
+#: invenio/legacy/bibformat/adminlib.py:1474
 #, python-format
 msgid "Cannot load element \"%(x_file)s\" in template %(x_elem)s. Check element code."
 msgstr ""
@@ -1734,8 +1734,8 @@ msgstr ""
 msgid "Client"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:381 invenio/legacy/webcomment/templates.py:442
-#: invenio/legacy/webcomment/templates.py:784
+#: invenio/legacy/webcomment/templates.py:379 invenio/legacy/webcomment/templates.py:440
+#: invenio/legacy/webcomment/templates.py:782
 msgid "Close"
 msgstr ""
 
@@ -1792,9 +1792,9 @@ msgid "Come back to the document"
 msgstr ""
 
 #: invenio/legacy/bibdocfile/managedocfiles.py:394 invenio/legacy/bibexport/templates.py:347
-#: invenio/legacy/bibexport/templates.py:401 invenio/legacy/webcomment/templates.py:946
-#: invenio/legacy/webcomment/templates.py:1277 invenio/legacy/webcomment/templates.py:1725
-#: invenio/legacy/webcomment/templates.py:1961 invenio/legacy/websubmit/templates.py:2503
+#: invenio/legacy/bibexport/templates.py:401 invenio/legacy/webcomment/templates.py:944
+#: invenio/legacy/webcomment/templates.py:1275 invenio/legacy/webcomment/templates.py:1723
+#: invenio/legacy/webcomment/templates.py:1959 invenio/legacy/websubmit/templates.py:2503
 #: invenio/legacy/websubmit/functions/Create_Upload_Files_Interface.py:455
 msgid "Comment"
 msgstr ""
@@ -1804,25 +1804,25 @@ msgstr ""
 msgid "Comment ID %(x_name)s does not exist."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1594
+#: invenio/legacy/webcomment/templates.py:1592
 msgid "Comment ID:"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2449
+#: invenio/legacy/webcomment/templates.py:2447
 msgid "Comment deleted by the moderator"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:659 invenio/legacy/webcomment/templates.py:675
+#: invenio/legacy/webcomment/templates.py:657 invenio/legacy/webcomment/templates.py:673
 #: invenio/legacy/webcomment/webinterface.py:245 invenio/legacy/webcomment/webinterface.py:463
 #: invenio/legacy/websearch/adminlib.py:3397 invenio/legacy/websubmit/templates.py:2447
 msgid "Comments"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1550
+#: invenio/legacy/webcomment/templates.py:1548
 msgid "Comments and reviews are disabled"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2344
+#: invenio/legacy/webcomment/templates.py:2342
 msgid "Comments only"
 msgstr ""
 
@@ -1842,12 +1842,12 @@ msgstr ""
 msgid "Comparison of:"
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1340
+#: invenio/legacy/bibformat/adminlib.py:1339
 #, python-format
 msgid "Condition \"%(x_line)s\" can only have a single separator --- at line %(x_col)s."
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1331
+#: invenio/legacy/bibformat/adminlib.py:1330
 #, python-format
 msgid "Condition \"%(x_line)s\" is outside a tag specification at line %(x_col)s."
 msgstr ""
@@ -2004,17 +2004,17 @@ msgstr ""
 msgid "Could not find a description specified in tag \"<description>\" inside format template %(x_file)s."
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1432
+#: invenio/legacy/bibformat/adminlib.py:1431
 #, python-format
 msgid "Could not find a name specified in tag \"<name>\" inside format template %(x_file)s."
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1571
+#: invenio/legacy/bibformat/adminlib.py:1575
 #, python-format
 msgid "Could not find format element named %(x_name)s."
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1513
+#: invenio/legacy/bibformat/adminlib.py:1517
 #, python-format
 msgid "Could not read format template named %(x_file)s. %(x_text)s"
 msgstr ""
@@ -2136,7 +2136,7 @@ msgstr ""
 msgid "December"
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1369
+#: invenio/legacy/bibformat/adminlib.py:1368
 #, python-format
 msgid "Default template specification \"%(x_line)s\" must start with \"default :\" at line %(x_col)s."
 msgstr ""
@@ -2197,7 +2197,7 @@ msgstr ""
 msgid "Delete basket"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:411 invenio/legacy/webcomment/templates.py:413
+#: invenio/legacy/webcomment/templates.py:409 invenio/legacy/webcomment/templates.py:411
 msgid "Delete comment"
 msgstr ""
 
@@ -2227,15 +2227,15 @@ msgstr ""
 msgid "Delete key"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:546
+#: invenio/legacy/webcomment/templates.py:544
 msgid "Delete review"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1985
+#: invenio/legacy/webcomment/templates.py:1983
 msgid "Delete selected comments"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1978
+#: invenio/legacy/webcomment/templates.py:1976
 msgid "Delete selected reviews"
 msgstr ""
 
@@ -2312,7 +2312,7 @@ msgstr ""
 msgid "Discuss this document"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2416
+#: invenio/legacy/webcomment/templates.py:2414
 msgid "Display"
 msgstr ""
 
@@ -2334,7 +2334,7 @@ msgstr ""
 msgid "Display item and notes"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2422
+#: invenio/legacy/webcomment/templates.py:2420
 msgid "Display options"
 msgstr ""
 
@@ -2583,8 +2583,8 @@ msgstr ""
 #: invenio/legacy/bibcirculation/templates.py:15123 invenio/legacy/bibcirculation/templates.py:15328
 #: invenio/legacy/bibcirculation/templates.py:15398 invenio/legacy/bibcirculation/templates.py:15647
 #: invenio/legacy/bibcirculation/templates.py:15718 invenio/legacy/bibcirculation/templates.py:15972
-#: invenio/legacy/bibcirculation/utils.py:455 invenio/legacy/webcomment/templates.py:1672
-#: invenio/legacy/webcomment/templates.py:1704
+#: invenio/legacy/bibcirculation/utils.py:455 invenio/legacy/webcomment/templates.py:1670
+#: invenio/legacy/webcomment/templates.py:1702
 msgid "Email"
 msgstr ""
 
@@ -2659,7 +2659,7 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1556
+#: invenio/legacy/bibformat/adminlib.py:1560
 #, python-format
 msgid "Error in format element %(x_elem)s. %(x_e)s."
 msgstr ""
@@ -2951,7 +2951,7 @@ msgstr ""
 msgid "For"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2234
+#: invenio/legacy/webcomment/templates.py:2232
 #, python-format
 msgid "For any question, please use <%(CFG_SITE_SUPPORT_EMAIL)s>"
 msgstr ""
@@ -3016,12 +3016,12 @@ msgstr ""
 msgid "Format Validation"
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1495
+#: invenio/legacy/bibformat/adminlib.py:1499
 #, python-format
 msgid "Format element %(x_elem)s uses unknown parameter \"%(x_param)s\" in format template %(x_file)s."
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1562
+#: invenio/legacy/bibformat/adminlib.py:1566
 #, python-format
 msgid "Format element %(x_file)s cannot not be read. %(x_text)s"
 msgstr ""
@@ -3031,12 +3031,12 @@ msgstr ""
 msgid "Format element %(x_name)s cannot not be read. %(x_text)s"
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1456
+#: invenio/legacy/bibformat/adminlib.py:1457
 #, python-format
 msgid "Format template %(x_file)s calls undefined element \"%(x_elem)s\"."
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1465
+#: invenio/legacy/bibformat/adminlib.py:1467
 #, python-format
 msgid ""
 "Format template %(x_file)s calls unreadable element \"%(x_elem)s\". Check element file "
@@ -3101,7 +3101,7 @@ msgstr ""
 msgid "GO"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1963
+#: invenio/legacy/webcomment/templates.py:1961
 msgid "General informations"
 msgstr ""
 
@@ -3113,7 +3113,7 @@ msgstr ""
 msgid "Generate keywords"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1401
+#: invenio/legacy/webcomment/templates.py:1399
 msgid "Give a title to your review"
 msgstr ""
 
@@ -3178,11 +3178,11 @@ msgstr ""
 msgid "Group baskets"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2340
+#: invenio/legacy/webcomment/templates.py:2338
 msgid "Group by record, latest commented first"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2339
+#: invenio/legacy/webcomment/templates.py:2337
 msgid "Group by record, oldest commented first"
 msgstr ""
 
@@ -3215,7 +3215,7 @@ msgstr ""
 msgid "Groups"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1548
+#: invenio/legacy/webcomment/templates.py:1546
 msgid "Guide"
 msgstr ""
 
@@ -3246,7 +3246,7 @@ msgstr ""
 msgid "Having a problem revising a file? Send the revised version to %(mailto_link)s."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2189
+#: invenio/legacy/webcomment/templates.py:2187
 msgid "Hello:"
 msgstr ""
 
@@ -3274,20 +3274,20 @@ msgstr ""
 msgid "Help Pages"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2029
+#: invenio/legacy/webcomment/templates.py:2027
 #, python-format
 msgid "Here are all comments for record %(x_num)i, sorted by the most reported"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2021
+#: invenio/legacy/webcomment/templates.py:2019
 msgid "Here are all reported comments sorted by the most reported"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2019
+#: invenio/legacy/webcomment/templates.py:2017
 msgid "Here are all reported reviews sorted by the most reported"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2026
+#: invenio/legacy/webcomment/templates.py:2024
 #, python-format
 msgid "Here are all reviews for record %(x_num)i, sorted by the most reported"
 msgstr ""
@@ -3301,38 +3301,38 @@ msgstr ""
 msgid "Here are the %(x_name)s most popular searches."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2002
+#: invenio/legacy/webcomment/templates.py:2000
 #, python-format
 msgid "Here are the reported comments of user %(x_name)s"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2000
+#: invenio/legacy/webcomment/templates.py:1998
 #, python-format
 msgid "Here are the reported reviews of user %(x_name)s"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1663
+#: invenio/legacy/webcomment/templates.py:1661
 msgid ""
 "Here is a list, sorted by total number of reports, of all users who have had a comment reported "
 "at least once."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2013
+#: invenio/legacy/webcomment/templates.py:2011
 #, python-format
 msgid "Here is comment %(x_cmtID)s written by user %(x_user)s"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2008
+#: invenio/legacy/webcomment/templates.py:2006
 #, python-format
 msgid "Here is comment %(x_name)s"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2011
+#: invenio/legacy/webcomment/templates.py:2009
 #, python-format
 msgid "Here is review %(x_cmtID)s written by user %(x_user)s"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2006
+#: invenio/legacy/webcomment/templates.py:2004
 #, python-format
 msgid "Here is review %(x_name)s"
 msgstr ""
@@ -3654,7 +3654,7 @@ msgstr ""
 msgid "Input directory"
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:2060
+#: invenio/legacy/search_engine/__init__.py:2058
 #, python-format
 msgid "Instead searching %(x_name)s."
 msgstr ""
@@ -4059,7 +4059,7 @@ msgstr ""
 msgid "Latest additions:"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2338
+#: invenio/legacy/webcomment/templates.py:2336
 msgid "Latest comment first"
 msgstr ""
 
@@ -4148,7 +4148,7 @@ msgstr ""
 msgid "Limit to:"
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1395
+#: invenio/legacy/bibformat/adminlib.py:1394
 #, python-format
 msgid "Line %(x_line)s could not be understood at line %(x_col)s."
 msgstr ""
@@ -4490,17 +4490,17 @@ msgstr ""
 msgid "Marked as this person's paper"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1245
+#: invenio/legacy/webcomment/templates.py:1243
 #, python-format
 msgid "Max %(maxfiles)i files"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1246
+#: invenio/legacy/webcomment/templates.py:1244
 #, python-format
 msgid "Max %(x_nb_bytes)s per file"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1244
+#: invenio/legacy/webcomment/templates.py:1242
 msgid "Max one file"
 msgstr ""
 
@@ -4518,7 +4518,7 @@ msgstr ""
 #: invenio/legacy/bibformat/templates.py:1076 invenio/legacy/bibformat/templates.py:1392
 #: invenio/legacy/bibformat/templates.py:1498 invenio/legacy/bibformat/templates.py:1557
 #: invenio/legacy/bibknowledge/templates.py:326 invenio/legacy/bibknowledge/templates.py:586
-#: invenio/legacy/bibknowledge/templates.py:655 invenio/legacy/webcomment/templates.py:1553
+#: invenio/legacy/bibknowledge/templates.py:655 invenio/legacy/webcomment/templates.py:1551
 #: invenio/legacy/webjournal/templates.py:200 invenio/legacy/webjournal/templates.py:572
 #: invenio/legacy/webjournal/templates.py:713 invenio/legacy/weblinkback/templates.py:278
 msgid "Menu"
@@ -4553,7 +4553,7 @@ msgstr ""
 msgid "Mine!"
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1361
+#: invenio/legacy/bibformat/adminlib.py:1360
 #, python-format
 msgid "Missing column \":\" after \"default\" in \"%(x_line)s\" at line %(x_col)s."
 msgstr ""
@@ -4773,7 +4773,7 @@ msgid "New vendor information"
 msgstr ""
 
 #: invenio/legacy/bibcatalog/templates.py:74 invenio/legacy/bibknowledge/templates.py:165
-#: invenio/legacy/webcomment/templates.py:893 invenio/legacy/webcomment/templates.py:2538
+#: invenio/legacy/webcomment/templates.py:891 invenio/legacy/webcomment/templates.py:2536
 msgid "Next"
 msgstr ""
 
@@ -4801,15 +4801,15 @@ msgstr ""
 msgid "Next scheduled BibSched run:"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1671 invenio/legacy/webcomment/templates.py:1700
+#: invenio/legacy/webcomment/templates.py:1669 invenio/legacy/webcomment/templates.py:1698
 #: invenio/legacy/websession/templates.py:264 invenio/legacy/websession/templates.py:1175
 msgid "Nickname"
 msgstr ""
 
 #: invenio/legacy/bibcirculation/adminlib.py:2377 invenio/legacy/bibcirculation/adminlib.py:3491
 #: invenio/legacy/webalert/templates.py:320 invenio/legacy/webcomment/templates.py:236
-#: invenio/legacy/webcomment/templates.py:693 invenio/legacy/webcomment/templates.py:2047
-#: invenio/legacy/webcomment/templates.py:2071 invenio/legacy/webcomment/templates.py:2097
+#: invenio/legacy/webcomment/templates.py:691 invenio/legacy/webcomment/templates.py:2045
+#: invenio/legacy/webcomment/templates.py:2069 invenio/legacy/webcomment/templates.py:2095
 #: invenio/legacy/webmessage/templates.py:509 invenio/legacy/websession/templates.py:2370
 #: invenio/legacy/websession/templates.py:2410
 msgid "No"
@@ -4881,7 +4881,7 @@ msgstr ""
 msgid "No editorial board has been selected yet."
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:2109
+#: invenio/legacy/search_engine/__init__.py:2107
 #, python-format
 msgid "No exact match found for %(x_query1)s, using %(x_query2)s instead..."
 msgstr ""
@@ -4915,22 +4915,22 @@ msgstr ""
 msgid "No journals available"
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:3022
+#: invenio/legacy/search_engine/__init__.py:3020
 #, python-format
 msgid ""
 "No match found in collection %(x_collection)s. Other collections gave %(x_url_open)s%(x_nb_hits)d"
 " hits%(x_url_close)s."
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:3160
+#: invenio/legacy/search_engine/__init__.py:3158
 msgid "No match found, please enter different search terms."
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:6017
+#: invenio/legacy/search_engine/__init__.py:6015
 msgid "No match within your search limits, discarding this condition..."
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:5988
+#: invenio/legacy/search_engine/__init__.py:5986
 msgid "No match within your time limits, discarding this condition..."
 msgstr ""
 
@@ -4993,11 +4993,11 @@ msgstr ""
 msgid "No of loans"
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:2069
+#: invenio/legacy/search_engine/__init__.py:2067
 msgid "No phrase index available for fulltext yet, looking for word combination..."
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:3185
+#: invenio/legacy/search_engine/__init__.py:3183
 #, python-format
 msgid "No phrase index is available for %(x_name)s."
 msgstr ""
@@ -5010,13 +5010,13 @@ msgstr ""
 msgid "No problem found with format"
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:3039
+#: invenio/legacy/search_engine/__init__.py:3037
 msgid ""
 "No public collection matched your query. If you were looking for a hidden document, please type "
 "the correct URL for this record."
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:3043
+#: invenio/legacy/search_engine/__init__.py:3041
 msgid ""
 "No public collection matched your query. If you were looking for a non-public document, please "
 "choose the desired restricted collection first."
@@ -5068,7 +5068,7 @@ msgstr ""
 msgid "No rights"
 msgstr ""
 
-#: invenio/legacy/batchuploader/engine.py:297
+#: invenio/legacy/batchuploader/engine.py:296
 #, python-format
 msgid "No rights to upload to collection '%(x_name)s'"
 msgstr ""
@@ -5089,7 +5089,7 @@ msgstr ""
 msgid "No values found."
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:3174
+#: invenio/legacy/search_engine/__init__.py:3172
 #, python-format
 msgid "No word index is available for %(x_name)s."
 msgstr ""
@@ -5164,7 +5164,7 @@ msgstr ""
 msgid "Not provided"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2122
+#: invenio/legacy/webcomment/templates.py:2120
 msgid "Not yet reviewed"
 msgstr ""
 
@@ -5198,12 +5198,12 @@ msgid ""
 "execution.\n"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1205
+#: invenio/legacy/webcomment/templates.py:1203
 #, python-format
 msgid "Note: Your nickname, %(nick)s, will be displayed as author of this comment."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1323
+#: invenio/legacy/webcomment/templates.py:1321
 #, python-format
 msgid "Note: Your nickname, %(x_name)s, will be displayed as the author of this review."
 msgstr ""
@@ -5212,7 +5212,7 @@ msgstr ""
 msgid "Note: the requested submission has already been completed"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1210 invenio/legacy/webcomment/templates.py:1327
+#: invenio/legacy/webcomment/templates.py:1208 invenio/legacy/webcomment/templates.py:1325
 #, python-format
 msgid ""
 "Note: you have not %(x_url_open)sdefined your nickname%(x_url_close)s. %(x_nickname)s will be "
@@ -5299,7 +5299,7 @@ msgstr ""
 msgid "November"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1676
+#: invenio/legacy/webcomment/templates.py:1674
 msgid "Number negative votes"
 msgstr ""
 
@@ -5307,7 +5307,7 @@ msgstr ""
 msgid "Number of search results per page"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1675
+#: invenio/legacy/webcomment/templates.py:1673
 msgid "Number positive votes"
 msgstr ""
 
@@ -5326,7 +5326,7 @@ msgstr ""
 
 #: invenio/legacy/bibcirculation/templates.py:1518 invenio/legacy/bibcirculation/templates.py:1757
 #: invenio/legacy/bibexport/templates.py:494 invenio/legacy/bibexport/templates.py:557
-#: invenio/legacy/webcomment/templates.py:1994
+#: invenio/legacy/webcomment/templates.py:1992
 msgid "OK"
 msgstr ""
 
@@ -5353,7 +5353,7 @@ msgstr ""
 msgid "Old password"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2337
+#: invenio/legacy/webcomment/templates.py:2335
 msgid "Oldest comment first"
 msgstr ""
 
@@ -5361,7 +5361,7 @@ msgstr ""
 msgid "On all pages"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1227
+#: invenio/legacy/webcomment/templates.py:1225
 msgid "Once logged in, authorized users can also attach files."
 msgstr ""
 
@@ -5377,7 +5377,7 @@ msgstr ""
 msgid "Only this edition?"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:442 invenio/legacy/webcomment/templates.py:783
+#: invenio/legacy/webcomment/templates.py:440 invenio/legacy/webcomment/templates.py:781
 msgid "Open"
 msgstr ""
 
@@ -5406,11 +5406,11 @@ msgstr ""
 msgid "Optionally, add a note to this item"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1242
+#: invenio/legacy/webcomment/templates.py:1240
 msgid "Optionally, attach a file to this comment"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1243
+#: invenio/legacy/webcomment/templates.py:1241
 msgid "Optionally, attach files to this comment"
 msgstr ""
 
@@ -5420,7 +5420,7 @@ msgstr ""
 msgid "Options"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1595
+#: invenio/legacy/webcomment/templates.py:1593
 msgid "Or enter a record ID to list all the associated comments/reviews:"
 msgstr ""
 
@@ -5428,7 +5428,7 @@ msgstr ""
 msgid "Or please try again."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2417
+#: invenio/legacy/webcomment/templates.py:2415
 msgid "Order by"
 msgstr ""
 
@@ -5471,7 +5471,7 @@ msgstr ""
 msgid "Output fields"
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1402
+#: invenio/legacy/bibformat/adminlib.py:1401
 #, python-format
 msgid "Output format %(x_file)s cannot not be read. %(x_text)s"
 msgstr ""
@@ -5540,7 +5540,7 @@ msgstr ""
 msgid "Page not found"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1003
+#: invenio/legacy/webcomment/templates.py:1001
 msgid "Page:"
 msgstr ""
 
@@ -5660,7 +5660,7 @@ msgstr ""
 msgid "People who viewed this page also viewed:"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2418
+#: invenio/legacy/webcomment/templates.py:2416
 msgid "Per page"
 msgstr ""
 
@@ -5853,7 +5853,7 @@ msgstr ""
 msgid "Please enter a valid name of or a full path to a BibFilter script or change postprocess mode."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1570
+#: invenio/legacy/webcomment/templates.py:1568
 msgid ""
 "Please enter the ID of the comment/review so that you can view it before deciding whether to "
 "delete it or not"
@@ -6054,7 +6054,7 @@ msgid "Preview results"
 msgstr ""
 
 #: invenio/legacy/bibcatalog/templates.py:52 invenio/legacy/bibknowledge/templates.py:167
-#: invenio/legacy/webcomment/templates.py:877 invenio/legacy/webcomment/templates.py:2514
+#: invenio/legacy/webcomment/templates.py:875 invenio/legacy/webcomment/templates.py:2512
 #: invenio/legacy/websearch/templates.py:1885
 msgid "Previous"
 msgstr ""
@@ -6230,12 +6230,12 @@ msgstr ""
 msgid "REPLY"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1399
+#: invenio/legacy/webcomment/templates.py:1397
 msgid "Rate this article"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:314 invenio/legacy/webcomment/templates.py:336
-#: invenio/legacy/webcomment/templates.py:2159
+#: invenio/legacy/webcomment/templates.py:312 invenio/legacy/webcomment/templates.py:334
+#: invenio/legacy/webcomment/templates.py:2157
 msgid "Rate this document"
 msgstr ""
 
@@ -6247,7 +6247,7 @@ msgstr ""
 msgid "Read a message"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:292
+#: invenio/legacy/webcomment/templates.py:291
 #, python-format
 msgid "Readers found the following %(x_name)s reviews to be most helpful."
 msgstr ""
@@ -6277,7 +6277,7 @@ msgstr ""
 msgid "Recompute Now!"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:938 invenio/legacy/webcomment/templates.py:1721
+#: invenio/legacy/webcomment/templates.py:936 invenio/legacy/webcomment/templates.py:1719
 #: invenio/legacy/websearch/templates.py:539
 msgid "Record"
 msgstr ""
@@ -6292,7 +6292,7 @@ msgstr ""
 msgid "Record ID %(x_rec)s does not exist."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1596
+#: invenio/legacy/webcomment/templates.py:1594
 msgid "Record ID:"
 msgstr ""
 
@@ -6313,11 +6313,11 @@ msgstr ""
 msgid "Record id not valid"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2342
+#: invenio/legacy/webcomment/templates.py:2340
 msgid "Records and comments"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2343
+#: invenio/legacy/webcomment/templates.py:2341
 msgid "Records only"
 msgstr ""
 
@@ -6349,7 +6349,7 @@ msgstr ""
 msgid "References"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2423 invenio/legacy/webjournal/adminlib.py:326
+#: invenio/legacy/webcomment/templates.py:2421 invenio/legacy/webjournal/adminlib.py:326
 #: invenio/legacy/webjournal/adminlib.py:343 invenio/legacy/webjournal/templates.py:454
 #: invenio/legacy/weblinkback/templates.py:209
 msgid "Refresh"
@@ -6506,7 +6506,7 @@ msgid "Replace the selected rules with this rule"
 msgstr ""
 
 #: invenio/legacy/webbasket/templates.py:3223 invenio/legacy/webbasket/templates.py:4027
-#: invenio/legacy/webcomment/templates.py:386 invenio/legacy/webmessage/templates.py:111
+#: invenio/legacy/webcomment/templates.py:384 invenio/legacy/webmessage/templates.py:111
 msgid "Reply"
 msgstr ""
 
@@ -6514,7 +6514,7 @@ msgstr ""
 msgid "Report Number"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:388 invenio/legacy/webcomment/templates.py:839
+#: invenio/legacy/webcomment/templates.py:386 invenio/legacy/webcomment/templates.py:837
 msgid "Report abuse"
 msgstr ""
 
@@ -6583,9 +6583,9 @@ msgstr ""
 
 #: invenio/legacy/bibcirculation/adminlib.py:3088 invenio/legacy/bibcirculation/webinterface.py:856
 #: invenio/legacy/bibdocfile/webinterface.py:101 invenio/legacy/bibdocfile/webinterface.py:145
-#: invenio/legacy/search_engine/__init__.py:2119 invenio/legacy/search_engine/__init__.py:2128
-#: invenio/legacy/search_engine/__init__.py:5587 invenio/legacy/search_engine/__init__.py:5644
-#: invenio/legacy/search_engine/__init__.py:5714
+#: invenio/legacy/search_engine/__init__.py:2117 invenio/legacy/search_engine/__init__.py:2126
+#: invenio/legacy/search_engine/__init__.py:5585 invenio/legacy/search_engine/__init__.py:5642
+#: invenio/legacy/search_engine/__init__.py:5712
 msgid "Requested record does not seem to exist."
 msgstr ""
 
@@ -6701,7 +6701,7 @@ msgstr ""
 msgid "Retype password"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:946 invenio/legacy/webcomment/templates.py:1961
+#: invenio/legacy/webcomment/templates.py:944 invenio/legacy/webcomment/templates.py:1959
 msgid "Review"
 msgstr ""
 
@@ -6709,12 +6709,12 @@ msgstr ""
 msgid "Review Transaction"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:511
+#: invenio/legacy/webcomment/templates.py:509
 #, python-format
 msgid "Reviewed by %(x_nickname)s on %(x_date)s"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:660 invenio/legacy/webcomment/templates.py:676
+#: invenio/legacy/webcomment/templates.py:658 invenio/legacy/webcomment/templates.py:674
 #: invenio/legacy/webcomment/webinterface.py:245 invenio/legacy/webcomment/webinterface.py:463
 #: invenio/legacy/websearch/adminlib.py:3398
 msgid "Reviews"
@@ -6853,7 +6853,7 @@ msgid "Search ILL request by"
 msgstr ""
 
 #: invenio/legacy/search_engine/__init__.py:905 invenio/legacy/search_engine/__init__.py:935
-#: invenio/legacy/search_engine/__init__.py:5631 invenio/legacy/search_engine/__init__.py:5703
+#: invenio/legacy/search_engine/__init__.py:5629 invenio/legacy/search_engine/__init__.py:5701
 msgid "Search Results"
 msgstr ""
 
@@ -6944,25 +6944,25 @@ msgstr ""
 msgid "Search options:"
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:2248
+#: invenio/legacy/search_engine/__init__.py:2246
 msgid ""
 "Search syntax misunderstood. Ignoring all parentheses in the query. If this doesn't help, please "
 "check your search and try again."
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:3228
+#: invenio/legacy/search_engine/__init__.py:3226
 #, python-format
 msgid "Search term %(x_name)s did not match any record. Nearest terms in any collection are:"
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:3223
+#: invenio/legacy/search_engine/__init__.py:3221
 #, python-format
 msgid ""
 "Search term %(x_term)s inside index %(x_index)s did not match any record. Nearest terms in any "
 "collection are:"
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:2066
+#: invenio/legacy/search_engine/__init__.py:2064
 msgid "Search term too generic, displaying only partial results..."
 msgstr ""
 
@@ -7010,7 +7010,7 @@ msgstr ""
 msgid "See also: similar author names"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2463
+#: invenio/legacy/webcomment/templates.py:2461
 msgid "See comment on discussion page"
 msgstr ""
 
@@ -7022,7 +7022,7 @@ msgstr ""
 msgid "See this book on BibCirculation"
 msgstr ""
 
-#: invenio/legacy/bibexport/templates.py:652 invenio/legacy/webcomment/templates.py:1964
+#: invenio/legacy/bibexport/templates.py:652 invenio/legacy/webcomment/templates.py:1962
 msgid "Select"
 msgstr ""
 
@@ -7048,7 +7048,7 @@ msgstr ""
 msgid "Select a referee"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1400
+#: invenio/legacy/webcomment/templates.py:1398
 msgid "Select a score"
 msgstr ""
 
@@ -7146,7 +7146,7 @@ msgstr ""
 msgid "Send later?"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1261
+#: invenio/legacy/webcomment/templates.py:1259
 msgid "Send me an email when a new comment is posted"
 msgstr ""
 
@@ -7245,7 +7245,7 @@ msgstr ""
 msgid "Sharing basket to a new group"
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1307 invenio/legacy/bibformat/adminlib.py:1322
+#: invenio/legacy/bibformat/adminlib.py:1307 invenio/legacy/bibformat/adminlib.py:1321
 #, python-format
 msgid "Should be \"tag field_number:\" at line %(x_line)s."
 msgstr ""
@@ -7269,7 +7269,7 @@ msgstr ""
 msgid "Show collection help boxes"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2027
+#: invenio/legacy/webcomment/templates.py:2025
 msgid "Show comments"
 msgstr ""
 
@@ -7281,7 +7281,7 @@ msgstr ""
 msgid "Show more..."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2030
+#: invenio/legacy/webcomment/templates.py:2028
 msgid "Show reviews"
 msgstr ""
 
@@ -7352,7 +7352,7 @@ msgstr ""
 msgid "Sorry"
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:4038 invenio/legacy/search_engine/__init__.py:4154
+#: invenio/legacy/search_engine/__init__.py:4036 invenio/legacy/search_engine/__init__.py:4152
 #, python-format
 msgid "Sorry, %(x_name)s does not seem to be a valid sort option. The records will not be sorted."
 msgstr ""
@@ -7393,7 +7393,7 @@ msgstr ""
 msgid "Sorry, page %(page)s does not seem to exist."
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:4143
+#: invenio/legacy/search_engine/__init__.py:4141
 #, python-format
 msgid "Sorry, sorting is allowed on sets of up to %(x_name)d records only. Using default sort order."
 msgstr ""
@@ -7484,7 +7484,7 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:167 invenio/legacy/webcomment/templates.py:924
+#: invenio/legacy/webcomment/templates.py:167 invenio/legacy/webcomment/templates.py:922
 msgid "Start a discussion about any aspect of this document."
 msgstr ""
 
@@ -7559,7 +7559,7 @@ msgstr ""
 msgid "Submitted on"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1020
+#: invenio/legacy/webcomment/templates.py:1018
 msgid "Subscribe"
 msgstr ""
 
@@ -7611,7 +7611,7 @@ msgstr ""
 msgid "Suppress abuse reports"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1979 invenio/legacy/webcomment/templates.py:1986
+#: invenio/legacy/webcomment/templates.py:1977 invenio/legacy/webcomment/templates.py:1984
 msgid "Suppress selected abuse report"
 msgstr ""
 
@@ -7648,12 +7648,12 @@ msgstr ""
 msgid "Take a decision"
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1386
+#: invenio/legacy/bibformat/adminlib.py:1385
 #, python-format
 msgid "Template \"%(x_tem)s\" does not exist at line %(x_col)s."
 msgstr ""
 
-#: invenio/legacy/bibformat/adminlib.py:1349
+#: invenio/legacy/bibformat/adminlib.py:1348
 #, python-format
 msgid "Template \"%(x_tem)s\" does not exist at line %(x_line)s."
 msgstr ""
@@ -7815,7 +7815,7 @@ msgstr ""
 msgid "The file you want to edit is protected against modifications. Your action has not been applied"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2191
+#: invenio/legacy/webcomment/templates.py:2189
 #, python-format
 msgid "The following comment was sent to %(CFG_SITE_NAME)s by %(user_nickname)s:"
 msgstr ""
@@ -7836,7 +7836,7 @@ msgstr ""
 msgid "The following names have been automatically chosen:"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2190
+#: invenio/legacy/webcomment/templates.py:2188
 #, python-format
 msgid "The following review was sent to %(CFG_SITE_NAME)s by %(user_nickname)s:"
 msgstr ""
@@ -7971,15 +7971,15 @@ msgstr ""
 msgid "The publication date of this book is %(x_date)s."
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:4400 invenio/legacy/search_engine/__init__.py:4756
+#: invenio/legacy/search_engine/__init__.py:4398 invenio/legacy/search_engine/__init__.py:4754
 #, python-format
 msgid "The record %(x_rec)d replaces it."
 msgstr ""
 
-#: invenio/legacy/bibcirculation/webinterface.py:854 invenio/legacy/search_engine/__init__.py:4397
-#: invenio/legacy/search_engine/__init__.py:4752 invenio/legacy/search_engine/__init__.py:4943
-#: invenio/legacy/search_engine/__init__.py:4966 invenio/legacy/search_engine/__init__.py:4974
-#: invenio/legacy/search_engine/__init__.py:4982 invenio/legacy/search_engine/__init__.py:5028
+#: invenio/legacy/bibcirculation/webinterface.py:854 invenio/legacy/search_engine/__init__.py:4395
+#: invenio/legacy/search_engine/__init__.py:4750 invenio/legacy/search_engine/__init__.py:4941
+#: invenio/legacy/search_engine/__init__.py:4964 invenio/legacy/search_engine/__init__.py:4972
+#: invenio/legacy/search_engine/__init__.py:4980 invenio/legacy/search_engine/__init__.py:5026
 msgid "The record has been deleted."
 msgstr ""
 
@@ -8128,7 +8128,7 @@ msgstr ""
 msgid "The url you have provided is not valid: The server failed to fulfil an apparently valid request."
 msgstr ""
 
-#: invenio/legacy/batchuploader/engine.py:534 invenio/legacy/batchuploader/engine.py:547
+#: invenio/legacy/batchuploader/engine.py:533 invenio/legacy/batchuploader/engine.py:546
 #, python-format
 msgid "The user '%(x_user)s' is not authorized to modify collection '%(x_coll)s'"
 msgstr ""
@@ -8150,12 +8150,12 @@ msgstr ""
 msgid "There are no loans."
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:3168
+#: invenio/legacy/search_engine/__init__.py:3166
 #, python-format
 msgid "There are no records cited by %(x_rec)s."
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:3166
+#: invenio/legacy/search_engine/__init__.py:3164
 #, python-format
 msgid "There are no records referring to %(x_rec)s."
 msgstr ""
@@ -8169,16 +8169,16 @@ msgstr ""
 msgid "There are no suitable keywords for display in this record."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1619
+#: invenio/legacy/webcomment/templates.py:1617
 msgid "There have been no reports so far."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:919
+#: invenio/legacy/webcomment/templates.py:917
 #, python-format
 msgid "There is a total of %(x_num)s comments"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:917
+#: invenio/legacy/webcomment/templates.py:915
 #, python-format
 msgid "There is a total of %(x_num)s reviews"
 msgstr ""
@@ -8268,7 +8268,7 @@ msgid ""
 "yourself."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1714
+#: invenio/legacy/webcomment/templates.py:1712
 #, python-format
 msgid "This comment has been reported %(x_num)i times"
 msgstr ""
@@ -8317,7 +8317,7 @@ msgstr ""
 msgid "This is a hosted external collection. Please click on the Search button to see its content."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2218
+#: invenio/legacy/webcomment/templates.py:2216
 msgid "This is an automatic message, please don't reply to it."
 msgstr ""
 
@@ -8416,7 +8416,7 @@ msgstr ""
 msgid "This request for resetting the password is not valid or is expired."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1712
+#: invenio/legacy/webcomment/templates.py:1710
 #, python-format
 msgid "This review has been reported %(x_num)i times"
 msgstr ""
@@ -8493,17 +8493,17 @@ msgstr ""
 msgid "To other person!"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2220
+#: invenio/legacy/webcomment/templates.py:2218
 #, python-format
 msgid "To post another comment, go to <%(x_url)s> instead."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2225
+#: invenio/legacy/webcomment/templates.py:2223
 #, python-format
 msgid "To specifically reply to this comment, go to <%(x_url)s>"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2230
+#: invenio/legacy/webcomment/templates.py:2228
 #, python-format
 msgid "To unsubscribe from this discussion, go to <%(x_url)s>"
 msgstr ""
@@ -8536,11 +8536,11 @@ msgstr ""
 msgid "Total number of papers analyzed:"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1678
+#: invenio/legacy/webcomment/templates.py:1676
 msgid "Total number of reports"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1677
+#: invenio/legacy/webcomment/templates.py:1675
 msgid "Total number votes"
 msgstr ""
 
@@ -8689,7 +8689,7 @@ msgstr ""
 msgid "Unable to update settings."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:402
+#: invenio/legacy/webcomment/templates.py:400
 msgid "Undelete comment"
 msgstr ""
 
@@ -8697,15 +8697,15 @@ msgstr ""
 msgid "Undelete comments"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:537
+#: invenio/legacy/webcomment/templates.py:535
 msgid "Undelete review"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1984
+#: invenio/legacy/webcomment/templates.py:1982
 msgid "Undelete selected comments"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1980
+#: invenio/legacy/webcomment/templates.py:1978
 msgid "Undelete selected reviews"
 msgstr ""
 
@@ -8748,15 +8748,15 @@ msgstr ""
 msgid "Unknown type: %(x_type)s"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:419
+#: invenio/legacy/webcomment/templates.py:417
 msgid "Unreport comment"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:552
+#: invenio/legacy/webcomment/templates.py:550
 msgid "Unreport review"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1028
+#: invenio/legacy/webcomment/templates.py:1026
 msgid "Unsubscribe"
 msgstr ""
 
@@ -8878,7 +8878,7 @@ msgstr ""
 msgid "Use '\\$' delimiters to write LaTeX markup. Eg: \\$e=mc^{2}\\$"
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:4634
+#: invenio/legacy/search_engine/__init__.py:4632
 msgid "Use different search terms."
 msgstr ""
 
@@ -8895,7 +8895,7 @@ msgstr ""
 msgid "User %(x_name)s does not exist."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1673 invenio/legacy/webcomment/templates.py:1702
+#: invenio/legacy/webcomment/templates.py:1671 invenio/legacy/webcomment/templates.py:1700
 msgid "User ID"
 msgstr ""
 
@@ -8988,7 +8988,7 @@ msgstr ""
 msgid "Verify syntax"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1598
+#: invenio/legacy/webcomment/templates.py:1596
 msgid "View Comment"
 msgstr ""
 
@@ -8996,22 +8996,22 @@ msgstr ""
 msgid "View Holding Pen"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1623
+#: invenio/legacy/webcomment/templates.py:1621
 #, python-format
 msgid "View all %(x_name)s reported comments"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1626
+#: invenio/legacy/webcomment/templates.py:1624
 #, python-format
 msgid "View all %(x_name)s reported reviews"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:295 invenio/legacy/webcomment/templates.py:318
+#: invenio/legacy/webcomment/templates.py:293 invenio/legacy/webcomment/templates.py:316
 #, python-format
 msgid "View all %(x_name)s reviews"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1530
+#: invenio/legacy/webcomment/templates.py:1528
 #: invenio/legacy/webcomment/web/admin/webcommentadmin.py:140
 msgid "View all comments reported as abuse"
 msgstr ""
@@ -9020,7 +9020,7 @@ msgstr ""
 msgid "View all reported users"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1538
+#: invenio/legacy/webcomment/templates.py:1536
 #: invenio/legacy/webcomment/web/admin/webcommentadmin.py:140
 msgid "View all reviews reported as abuse"
 msgstr ""
@@ -9029,11 +9029,11 @@ msgstr ""
 msgid "View all the searches you performed during the last 30 days."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1679
+#: invenio/legacy/webcomment/templates.py:1677
 msgid "View all user's reported comments/reviews"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1546
+#: invenio/legacy/webcomment/templates.py:1544
 msgid "View all users who have been reported"
 msgstr ""
 
@@ -9045,22 +9045,22 @@ msgstr ""
 msgid "View last"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1528
+#: invenio/legacy/webcomment/templates.py:1526
 #: invenio/legacy/webcomment/web/admin/webcommentadmin.py:207
 msgid "View latest commented records"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1536
+#: invenio/legacy/webcomment/templates.py:1534
 #: invenio/legacy/webcomment/web/admin/webcommentadmin.py:206
 msgid "View latest reviewed records"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1526
+#: invenio/legacy/webcomment/templates.py:1524
 #: invenio/legacy/webcomment/web/admin/webcommentadmin.py:171
 msgid "View most commented records"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1534
+#: invenio/legacy/webcomment/templates.py:1532
 #: invenio/legacy/webcomment/web/admin/webcommentadmin.py:170
 msgid "View most reviewed records"
 msgstr ""
@@ -9073,7 +9073,7 @@ msgstr ""
 msgid "View records"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1002
+#: invenio/legacy/webcomment/templates.py:1000
 msgid "Viewing"
 msgstr ""
 
@@ -9160,7 +9160,7 @@ msgid ""
 "%(x_range_from_year)s-%(x_range_to_year)s."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:270 invenio/legacy/webcomment/templates.py:838
+#: invenio/legacy/webcomment/templates.py:270 invenio/legacy/webcomment/templates.py:836
 msgid "Was this review helpful?"
 msgstr ""
 
@@ -9291,7 +9291,7 @@ msgstr ""
 msgid "Words nearest to %(x_word)s inside %(x_field)s in any collection are:"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:80 invenio/legacy/webcomment/templates.py:914
+#: invenio/legacy/webcomment/templates.py:80 invenio/legacy/webcomment/templates.py:912
 #: invenio/legacy/websubmit/templates.py:2449
 msgid "Write a comment"
 msgstr ""
@@ -9301,8 +9301,8 @@ msgstr ""
 msgid "Write a message"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:281 invenio/legacy/webcomment/templates.py:319
-#: invenio/legacy/webcomment/templates.py:914
+#: invenio/legacy/webcomment/templates.py:281 invenio/legacy/webcomment/templates.py:317
+#: invenio/legacy/webcomment/templates.py:912
 msgid "Write a review"
 msgstr ""
 
@@ -9324,11 +9324,11 @@ msgstr ""
 msgid "Write notes"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1402
+#: invenio/legacy/webcomment/templates.py:1400
 msgid "Write your review"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1962
+#: invenio/legacy/webcomment/templates.py:1960
 msgid "Written by"
 msgstr ""
 
@@ -9371,9 +9371,9 @@ msgstr ""
 
 #: invenio/legacy/bibcirculation/adminlib.py:2372 invenio/legacy/bibcirculation/adminlib.py:3486
 #: invenio/legacy/bibcirculation/adminlib.py:3530 invenio/legacy/webbasket/templates.py:1842
-#: invenio/legacy/webcomment/templates.py:235 invenio/legacy/webcomment/templates.py:691
-#: invenio/legacy/webcomment/templates.py:2047 invenio/legacy/webcomment/templates.py:2071
-#: invenio/legacy/webcomment/templates.py:2097 invenio/legacy/webmessage/templates.py:508
+#: invenio/legacy/webcomment/templates.py:235 invenio/legacy/webcomment/templates.py:689
+#: invenio/legacy/webcomment/templates.py:2045 invenio/legacy/webcomment/templates.py:2069
+#: invenio/legacy/webcomment/templates.py:2095 invenio/legacy/webmessage/templates.py:508
 #: invenio/legacy/websession/templates.py:2369 invenio/legacy/websession/templates.py:2409
 msgid "Yes"
 msgstr ""
@@ -9503,7 +9503,7 @@ msgstr ""
 msgid "You are not authorized to access this submission interface."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1035
+#: invenio/legacy/webcomment/templates.py:1033
 msgid "You are not authorized to comment or review."
 msgstr ""
 
@@ -9580,7 +9580,7 @@ msgid ""
 "                %(x_url_open)slogout from SSO%(x_url_close)s, too."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1446
+#: invenio/legacy/webcomment/templates.py:1444
 #, python-format
 msgid ""
 "You can also view all the comments you have submitted so far on \"%(x_url_open)sYour "
@@ -9808,7 +9808,7 @@ msgstr ""
 msgid "You have defined %(num)s alerts."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2451
+#: invenio/legacy/webcomment/templates.py:2449
 msgid "You have deleted this comment: it is not visible by other users"
 msgstr ""
 
@@ -9835,11 +9835,11 @@ msgstr ""
 msgid "You have not selected a file to upload"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2357
+#: invenio/legacy/webcomment/templates.py:2355
 msgid "You have not yet submitted any comment in the document \"discussion\" tab."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2388
+#: invenio/legacy/webcomment/templates.py:2386
 msgid ""
 "You have not yet submitted any comment. Browse documents from the search interface and take part "
 "to discussions!"
@@ -9893,8 +9893,8 @@ msgstr ""
 msgid "You may want to start by %(x_url_open)screating a new basket%(x_url_close)s."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2360 invenio/legacy/webcomment/templates.py:2368
-#: invenio/legacy/webcomment/templates.py:2376
+#: invenio/legacy/webcomment/templates.py:2358 invenio/legacy/webcomment/templates.py:2366
+#: invenio/legacy/webcomment/templates.py:2374
 msgid "You might find other comments here: "
 msgstr ""
 
@@ -10059,11 +10059,11 @@ msgstr ""
 msgid "Your book purchase request"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1441
+#: invenio/legacy/webcomment/templates.py:1439
 msgid "Your comment was successfully added."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2301
+#: invenio/legacy/webcomment/templates.py:2299
 msgid "Your comment will be lost."
 msgstr ""
 
@@ -10202,7 +10202,7 @@ msgstr ""
 msgid "Your request is valid. Please set the new desired password in the following form."
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:1439
+#: invenio/legacy/webcomment/templates.py:1437
 msgid "Your review was successfully added."
 msgstr ""
 
@@ -10211,7 +10211,7 @@ msgstr ""
 msgid "Your rule: %(x_rule)s"
 msgstr ""
 
-#: invenio/legacy/search_engine/__init__.py:3151
+#: invenio/legacy/search_engine/__init__.py:3149
 msgid "Your search did not match any records.  Please try again."
 msgstr ""
 
@@ -10380,12 +10380,12 @@ msgstr ""
 msgid "collections"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:945 invenio/legacy/webcomment/templates.py:1004
+#: invenio/legacy/webcomment/templates.py:943 invenio/legacy/webcomment/templates.py:1002
 msgid "comment"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2055 invenio/legacy/webcomment/templates.py:2079
-#: invenio/legacy/webcomment/templates.py:2105
+#: invenio/legacy/webcomment/templates.py:2053 invenio/legacy/webcomment/templates.py:2077
+#: invenio/legacy/webcomment/templates.py:2103
 msgid "comment ID"
 msgstr ""
 
@@ -10820,7 +10820,7 @@ msgstr ""
 msgid "results"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:945 invenio/legacy/webcomment/templates.py:1004
+#: invenio/legacy/webcomment/templates.py:943 invenio/legacy/webcomment/templates.py:1002
 msgid "review"
 msgstr ""
 
@@ -10875,15 +10875,15 @@ msgstr ""
 msgid "subject"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2055
+#: invenio/legacy/webcomment/templates.py:2053
 msgid "successfully deleted"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2105
+#: invenio/legacy/webcomment/templates.py:2103
 msgid "successfully suppressed abuse report"
 msgstr ""
 
-#: invenio/legacy/webcomment/templates.py:2079
+#: invenio/legacy/webcomment/templates.py:2077
 msgid "successfully undeleted"
 msgstr ""
 

@@ -2051,13 +2051,11 @@ def search_pattern(req=None, p=None, f=None, m=None, ap=0, of="id", verbose=0, l
         bsu_o, bsu_p, bsu_f, bsu_m = basic_search_units[idx_unit]
         if bsu_f and len(bsu_f) < 2:
             if of.startswith("h"):
-                write_warning(_("There is no index %(x_name)s.  Searching for %(x_text)s in all fields.",
-                    x_name=bsu_f, x_text=bsu_p), req=req)
+                write_warning(_("There is no index %(x_name)s.  Searching for %(x_text)s in all fields.", x_name=bsu_f, x_text=bsu_p), req=req)
             bsu_f = ''
             bsu_m = 'w'
             if of.startswith("h") and verbose:
-                write_warning(_('Instead searching %(x_name)s.',
-                    x_name=str([bsu_o, bsu_p, bsu_f, bsu_m])), req=req)
+                write_warning(_('Instead searching %(x_name)s.', x_name=str([bsu_o, bsu_p, bsu_f, bsu_m])), req=req)
         try:
             basic_search_unit_hitset = search_unit(bsu_p, bsu_f, bsu_m, wl)
         except InvenioWebSearchWildcardLimitError, excp:

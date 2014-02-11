@@ -3903,7 +3903,7 @@ def _configure_doctype_move_field_on_submissionpage(doctype, action, pagenum, mo
         ## invalid field numbers
         try:
             raise InvenioWebSubmitWarning(_('Unable to move field at position %(x_from)s to position %(x_to)s on page %(x_page)s of submission \'%(x_sub)s%(x_subm)s\' - Invalid Field Position Numbers',
-                    x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_subm=doctype))
+                                            x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_subm=doctype))
         except InvenioWebSubmitWarning, exc:
             register_exception(stream='warning')
             #warnings.append(exc.message)
@@ -3915,7 +3915,7 @@ def _configure_doctype_move_field_on_submissionpage(doctype, action, pagenum, mo
         ## failed to swap 2 fields - couldn't move field1 to temp position
         try:
             raise InvenioWebSubmitWarning(_('Unable to swap field at position %(x_from)s with field at position %(x_to)s on page %(x_page)s of submission %(x_sub)s - could not move field at position %(x_subm)s to temporary field location',
-                    x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_subm=doctype))
+                                            x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_subm=doctype))
         except InvenioWebSubmitWarning, exc:
             register_exception(stream='warning')
             #warnings.append(exc.message)
@@ -3927,7 +3927,7 @@ def _configure_doctype_move_field_on_submissionpage(doctype, action, pagenum, mo
         ## failed to swap 2 fields on submission page - couldn't move field2 to field1 position
         try:
             raise InvenioWebSubmitWarning(_('Unable to swap field at position %(x_from)s with field at position %(x_to)s on page %(x_page)s of submission %(x_sub)s - could not move field at position %(x_posfrom)s to position %(x_posto)s. Please ask Admin to check that a field was not stranded in a temporary position',
-                    x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_posfrom=doctype, x_posto=movefieldtoposn))
+                                            x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_posfrom=doctype, x_posto=movefieldtoposn))
         except InvenioWebSubmitWarning, exc:
             register_exception(stream='warning')
             #warnings.append(exc.message)
@@ -3939,7 +3939,7 @@ def _configure_doctype_move_field_on_submissionpage(doctype, action, pagenum, mo
         ## failed to swap 2 fields in submission page - couldnt swap field at temp position to field2 position
         try:
             raise InvenioWebSubmitWarning(_('Unable to swap field at position %(x_from)s with field at position %(x_to)s on page %(x_page)s of submission %(x_sub)s - could not move field that was located at position %(x_posfrom)s to position %(x_posto)s from temporary position. Field is now stranded in temporary position and must be corrected manually by an Admin',
-                    x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_posfrom=movefieldfromposn, x_posto=movefieldtoposn))
+                                            x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_posfrom=movefieldfromposn, x_posto=movefieldtoposn))
         except InvenioWebSubmitWarning, exc:
             register_exception(stream='warning')
             #warnings.append(exc.message)
@@ -3951,7 +3951,7 @@ def _configure_doctype_move_field_on_submissionpage(doctype, action, pagenum, mo
         ## failed to decrement the position of all fields below the field that was moved to a temp position
         try:
             raise InvenioWebSubmitWarning(_('Unable to move field at position %(x_from)s to position %(x_to)s on page %(x_page)s of submission %(x_sub)s - could not decrement the position of the fields below position %(x_pos)s. Tried to recover - please check that field ordering is not broken',
-                    x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_posfrom=movefieldfromposn)  % (movefieldfromposn, movefieldtoposn, pagenum, action, movefieldfromposn))
+                                            x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_posfrom=movefieldfromposn))
         except InvenioWebSubmitWarning, exc:
             register_exception(stream='warning')
             #warnings.append(exc.message)
@@ -3963,7 +3963,7 @@ def _configure_doctype_move_field_on_submissionpage(doctype, action, pagenum, mo
         ## failed to increment position of fields in and below position into which 'movefromfieldposn' is to be inserted
         try:
             raise InvenioWebSubmitWarning(_('Unable to move field at position %(x_from)s to position %(x_to)s on page %(x_page)s of submission %(x_sub)s%(x_subm)s - could not increment the position of the fields at and below position %(x_frompos)s. The field that was at position %(x_topos)s is now stranded in a temporary position.',
-                    x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_subm=doctype, x_frompos=movefieldtoposn, x_topos=movefieldfromposn)  % (movefieldfromposn, movefieldtoposn, pagenum, action, doctype, movefieldtoposn, movefieldfromposn))
+                                            x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_subm=doctype, x_frompos=movefieldtoposn, x_topos=movefieldfromposn))
         except InvenioWebSubmitWarning, exc:
             register_exception(stream='warning')
             #warnings.append(exc.message)
@@ -3975,7 +3975,7 @@ def _configure_doctype_move_field_on_submissionpage(doctype, action, pagenum, mo
         ## successful update:
         try:
             raise InvenioWebSubmitWarning(_('Moved field from position %(x_from)s to position %(x_to)s on page %(x_page)s of submission \'%(x_sub)s%(x_subm)s\'.',
-                    x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_subm=doctype))
+                                            x_from=movefieldfromposn, x_to=movefieldtoposn, x_page=pagenum, x_sub=action, x_subm=doctype))
         except InvenioWebSubmitWarning, exc:
             register_exception(stream='warning')
             #warnings.append(exc.message)
@@ -3997,7 +3997,7 @@ def _configure_doctype_delete_field_from_submissionpage(doctype, action, pagenum
     if del_res == 1:
         try:
             raise InvenioWebSubmitWarning(_('Unable to delete field at position %(x_from)s from page %(x_to)s of submission \'%(x_sub)s\'',
-                    x_from=fieldnum, x_page=pagenum, x_sub=action))
+                                            x_from=fieldnum, x_page=pagenum, x_sub=action))
         except InvenioWebSubmitWarning, exc:
             register_exception(stream='warning')
             #warnings.append(exc.message)
@@ -4008,7 +4008,7 @@ def _configure_doctype_delete_field_from_submissionpage(doctype, action, pagenum
         user_msg.append("Field deleted")
         try:
             raise InvenioWebSubmitWarning(_('Unable to delete field at position %(x_from)s from page %(x_to)s of submission \'%(x_sub)s%(x_subm)s\'',
-                    x_from=fieldnum, x_to=pagenum, x_sub=action, x_subm=doctype))
+                                            x_from=fieldnum, x_to=pagenum, x_sub=action, x_subm=doctype))
         except InvenioWebSubmitWarning, exc:
             register_exception(stream='warning')
             #warnings.append(exc.message)

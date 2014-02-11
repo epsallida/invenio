@@ -288,9 +288,7 @@ class Template:
             score += _("Average review score: %(x_nb_score)s based on %(x_nb_reviews)s reviews") % \
                 {'x_nb_score': '</b><img src="' + CFG_SITE_URL + '/img/' + avg_score_img + '" alt="' + avg_score + '" />',
                  'x_nb_reviews': nb_comments_total}
-            useful_label = _("Readers found the following %(x_name)s reviews to be most helpful.",
-                      x_name=len(comments) > 1 and len(comments) or "")
-            #useful_label %= len(comments) > 1 and len(comments) or ""
+            useful_label = _("Readers found the following %(x_name)s reviews to be most helpful.", x_name=len(comments) if len(comments) > 0 else '')
             view_all_comments_link ='<a class"webcomment_view_all_reviews" href="%s/%s/%s/reviews/display?ln=%s&amp;do=hh">' % (CFG_SITE_URL, CFG_SITE_RECORD, recID, ln)
             view_all_comments_link += _("View all %(x_name)s reviews", x_name=nb_comments_total)
             view_all_comments_link += '</a><br />'

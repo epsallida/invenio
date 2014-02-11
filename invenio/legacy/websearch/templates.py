@@ -3578,9 +3578,9 @@ class Template:
                  <p>%(you_may_want)s</p>
               """ % { 'title': self.tmpl_collection_not_found_page_title(colname, ln),
                       'sorry': _("Sorry, collection %(x_name)s does not seem to exist.",
-                            x_name=('<strong>' + cgi.escape(colname) + '</strong>')),
+                                 x_name=('<strong>' + cgi.escape(colname) + '</strong>')),
                       'you_may_want': _("You may want to start browsing from %(x_name)s.",
-                            x_name=('<a href="' + CFG_SITE_URL + '?ln=' + ln + '">' + cgi.escape(CFG_SITE_NAME_INTL.get(ln, CFG_SITE_NAME)) + '</a>'))}
+                                        x_name=('<a href="' + CFG_SITE_URL + '?ln=' + ln + '">' + cgi.escape(CFG_SITE_NAME_INTL.get(ln, CFG_SITE_NAME)) + '</a>'))}
         return out
 
     def tmpl_alert_rss_teaser_box_for_query(self, id_query, ln, display_email_alert_part=True):

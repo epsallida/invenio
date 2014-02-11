@@ -564,19 +564,19 @@ def create_file_upload_interface(recid,
             if minsize.isdigit() and os.path.getsize(uploaded_filepath) < int(minsize):
                 os.unlink(uploaded_filepath)
                 body += '<script>alert("%s");</script>' % \
-                       (_("The uploaded file is too small (<%(x_size)i o) and has therefore not been considered",
-                            x_size=int(minsize))).replace('"', '\\"')
+                    (_("The uploaded file is too small (<%(x_size)i o) and has therefore not been considered",
+                        x_size=int(minsize))).replace('"', '\\"')
             elif maxsize.isdigit() and os.path.getsize(uploaded_filepath) > int(maxsize):
                 os.unlink(uploaded_filepath)
                 body += '<script>alert("%s");</script>' % \
-                       (_("The uploaded file is too big (>%(x_size)i o) and has therefore not been considered",
-                            x_size=int(maxsize))).replace('"', '\\"')
+                    (_("The uploaded file is too big (>%(x_size)i o) and has therefore not been considered",
+                        x_size=int(maxsize))).replace('"', '\\"')
             elif len(filename) + len(extension) + 4 > 255:
                 # Max filename = 256, including extension and version that
                 # will be appended later by BibDoc
                 os.unlink(uploaded_filepath)
                 body += '<script>alert("%s");</script>' % \
-                       _("The uploaded file name is too long and has therefore not been considered").replace('"', '\\"')
+                    _("The uploaded file name is too long and has therefore not been considered").replace('"', '\\"')
 
             elif file_action == 'add' and \
                      max_files_for_doctype.has_key(file_doctype) and \
@@ -611,19 +611,19 @@ def create_file_upload_interface(recid,
                     # and tell user.
                     os.unlink(uploaded_filepath)
                     body += '<script>alert("%s");</script>' % \
-                           (_("A file named %(x_name)s already exists. Please choose another name.",
-                              x_name=(file_rename or filename))).replace('"', '\\"')
+                        (_("A file named %(x_name)s already exists. Please choose another name.",
+                            x_name=(file_rename or filename))).replace('"', '\\"')
 
                 elif file_action == "revise" and \
-                         file_rename != file_target and \
-                         file_rename in [bibdoc['get_docname'] for bibdoc \
+                        file_rename != file_target and \
+                        file_rename in [bibdoc['get_docname'] for bibdoc \
                                          in abstract_bibdocs]:
                     # A file different from the one to revise already has
                     # the same bibdocname
                     os.unlink(uploaded_filepath)
                     body += '<script>alert("%s");</script>' % \
-                           (_("A file named %(x_name)s already exists. Please choose another name.",
-                             x_name=file_rename)).replace('"', '\\"')
+                        (_("A file named %(x_name)s already exists. Please choose another name.",
+                            x_name=file_rename)).replace('"', '\\"')
 
                 elif file_action == "addFormat" and \
                          (extension in \
