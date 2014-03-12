@@ -30,92 +30,45 @@ from invenio.modules.accounts.models import User
 from invenio.modules.cloudconnector.errors import CloudRedirectUrl, \
     ErrorBuildingFS
 
+from flask import url_for
+from invenio.modules.oauthclient.views.client import oauth
+from invenio.modules.oauthclient.models import RemoteToken, RemoteAccount
+
 
 class Factory(object):
     def build_fs(self, current_user, credentials, root=None,
                  callback_url=None, request=None, session=None):
+        url = url_for('oauthclient.login', remote_app='dropbox')
 
-            if session == None and credentials.get('access_token') == None:
-                #Dropbox can't work if session and access_token are None
-                raise ErrorBuildingFS("Session or credentials need to be set "
-                                      "when building dropbox")
-            elif credentials.get('access_token') != None:
-                try:
-                    filesystem = DropboxFS(root, credentials)
-                    filesystem.about()
-                    return filesystem
-                except ResourceNotFoundError, e:
-                    if(root != "/"):
-                        filesystem = DropboxFS("/", credentials)
-                    filesystem.makedir(root, recursive=True)
-                    filesystem = DropboxFS(root, credentials)
-                    return filesystem
-                except:
-                    #Remove the old stored credentials
-                    new_data = {'dropbox':
-                        {'uid': None,
-                         'access_token': None,
-                         }
-                    }
-                    self._update_cloudutils_settings(current_user, new_data)
-                    flow = dropbox.client.DropboxOAuth2Flow(
-                        cfg['CFG_DROPBOX_KEY'],
-                        cfg['CFG_DROPBOX_SECRET'],
-                        callback_url, session,
-                        cfg['CFG_DROPBOX_CSRF_TOKEN'],
-                    )
+        client_id = oauth.remote_apps['dropbox'].consumer_key
+        user_id = current_user.get_id()
+        token = RemoteToken.get(user_id, client_id)
 
-                    url = flow.start()
-                    raise CloudRedirectUrl(url, __name__)
-            elif 'code' in request.args:
-                try:
-                    access_token, uid, url_state = dropbox.client.DropboxOAuth2Flow(
-                        cfg['CFG_DROPBOX_KEY'],
-                        cfg['CFG_DROPBOX_SECRET'],
-                        callback_url, session,
-                        cfg['CFG_DROPBOX_CSRF_TOKEN'],
-                    ).finish(request.args)
-                except Exception, e:
-                    raise ErrorBuildingFS(e)
-
-                new_data = {
-                            'dropbox': {
-                                    'uid': uid,
-                                    'access_token': access_token
-                                    }
-                           }
-                self._update_cloudutils_settings(current_user, new_data)
-
-                filesystem = DropboxFS(root, {"access_token": access_token})
+        if token is not None:
+            credentials = {'access_token': token.access_token}
+            try:
+                filesystem = DropboxFS(root, credentials)
+                filesystem.about()
                 return filesystem
-            elif session is not None:
-                flow = dropbox.client.DropboxOAuth2Flow(
-                    cfg['CFG_DROPBOX_KEY'],
-                    cfg['CFG_DROPBOX_SECRET'],
-                    callback_url, session,
-                    cfg['CFG_DROPBOX_CSRF_TOKEN'],
-                )
-
-                url = flow.start()
+            except ResourceNotFoundError, e:
+                if(root != "/"):
+                    filesystem = DropboxFS("/", credentials)
+                filesystem.makedir(root, recursive=True)
+                filesystem = DropboxFS(root, credentials)
+                return filesystem
+            except:
                 raise CloudRedirectUrl(url, __name__)
-
-            else:
-                raise ErrorBuildingFS("Insufficient data provided to the cloud builder")
+        else:
+            raise CloudRedirectUrl(url, __name__)
 
     def _update_cloudutils_settings(self, current_user, new_data):
         # Updates cloudutils settings in DataBase and refreshes current user
         user = User.query.get(current_user.get_id())
-        settings = user.settings
-        cloudutils_settings = settings.get("cloudutils_settings")
 
-        if( cloudutils_settings ):
-            cloudutils_settings.update( new_data )
+        client_id = oauth.remote_apps['dropbox'].consumer_key
+        account = RemoteAccount.get(user.id, client_id)
+        account.extra_data = new_data
 
-            settings.update(settings)
-        else:
-            settings.update({"cloudutils_settings" : new_data})
-
-        user.settings = settings
-        db.session.merge(user)
+        account.extra_data.update()
         db.session.commit()
         current_user.reload()
