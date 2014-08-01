@@ -28,6 +28,7 @@ from invenio.ext.sqlalchemy import db
 
 from invenio.modules.accounts.models import User
 
+
 class AccACTION(db.Model):
     """Represents a AccACTION record."""
     __tablename__ = 'accACTION'
@@ -38,8 +39,8 @@ class AccACTION(db.Model):
                 nullable=True)
     description = db.Column(db.String(255), nullable=True)
     allowedkeywords = db.Column(db.String(255), nullable=True)
-    optional = db.Column(db.Enum('yes', 'no', name='opt_action'), nullable=False,
-                server_default='no')
+    optional = db.Column(db.Enum('yes', 'no', name='yes_no'), nullable=False,
+                         server_default='no')
 
 class AccARGUMENT(db.Model):
     """Represents a AccARGUMENT record."""
