@@ -111,10 +111,10 @@ def dump_submission(doctype, method=None, include_cleaning=True,
     if include_cleaning:
         if method == 'NAMES':
             dump_header += """
-DELETE FROM sbmFUNDESC WHERE function LIKE '%(doctype)s%%';
-DELETE FROM sbmFIELD WHERE subname LIKE '%%%(doctype)s';
-DELETE FROM sbmFIELDDESC WHERE name LIKE '%(doctype)s%%';
-DELETE FROM sbmALLFUNCDESCR WHERE function LIKE '%(doctype)s%%';
+DELETE FROM `sbmFUNDESC` WHERE function LIKE '%(doctype)s%%';
+DELETE FROM `sbmFIELD` WHERE subname LIKE '%%%(doctype)s';
+DELETE FROM `sbmFIELDDESC` WHERE name LIKE '%(doctype)s%%';
+DELETE FROM `sbmALLFUNCDESCR` WHERE function LIKE '%(doctype)s%%';
 """ % {'doctype': escape_string(doctype)}
         elif method == "RELATIONS":
             dump_header += """
@@ -124,37 +124,37 @@ DELETE sbmFIELDDESC.* FROM sbmFIELDDESC, sbmFIELD, sbmIMPLEMENT WHERE sbmFIELD.f
 DELETE sbmFIELD.* FROM sbmFIELD, sbmIMPLEMENT WHERE sbmFIELD.subname=sbmIMPLEMENT.subname AND sbmIMPLEMENT.docname='%(doctype)s';
 """ % {'doctype': escape_string(doctype)}
 
-        dump_header += """DELETE FROM sbmDOCTYPE WHERE sdocname='%(doctype)s';
-DELETE FROM sbmCATEGORIES WHERE doctype ='%(doctype)s';
-DELETE FROM sbmFUNCTIONS WHERE doctype='%(doctype)s';
-DELETE FROM sbmIMPLEMENT WHERE docname='%(doctype)s';
-DELETE FROM sbmPARAMETERS WHERE doctype='%(doctype)s';
+        dump_header += """DELETE FROM `sbmDOCTYPE` WHERE sdocname='%(doctype)s';
+DELETE FROM `sbmCATEGORIES` WHERE doctype ='%(doctype)s';
+DELETE FROM `sbmFUNCTIONS` WHERE doctype='%(doctype)s';
+DELETE FROM `sbmIMPLEMENT` WHERE docname='%(doctype)s';
+DELETE FROM `sbmPARAMETERS` WHERE doctype='%(doctype)s';
 """ % {'doctype': escape_string(doctype)}
 
     dump_output = ''
-    res = run_sql('SELECT * FROM sbmDOCTYPE WHERE sdocname=%s', (doctype,), with_desc=1)
+    res = run_sql('SELECT * FROM `sbmDOCTYPE` WHERE sdocname=%s', (doctype,), with_desc=1)
     dump_output += build_table_dump('sbmDOCTYPE', res, ignore_duplicate_insert)
-    res = run_sql('SELECT * FROM sbmCATEGORIES WHERE doctype=%s', (doctype,), with_desc=1)
+    res = run_sql('SELECT * FROM `sbmCATEGORIES` WHERE doctype=%s', (doctype,), with_desc=1)
     dump_output += build_table_dump('sbmCATEGORIES', res, ignore_duplicate_insert)
-#    res = run_sql("SELECT * FROM sbmFIELD WHERE subname like '%%%s'" % (escape_string(doctype),), with_desc=1)
+#    res = run_sql("SELECT * FROM `sbmFIELD` WHERE subname like '%%%s'" % (escape_string(doctype),), with_desc=1)
 #    dump_output += build_table_dump('sbmFIELD', res)
-#    res = run_sql("SELECT * FROM sbmFIELDDESC WHERE  name like '%s%%'" % (escape_string(doctype),), with_desc=1)
+#    res = run_sql("SELECT * FROM `sbmFIELDDESC` WHERE  name like '%s%%'" % (escape_string(doctype),), with_desc=1)
 #    dump_output += build_table_dump('sbmFIELDDESC', res)
-    res = run_sql('SELECT * FROM sbmFUNCTIONS WHERE doctype=%s', (doctype,), with_desc=1)
+    res = run_sql('SELECT * FROM `sbmFUNCTIONS` WHERE doctype=%s', (doctype,), with_desc=1)
     dump_output += build_table_dump('sbmFUNCTIONS', res, ignore_duplicate_insert)
-    res = run_sql('SELECT * FROM sbmIMPLEMENT WHERE docname=%s', (doctype,), with_desc=1)
+    res = run_sql('SELECT * FROM `sbmIMPLEMENT` WHERE docname=%s', (doctype,), with_desc=1)
     dump_output += build_table_dump('sbmIMPLEMENT', res, ignore_duplicate_insert)
-    res = run_sql('SELECT * FROM sbmPARAMETERS WHERE doctype=%s', (doctype,), with_desc=1)
+    res = run_sql('SELECT * FROM `sbmPARAMETERS` WHERE doctype=%s', (doctype,), with_desc=1)
     dump_output += build_table_dump('sbmPARAMETERS', res, ignore_duplicate_insert)
 
     if method == "NAMES":
-        res = run_sql("SELECT * FROM sbmALLFUNCDESCR WHERE function LIKE '%s%%'" % (escape_string(doctype),), with_desc=1)
+        res = run_sql("SELECT * FROM `sbmALLFUNCDESCR` WHERE function LIKE '%s%%'" % (escape_string(doctype),), with_desc=1)
         dump_output += build_table_dump('sbmALLFUNCDESCR', res, ignore_duplicate_insert)
-        res = run_sql("SELECT * FROM sbmFUNDESC WHERE function LIKE '%s%%'" % (escape_string(doctype),), with_desc=1)
+        res = run_sql("SELECT * FROM `sbmFUNDESC` WHERE function LIKE '%s%%'" % (escape_string(doctype),), with_desc=1)
         dump_output += build_table_dump('sbmFUNDESC', res, ignore_duplicate_insert)
-        res = run_sql("SELECT * FROM sbmFIELD WHERE subname LIKE '%%%s'" % (escape_string(doctype),), with_desc=1)
+        res = run_sql("SELECT * FROM `sbmFIELD` WHERE subname LIKE '%%%s'" % (escape_string(doctype),), with_desc=1)
         dump_output += build_table_dump('sbmFIELD', res, ignore_duplicate_insert)
-        res = run_sql("SELECT * FROM sbmFIELDDESC WHERE name LIKE '%s%%'" % (escape_string(doctype),), with_desc=1)
+        res = run_sql("SELECT * FROM `sbmFIELDDESC` WHERE name LIKE '%s%%'" % (escape_string(doctype),), with_desc=1)
         dump_output += build_table_dump('sbmFIELDDESC', res, ignore_duplicate_insert)
     elif method == "RELATIONS":
         res = run_sql("SELECT DISTINCT sbmALLFUNCDESCR.* FROM sbmALLFUNCDESCR, sbmFUNCTIONS WHERE sbmALLFUNCDESCR.function=sbmFUNCTIONS.function and sbmFUNCTIONS.doctype=%s",  \
@@ -184,21 +184,21 @@ def remove_submission(doctype, method=CFG_WEBSUBMIT_DUMPER_DEFAULT_METHOD):
     "Remove submission from database"
     # NOT TESTED
     if method == "NAMES":
-        run_sql("DELETE FROM sbmFUNDESC WHERE function LIKE '%s%%'" % (doctype,))
-        run_sql("DELETE FROM sbmFIELD WHERE subname LIKE '%%%s'" % (doctype,))
-        run_sql("DELETE FROM sbmFIELDDESC WHERE  name LIKE '%s%%'" % (doctype,))
-        run_sql("DELETE FROM sbmALLFUNCDESCR WHERE function LIKE '%s%%'" % (doctype,))
+        run_sql("DELETE FROM `sbmFUNDESC` WHERE function LIKE '%s%%'" % (doctype,))
+        run_sql("DELETE FROM `sbmFIELD` WHERE subname LIKE '%%%s'" % (doctype,))
+        run_sql("DELETE FROM `sbmFIELDDESC` WHERE  name LIKE '%s%%'" % (doctype,))
+        run_sql("DELETE FROM `sbmALLFUNCDESCR` WHERE function LIKE '%s%%'" % (doctype,))
     elif method == "RELATIONS":
         run_sql("DELETE sbmALLFUNCDESCR.* FROM sbmALLFUNCDESCR, sbmFUNCTIONS WHERE sbmALLFUNCDESCR.function=sbmFUNCTIONS.function and sbmFUNCTIONS.doctype=%s", (doctype,))
         run_sql("DELETE sbmFUNDESC.* FROM sbmFUNDESC, sbmFUNCTIONS WHERE sbmFUNDESC.function=sbmFUNCTIONS.function and sbmFUNCTIONS.doctype=%s", (doctype,))
         run_sql("DELETE sbmFIELDDESC.* FROM sbmFIELDDESC, sbmFIELD, sbmIMPLEMENT WHERE sbmFIELD.fidesc=sbmFIELDDESC.name AND sbmFIELD.subname=sbmIMPLEMENT.subname AND sbmIMPLEMENT.docname=%s", (doctype,))
         run_sql("DELETE sbmFIELD.* FROM sbmFIELD, sbmIMPLEMENT WHERE sbmFIELD.subname=sbmIMPLEMENT.subname AND sbmIMPLEMENT.docname=%s", (doctype,))
 
-    run_sql("DELETE FROM sbmDOCTYPE WHERE sdocname=%s", (doctype,))
-    run_sql("DELETE FROM sbmCATEGORIES WHERE doctype=%s", (doctype,))
-    run_sql("DELETE FROM sbmFUNCTIONS WHERE doctype=%s", (doctype,))
-    run_sql("DELETE FROM sbmIMPLEMENT WHERE docname=%s", (doctype,))
-    run_sql("DELETE FROM sbmPARAMETERS WHERE doctype=%s", (doctype,))
+    run_sql("DELETE FROM `sbmDOCTYPE` WHERE sdocname=%s", (doctype,))
+    run_sql("DELETE FROM `sbmCATEGORIES` WHERE doctype=%s", (doctype,))
+    run_sql("DELETE FROM `sbmFUNCTIONS` WHERE doctype=%s", (doctype,))
+    run_sql("DELETE FROM `sbmIMPLEMENT` WHERE docname=%s", (doctype,))
+    run_sql("DELETE FROM `sbmPARAMETERS` WHERE doctype=%s", (doctype,))
 
 re_method_pattern = re.compile("-- Extra:(?P<method>\S*)\s")
 def load_submission(doctype, dump, method=None):
@@ -215,7 +215,7 @@ def load_submission(doctype, dump, method=None):
 
     def guess_dump_has_delete_statements(dump):
         """Guess if given submission dump already contain delete statements"""
-        return "DELETE FROM sbmDOCTYPE WHERE sdocname".lower() in dump.lower()
+        return "DELETE FROM `sbmDOCTYPE` WHERE sdocname".lower() in dump.lower()
 
     if not method:
         method = guess_dump_method(dump)
@@ -256,34 +256,34 @@ def diff_submission(submission1_dump, submission2_dump, verbose=2,
         "Clean one line of the submission"
         updated_line = line
         if ignore_dates:
-            if line.startswith('INSERT INTO sbmFIELD VALUES'):
+            if line.startswith('INSERT INTO `sbmFIELD` VALUES'):
                 args = updated_line.split(",")
                 args[-3] = ''
                 args[-4] = ''
                 updated_line = ','.join(args)
-            elif line.startswith('INSERT INTO sbmFIELDDESC VALUES'):
+            elif line.startswith('INSERT INTO `sbmFIELDDESC` VALUES'):
                 args = updated_line.split(",")
                 args[-4] = ''
                 args[-5] = ''
                 updated_line = ','.join(args)
-            elif line.startswith('INSERT INTO sbmIMPLEMENT VALUES '):
+            elif line.startswith('INSERT INTO `sbmIMPLEMENT` VALUES '):
                 args = updated_line.split(",")
                 args[-6] = ''
                 args[-7] = ''
                 updated_line = ','.join(args)
 
         if ignore_positions:
-            if line.startswith('INSERT INTO sbmFIELD VALUES'):
+            if line.startswith('INSERT INTO `sbmFIELD` VALUES'):
                 args = updated_line.split(",")
                 args[2] = ''
                 updated_line = ','.join(args)
 
         if ignore_pages:
-            if line.startswith('INSERT INTO sbmFIELD VALUES'):
+            if line.startswith('INSERT INTO `sbmFIELD` VALUES'):
                 args = updated_line.split(",")
                 args[1] = ''
                 updated_line = ','.join(args)
-            if line.startswith('INSERT INTO sbmIMPLEMENT VALUES '):
+            if line.startswith('INSERT INTO `sbmIMPLEMENT` VALUES '):
                 args = updated_line.split(",")
                 args[4] = ''
                 updated_line = ','.join(args)

@@ -190,7 +190,7 @@ def record_get_xml(recID, format='xm', decompress=zlib.decompress,
     def get_creation_date(recID, fmt="%Y-%m-%d"):
         "Returns the creation date of the record 'recID'."
         out = ""
-        res = run_sql("SELECT DATE_FORMAT(creation_date,%s) FROM bibrec WHERE id=%s", (fmt, recID), 1)
+        res = run_sql("SELECT DATE_FORMAT(creation_date,%s) FROM `bibrec` WHERE id=%s", (fmt, recID), 1)
         if res:
             out = res[0][0]
         return out
@@ -198,7 +198,7 @@ def record_get_xml(recID, format='xm', decompress=zlib.decompress,
     def get_modification_date(recID, fmt="%Y-%m-%d"):
         "Returns the date of last modification for the record 'recID'."
         out = ""
-        res = run_sql("SELECT DATE_FORMAT(modification_date,%s) FROM bibrec WHERE id=%s", (fmt, recID), 1)
+        res = run_sql("SELECT DATE_FORMAT(modification_date,%s) FROM `bibrec` WHERE id=%s", (fmt, recID), 1)
         if res:
             out = res[0][0]
         return out
@@ -227,7 +227,7 @@ def record_get_xml(recID, format='xm', decompress=zlib.decompress,
         res = None
         if on_the_fly is False:
             # look for cached format existence:
-            query = """SELECT value FROM bibfmt WHERE
+            query = """SELECT value FROM `bibfmt` WHERE
             id_bibrec='%s' AND format='%s'""" % (recID, format)
             res = run_sql(query, None, 1)
         if res and record_exist_p == 1:
@@ -260,7 +260,7 @@ def record_get_xml(recID, format='xm', decompress=zlib.decompress,
                     out += "<datafield tag=\"970\" ind1=\" \" ind2=\" \"><subfield code=\"d\">%d</subfield></datafield>\n" % merged_recid
             else:
                 # controlfields
-                query = "SELECT b.tag,b.value,bb.field_number FROM bib00x AS b, bibrec_bib00x AS bb "\
+                query = "SELECT b.tag,b.value,bb.field_number FROM `bib00x` AS b, bibrec_bib00x AS bb "\
                         "WHERE bb.id_bibrec='%s' AND b.id=bb.id_bibxxx AND b.tag LIKE '00%%' "\
                         "ORDER BY bb.field_number, b.tag ASC" % recID
                 res = run_sql(query)

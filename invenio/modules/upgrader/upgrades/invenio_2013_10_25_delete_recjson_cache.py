@@ -27,7 +27,7 @@ def info():
     return "Delete recjson cache after bibfield config update"
 
 def do_upgrade():
-    run_sql("DELETE FROM bibfmt WHERE format='recjson'")
+    run_sql("DELETE FROM `bibfmt` WHERE format='recjson'")
 
 def estimate():
     return 10

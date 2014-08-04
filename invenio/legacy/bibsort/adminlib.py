@@ -371,14 +371,14 @@ def get_all_available_fields():
     """
     Returns all fields
     """
-    return run_sql("SELECT code FROM field ORDER BY code")
+    return run_sql("SELECT code FROM `field` ORDER BY code")
 
 
 def get_all_available_rnks():
     """
     Returns all ranking methods
     """
-    return run_sql("SELECT name FROM rnkMETHOD ORDER BY name")
+    return run_sql("SELECT name FROM `rnkMETHOD` ORDER BY name")
 
 
 def perform_modifytranslations(ln, bsrID, trans=None, confirm=0):

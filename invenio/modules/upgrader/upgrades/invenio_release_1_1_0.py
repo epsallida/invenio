@@ -60,7 +60,7 @@ def do_upgrade():
 
     # Create tables
     _create_table(tables, "upgrade", """
-        CREATE TABLE IF NOT EXISTS upgrade (
+        CREATE TABLE IF NOT EXISTS `upgrade` (
           upgrade varchar(255) NOT NULL,
           applied DATETIME NOT NULL,
           PRIMARY KEY (upgrade)
@@ -68,7 +68,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "idxWORD17F", """
-        CREATE TABLE IF NOT EXISTS idxWORD17F (
+        CREATE TABLE IF NOT EXISTS `idxWORD17F` (
           id mediumint(9) unsigned NOT NULL auto_increment,
           term varchar(50) default NULL,
           hitlist longblob,
@@ -78,7 +78,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "idxWORD17R", """
-        CREATE TABLE IF NOT EXISTS idxWORD17R (
+        CREATE TABLE IF NOT EXISTS `idxWORD17R` (
           id_bibrec mediumint(9) unsigned NOT NULL,
           termlist longblob,
           type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
@@ -87,7 +87,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "idxWORD18F", """
-        CREATE TABLE IF NOT EXISTS idxWORD18F (
+        CREATE TABLE IF NOT EXISTS `idxWORD18F` (
           id mediumint(9) unsigned NOT NULL auto_increment,
           term varchar(50) default NULL,
           hitlist longblob,
@@ -97,7 +97,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "idxWORD18R", """
-        CREATE TABLE IF NOT EXISTS idxWORD18R (
+        CREATE TABLE IF NOT EXISTS `idxWORD18R` (
           id_bibrec mediumint(9) unsigned NOT NULL,
           termlist longblob,
           type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
@@ -106,7 +106,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "idxPAIR17F", """
-        CREATE TABLE IF NOT EXISTS idxPAIR17F (
+        CREATE TABLE IF NOT EXISTS `idxPAIR17F` (
           id mediumint(9) unsigned NOT NULL auto_increment,
           term varchar(100) default NULL,
           hitlist longblob,
@@ -116,7 +116,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "idxPAIR17R", """
-        CREATE TABLE IF NOT EXISTS idxPAIR17R (
+        CREATE TABLE IF NOT EXISTS `idxPAIR17R` (
           id_bibrec mediumint(9) unsigned NOT NULL,
           termlist longblob,
           type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
@@ -125,7 +125,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "idxPAIR18F", """
-        CREATE TABLE IF NOT EXISTS idxPAIR18F (
+        CREATE TABLE IF NOT EXISTS `idxPAIR18F` (
           id mediumint(9) unsigned NOT NULL auto_increment,
           term varchar(100) default NULL,
           hitlist longblob,
@@ -135,7 +135,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "idxPAIR18R", """
-        CREATE TABLE IF NOT EXISTS idxPAIR18R (
+        CREATE TABLE IF NOT EXISTS `idxPAIR18R` (
           id_bibrec mediumint(9) unsigned NOT NULL,
           termlist longblob,
           type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
@@ -144,7 +144,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "idxPHRASE17F", """
-        CREATE TABLE IF NOT EXISTS idxPHRASE17F (
+        CREATE TABLE IF NOT EXISTS `idxPHRASE17F` (
           id mediumint(9) unsigned NOT NULL auto_increment,
           term text default NULL,
           hitlist longblob,
@@ -154,7 +154,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "idxPHRASE17R", """
-        CREATE TABLE IF NOT EXISTS idxPHRASE17R (
+        CREATE TABLE IF NOT EXISTS `idxPHRASE17R` (
           id_bibrec mediumint(9) unsigned NOT NULL,
           termlist longblob,
           type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
@@ -163,7 +163,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "idxPHRASE18F", """
-        CREATE TABLE IF NOT EXISTS idxPHRASE18F (
+        CREATE TABLE IF NOT EXISTS `idxPHRASE18F` (
           id mediumint(9) unsigned NOT NULL auto_increment,
           term text default NULL,
           hitlist longblob,
@@ -173,7 +173,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "idxPHRASE18R", """
-        CREATE TABLE IF NOT EXISTS idxPHRASE18R (
+        CREATE TABLE IF NOT EXISTS `idxPHRASE18R` (
           id_bibrec mediumint(9) unsigned NOT NULL,
           termlist longblob,
           type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
@@ -182,7 +182,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "bibdocfsinfo", """
-        CREATE TABLE IF NOT EXISTS bibdocfsinfo (
+        CREATE TABLE IF NOT EXISTS `bibdocfsinfo` (
           id_bibdoc mediumint(9) unsigned NOT NULL,
           version tinyint(4) unsigned NOT NULL,
           format varchar(50) NOT NULL,
@@ -204,7 +204,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "userEXT", """
-        CREATE TABLE IF NOT EXISTS userEXT (
+        CREATE TABLE IF NOT EXISTS `userEXT` (
           id varbinary(255) NOT NULL,
           method varchar(50) NOT NULL,
           id_user int(15) unsigned NOT NULL,
@@ -214,7 +214,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "cmtCOLLAPSED", """
-        CREATE TABLE IF NOT EXISTS cmtCOLLAPSED (
+        CREATE TABLE IF NOT EXISTS `cmtCOLLAPSED` (
           id_bibrec int(15) unsigned NOT NULL default '0',
           id_cmtRECORDCOMMENT int(15) unsigned NULL,
           id_user int(15) unsigned NOT NULL,
@@ -231,7 +231,7 @@ def do_upgrade():
           `name` VARCHAR( 256 ) NOT NULL ,
           `flag` SMALLINT( 2 ) NOT NULL DEFAULT  '0' ,
           `lcul` SMALLINT( 2 ) NOT NULL DEFAULT  '0' ,
-          `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+          `last_updated` TIMESTAMP ON UPDATE `CURRENT_TIMESTAMP` NOT NULL DEFAULT CURRENT_TIMESTAMP ,
           INDEX `personid-b` (`personid`) ,
           INDEX `reftable-b` (`bibref_table`) ,
           INDEX `refvalue-b` (`bibref_value`) ,
@@ -320,7 +320,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "bsrMETHOD", """
-        CREATE TABLE IF NOT EXISTS bsrMETHOD (
+        CREATE TABLE IF NOT EXISTS `bsrMETHOD` (
           id mediumint(8) unsigned NOT NULL auto_increment,
           name varchar(20) NOT NULL,
           definition varchar(255) NOT NULL,
@@ -331,7 +331,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "bsrMETHODNAME", """
-        CREATE TABLE IF NOT EXISTS bsrMETHODNAME (
+        CREATE TABLE IF NOT EXISTS `bsrMETHODNAME` (
           id_bsrMETHOD mediumint(8) unsigned NOT NULL,
           ln char(5) NOT NULL default '',
           type char(3) NOT NULL default 'sn',
@@ -341,7 +341,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "bsrMETHODDATA", """
-        CREATE TABLE IF NOT EXISTS bsrMETHODDATA (
+        CREATE TABLE IF NOT EXISTS `bsrMETHODDATA` (
           id_bsrMETHOD mediumint(8) unsigned NOT NULL,
           data_dict longblob,
           data_dict_ordered longblob,
@@ -352,7 +352,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "bsrMETHODDATABUCKET", """
-        CREATE TABLE IF NOT EXISTS bsrMETHODDATABUCKET (
+        CREATE TABLE IF NOT EXISTS `bsrMETHODDATABUCKET` (
           id_bsrMETHOD mediumint(8) unsigned NOT NULL,
           bucket_no tinyint(2) NOT NULL,
           bucket_data longblob,
@@ -363,7 +363,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "collection_bsrMETHOD", """
-        CREATE TABLE IF NOT EXISTS collection_bsrMETHOD (
+        CREATE TABLE IF NOT EXISTS `collection_bsrMETHOD` (
           id_collection mediumint(9) unsigned NOT NULL,
           id_bsrMETHOD mediumint(9) unsigned NOT NULL,
           score tinyint(4) unsigned NOT NULL default '0',
@@ -372,7 +372,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "seqSTORE", """
-        CREATE TABLE IF NOT EXISTS seqSTORE (
+        CREATE TABLE IF NOT EXISTS `seqSTORE` (
           id int(15) NOT NULL auto_increment,
           seq_name varchar(15),
           seq_value varchar(20),
@@ -382,7 +382,7 @@ def do_upgrade():
         """)
 
     _create_table(tables, "webapikey", """
-        CREATE TABLE IF NOT EXISTS webapikey (
+        CREATE TABLE IF NOT EXISTS `webapikey` (
           id varchar(150) NOT NULL,
           secret varchar(150) NOT NULL,
           id_user int(15) NOT NULL,
@@ -408,17 +408,17 @@ def do_upgrade():
         """)
 
     # Insert and alter table queries
-    _run_sql_ignore("INSERT INTO sbmALLFUNCDESCR VALUES ('Set_Embargo','Set an embargo on all the documents of a given record.');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Set_Embargo','date_file');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Set_Embargo','date_format');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('User_is_Record_Owner_or_Curator','curator_role');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('User_is_Record_Owner_or_Curator','curator_flag');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Move_Photos_to_Storage','iconformat');")
-    _run_sql_ignore("INSERT INTO format (name, code, description, content_type, visibility) VALUES ('Podcast', 'xp', 'Sample format suitable for multimedia feeds, such as podcasts', 'application/rss+xml', 0);")
+    _run_sql_ignore("INSERT INTO `sbmALLFUNCDESCR` VALUES ('Set_Embargo','Set an embargo on all the documents of a given record.');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Set_Embargo','date_file');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Set_Embargo','date_format');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('User_is_Record_Owner_or_Curator','curator_role');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('User_is_Record_Owner_or_Curator','curator_flag');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Move_Photos_to_Storage','iconformat');")
+    _run_sql_ignore("INSERT INTO `format` (name, code, description, content_type, visibility) VALUES ('Podcast', 'xp', 'Sample format suitable for multimedia feeds, such as podcasts', 'application/rss+xml', 0);")
     _run_sql_ignore("ALTER TABLE accMAILCOOKIE ADD INDEX expiration (expiration);")
-    _run_sql_ignore("UPDATE sbmFUNDESC SET function='Move_CKEditor_Files_to_Storage' WHERE function='Move_FCKeditor_Files_to_Storage';")
-    _run_sql_ignore("UPDATE sbmALLFUNCDESCR SET function='Move_CKEditor_Files_to_Storage', description='Transfer files attached to the record with the CKEditor' WHERE function='Move_FCKeditor_Files_to_Storage';")
-    _run_sql_ignore("UPDATE sbmFUNCTIONS SET function='Move_CKEditor_Files_to_Storage' WHERE function='Move_FCKeditor_Files_to_Storage';")
+    _run_sql_ignore("UPDATE `sbmFUNDESC` SET function='Move_CKEditor_Files_to_Storage' WHERE function='Move_FCKeditor_Files_to_Storage';")
+    _run_sql_ignore("UPDATE `sbmALLFUNCDESCR` SET function='Move_CKEditor_Files_to_Storage', description='Transfer files attached to the record with the CKEditor' WHERE function='Move_FCKeditor_Files_to_Storage';")
+    _run_sql_ignore("UPDATE `sbmFUNCTIONS` SET function='Move_CKEditor_Files_to_Storage' WHERE function='Move_FCKeditor_Files_to_Storage';")
     _run_sql_ignore("ALTER TABLE schTASK CHANGE proc proc varchar(255) NOT NULL;")
     _run_sql_ignore("ALTER TABLE schTASK ADD sequenceid int(8) NULL default NULL;")
     _run_sql_ignore("ALTER TABLE schTASK ADD INDEX sequenceid (sequenceid);")
@@ -428,32 +428,32 @@ def do_upgrade():
     _run_sql_ignore("ALTER TABLE session CHANGE session_object session_object longblob;")
     _run_sql_ignore("ALTER TABLE session CHANGE session_expiry session_expiry datetime NOT NULL default '0000-00-00 00:00:00';")
     _run_sql_ignore("ALTER TABLE oaiREPOSITORY CHANGE setSpec setSpec varchar(255) NOT NULL default 'GLOBAL_SET';")
-    _run_sql_ignore("UPDATE oaiREPOSITORY SET setSpec='GLOBAL_SET' WHERE setSpec='';")
+    _run_sql_ignore("UPDATE `oaiREPOSITORY` SET setSpec='GLOBAL_SET' WHERE setSpec='';")
     _run_sql_ignore("ALTER TABLE user_query_basket ADD COLUMN alert_desc TEXT DEFAULT NULL AFTER alert_name;")
-    _run_sql_ignore("INSERT INTO sbmALLFUNCDESCR VALUES ('Link_Records','Link two records toghether via MARC');")
-    _run_sql_ignore("INSERT INTO sbmALLFUNCDESCR VALUES ('Video_Processing',NULL);")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Link_Records','edsrn');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Link_Records','edsrn2');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Link_Records','directRelationship');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Link_Records','reverseRelationship');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Link_Records','keep_original_edsrn2');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Video_Processing','aspect');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Video_Processing','batch_template');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Video_Processing','title');")
-    _run_sql_ignore("INSERT INTO sbmALLFUNCDESCR VALUES ('Set_RN_From_Sysno', 'Set the value of global rn variable to the report number identified by sysno (recid)');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Set_RN_From_Sysno','edsrn');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Set_RN_From_Sysno','rep_tags');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Set_RN_From_Sysno','record_search_pattern');")
-    _run_sql_ignore("UPDATE externalcollection SET name='INSPIRE' where name='SPIRES HEP';")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Report_Number_Generation','initialvalue');")
-    _run_sql_ignore("INSERT INTO sbmALLFUNCDESCR VALUES ('Notify_URL','Access URL, possibly to post content');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Notify_URL','url');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Notify_URL','data');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Notify_URL','admin_emails');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Notify_URL','content_type');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Notify_URL','attempt_times');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Notify_URL','attempt_sleeptime');")
-    _run_sql_ignore("INSERT INTO sbmFUNDESC VALUES ('Notify_URL','user');")
+    _run_sql_ignore("INSERT INTO `sbmALLFUNCDESCR` VALUES ('Link_Records','Link two records toghether via MARC');")
+    _run_sql_ignore("INSERT INTO `sbmALLFUNCDESCR` VALUES ('Video_Processing',NULL);")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Link_Records','edsrn');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Link_Records','edsrn2');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Link_Records','directRelationship');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Link_Records','reverseRelationship');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Link_Records','keep_original_edsrn2');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Video_Processing','aspect');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Video_Processing','batch_template');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Video_Processing','title');")
+    _run_sql_ignore("INSERT INTO `sbmALLFUNCDESCR` VALUES ('Set_RN_From_Sysno', 'Set the value of global rn variable to the report number identified by sysno (recid)');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Set_RN_From_Sysno','edsrn');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Set_RN_From_Sysno','rep_tags');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Set_RN_From_Sysno','record_search_pattern');")
+    _run_sql_ignore("UPDATE `externalcollection` SET name='INSPIRE' where name='SPIRES HEP';")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Report_Number_Generation','initialvalue');")
+    _run_sql_ignore("INSERT INTO `sbmALLFUNCDESCR` VALUES ('Notify_URL','Access URL, possibly to post content');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Notify_URL','url');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Notify_URL','data');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Notify_URL','admin_emails');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Notify_URL','content_type');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Notify_URL','attempt_times');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Notify_URL','attempt_sleeptime');")
+    _run_sql_ignore("INSERT INTO `sbmFUNDESC` VALUES ('Notify_URL','user');")
     _run_sql_ignore("ALTER TABLE bibfmt DROP COLUMN id;")
     _run_sql_ignore("ALTER TABLE bibfmt ADD PRIMARY KEY (id_bibrec, format);")
     _run_sql_ignore("ALTER TABLE bibfmt DROP KEY id_bibrec;")
@@ -525,7 +525,7 @@ def _create_table(tables, tblname, ddl_stmt):
     if tblname not in tables:
         run_sql(ddl_stmt)
     else:
-        res = run_sql('SHOW CREATE TABLE %s' % tblname)
+        res = run_sql('SHOW CREATE TABLE `%s`' % tblname)
         your_ddl = res[0][1]
         warnings.warn("Table '%s' already exists but was not supposed to."
                " Please manually compare the CREATE-statment used to create"

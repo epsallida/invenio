@@ -413,7 +413,7 @@ def touch_oai_set(setSpec):
 
     Note: the last_updated time is in localtime to the server.
     """
-    run_sql("UPDATE oaiREPOSITORY SET last_updated=NOW() WHERE setSpec=%s", (setSpec, ))
+    run_sql("UPDATE `oaiREPOSITORY` SET last_updated=NOW() WHERE setSpec=%s", (setSpec, ))
 
 def modify_oai_set(oai_set_id, oai_set_name, oai_set_spec,
                    oai_set_collection, oai_set_description,
@@ -437,7 +437,7 @@ def modify_oai_set(oai_set_id, oai_set_name, oai_set_spec,
                          'p3=' + oai_set_p3  + ';' + \
                          'f3=' + oai_set_f3  + ';' + \
                          'm3=' + oai_set_m3  + ';'
-        run_sql("""UPDATE oaiREPOSITORY SET
+        run_sql("""UPDATE `oaiREPOSITORY` SET
                             setName=%s,
                             setSpec=%s,
                             setCollection=%s,
@@ -495,7 +495,7 @@ def add_oai_set(oai_set_name, oai_set_spec, oai_set_collection,
                          'f3=' + oai_set_f3  + ';' + \
                          'm3=' + oai_set_m3  + ';'
 
-        run_sql("""INSERT INTO oaiREPOSITORY (id, setName, setSpec,
+        run_sql("""INSERT INTO `oaiREPOSITORY` (id, setName, setSpec,
                            setCollection, setDescription, setDefinition,
                            setRecList, p1, f1, m1, p2, f2, m2, p3, f3, m3)
                          VALUES (0, %s, %s, %s, %s, %s, NULL, %s, %s, %s,
@@ -513,7 +513,7 @@ def delete_oai_set(oai_set_id):
     """"""
 
     try:
-        run_sql("DELETE FROM oaiREPOSITORY WHERE id=%s", (oai_set_id,))
+        run_sql("DELETE FROM `oaiREPOSITORY` WHERE id=%s", (oai_set_id,))
         return (1, "")
     except StandardError as e:
         register_exception(alert_admin=True)

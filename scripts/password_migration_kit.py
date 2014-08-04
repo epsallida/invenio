@@ -102,7 +102,7 @@ def __get_admin_pwd():
     return run_sql(query)[0][0]
 
 def __migrate_passwords_from_null_to_empty_quotes():
-    query = "UPDATE user SET password='' WHERE password IS NULL"
+    query = "UPDATE `user` SET password='' WHERE password IS NULL"
     try:
         run_sql(query)
     except Exception as msg:
@@ -120,7 +120,7 @@ def __migrate_column_from_string_to_blob():
     return True
 
 def __encrypt_password():
-    query = "UPDATE user SET password=AES_ENCRYPT(email,password)"
+    query = "UPDATE `user` SET password=AES_ENCRYPT(email,password)"
     try:
         run_sql(query)
     except Exception as msg:
@@ -140,7 +140,7 @@ def __check_admin(admin_pwd):
         return False
 
 def __creating_backup():
-    query = "CREATE TABLE user_backup (PRIMARY KEY id (id)) SELECT id, email, password, note, settings, nickname, last_login FROM user"
+    query = "CREATE TABLE `user_backup` (PRIMARY KEY id (id)) SELECT id, email, password, note, settings, nickname, last_login FROM user"
     try:
         run_sql(query)
     except Exception as msg:
@@ -158,7 +158,7 @@ def __removing_backup():
     return True
 
 def __restoring_from_backup():
-    query = "UPDATE user SET password=''"
+    query = "UPDATE `user` SET password=''"
     try:
         run_sql(query)
     except Exception as msg:
@@ -170,7 +170,7 @@ def __restoring_from_backup():
     except Exception as msg:
         print('The query "%s" produced: %s' % (query, msg))
         return False
-    query = "UPDATE user,user_backup SET user.password=user_backup.password WHERE user.id=user_backup.id AND user.nickname=user_backup.nickname"
+    query = "UPDATE `user`, `user_backup` SET user.password=user_backup.password WHERE user.id=user_backup.id AND user.nickname=user_backup.nickname"
     try:
         run_sql(query)
     except Exception as msg:

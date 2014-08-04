@@ -52,7 +52,7 @@ def can_launch_bibupload(taskid):
     if taskid == 0:
         return True
 
-    sql = 'SELECT status FROM schTASK WHERE id = %s'
+    sql = 'SELECT status FROM `schTASK` WHERE id = %s'
     if run_sql(sql, [str(taskid)])[0][0] != 'DONE':
         return False
     return True

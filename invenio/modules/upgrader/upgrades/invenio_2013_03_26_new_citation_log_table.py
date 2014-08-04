@@ -28,7 +28,7 @@ def info():
 
 def do_upgrade():
     run_sql("""
-CREATE TABLE IF NOT EXISTS rnkCITATIONLOG (
+CREATE TABLE IF NOT EXISTS `rnkCITATIONLOG` (
   id int(11) unsigned NOT NULL auto_increment,
   citee int(10) unsigned NOT NULL,
   citer int(10) unsigned NOT NULL,

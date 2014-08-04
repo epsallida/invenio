@@ -24,13 +24,13 @@ from intbitset import intbitset
 
 
 def get_self_cited_by(recid):
-    sql = "SELECT citer FROM rnkSELFCITEDICT WHERE citee = %s"
+    sql = "SELECT citer FROM `rnkSELFCITEDICT` WHERE citee = %s"
     return intbitset(run_sql(sql, [recid]))
 
 
 def get_self_cited_by_list(recids):
     in_sql = ','.join('%s' for dummy in recids)
-    sql = "SELECT citee, citer FROM rnkSELFCITEDICT WHERE citee IN (%s)"
+    sql = "SELECT citee, citer FROM `rnkSELFCITEDICT` WHERE citee IN (%s)"
     cites = {}
     for citee, citer in run_sql(sql % in_sql, recids):
         cites.setdefault(citee, set()).add(citer)
@@ -38,13 +38,13 @@ def get_self_cited_by_list(recids):
 
 
 def get_self_refers_to(recid):
-    sql = "SELECT citee FROM rnkSELFCITEDICT WHERE citer = %s"
+    sql = "SELECT citee FROM `rnkSELFCITEDICT` WHERE citer = %s"
     return intbitset(run_sql(sql, [recid]))
 
 
 def get_self_refers_to_list(recids):
     in_sql = ','.join('%s' for dummy in recids)
-    sql = "SELECT citer, citee FROM rnkSELFCITEDICT WHERE citer IN (%s)"
+    sql = "SELECT citer, citee FROM `rnkSELFCITEDICT` WHERE citer IN (%s)"
     refs = {}
     for citer, citee in run_sql(sql % in_sql, recids):
         refs.setdefault(citer, set()).add(citee)

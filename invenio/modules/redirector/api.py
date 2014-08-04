@@ -65,7 +65,7 @@ def register_redirection(label, plugin, parameters=None, update_on_duplicate=Fal
     @note: parameters are going to be serialized to JSON before being stored
         in the DB. Hence only JSON-serializable values should be put there.
     """
-    if run_sql("SELECT label FROM goto WHERE label=%s", (label, )):
+    if run_sql("SELECT label FROM `goto` WHERE label=%s", (label, )):
         raise ValueError("%s label already exists" % label)
     if plugin not in REDIRECT_METHODS:
         raise ValueError("%s plugin does not exist" % plugin)
@@ -79,7 +79,7 @@ def register_redirection(label, plugin, parameters=None, update_on_duplicate=Fal
     try:
         run_sql("INSERT INTO goto(label, plugin, parameters, creation_date, modification_date) VALUES(%s, %s, %s, NOW(), NOW())", (label, plugin, json_parameters))
     except IntegrityError:
-        if run_sql("SELECT label FROM goto WHERE label=%s", (label,)):
+        if run_sql("SELECT label FROM `goto` WHERE label=%s", (label,)):
             if update_on_duplicate:
                 update_redirection(label=label, plugin=plugin, parameters=parameters)
             else:
@@ -111,7 +111,7 @@ def update_redirection(label, plugin, parameters=None):
     @note: parameters are going to be serialized to JSON before being stored
         in the DB. Hence only JSON-serializable values should be put there.
     """
-    if not run_sql("SELECT label FROM goto WHERE label=%s", (label, )):
+    if not run_sql("SELECT label FROM `goto` WHERE label=%s", (label, )):
         raise ValueError("%s label does not already exist" % label)
     if plugin not in REDIRECT_METHODS:
         raise ValueError("%s plugin does not exist" % plugin)
@@ -122,7 +122,7 @@ def update_redirection(label, plugin, parameters=None):
         json_parameters = json.dumps(parameters)
     except Exception as err:
         raise ValueError("The parameters %s do not specify a valid JSON map: %s" % (parameters, err))
-    run_sql("UPDATE goto SET plugin=%s, parameters=%s, modification_date=NOW() WHERE label=%s", (plugin, json_parameters, label))
+    run_sql("UPDATE `goto` SET plugin=%s, parameters=%s, modification_date=NOW() WHERE label=%s", (plugin, json_parameters, label))
 
 def drop_redirection(label):
     """
@@ -131,7 +131,7 @@ def drop_redirection(label):
     @param label: the uniquely identifying label for this redirection
     @type label: string
     """
-    run_sql("DELETE FROM goto WHERE label=%s", (label, ))
+    run_sql("DELETE FROM `goto` WHERE label=%s", (label, ))
 
 
 def get_redirection_data(label):
@@ -154,7 +154,7 @@ def get_redirection_data(label):
 
     @raises ValueError: in case the label does not exist.
     """
-    res = run_sql("SELECT label, plugin, parameters, creation_date, modification_date FROM goto WHERE label=%s", (label, ))
+    res = run_sql("SELECT label, plugin, parameters, creation_date, modification_date FROM `goto` WHERE label=%s", (label, ))
     if res:
         return {'label': res[0][0],
                  'plugin': REDIRECT_METHODS[res[0][1]],
@@ -169,4 +169,4 @@ def is_redirection_label_already_taken(label):
     """
     Returns True in case the given label is already taken.
     """
-    return bool(run_sql("SELECT label FROM goto WHERE label=%s", (label,)))
+    return bool(run_sql("SELECT label FROM `goto` WHERE label=%s", (label,)))

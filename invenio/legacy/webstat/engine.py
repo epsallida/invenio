@@ -86,7 +86,7 @@ def get_keyevent_trend_collection_population(args, return_sql=False):
     if args.get('collection', 'All') == 'All':
         sql_query_g = _get_sql_query("creation_date", args['granularity'],
                         "bibrec")
-        sql_query_i = "SELECT COUNT(id) FROM bibrec WHERE creation_date < %s"
+        sql_query_i = "SELECT COUNT(id) FROM `bibrec` WHERE creation_date < %s"
         initial_quantity = run_sql(sql_query_i, (lower, ))[0][0]
         return _get_keyevent_trend(args, sql_query_g, initial_quantity=initial_quantity,
                             return_sql=return_sql, sql_text=
@@ -97,7 +97,7 @@ def get_keyevent_trend_collection_population(args, return_sql=False):
         if len(ids) == 0:
             return []
         g = get_keyevent_trend_new_records(args, return_sql, True)
-        sql_query_i = "SELECT id FROM bibrec WHERE creation_date < %s"
+        sql_query_i = "SELECT id FROM `bibrec` WHERE creation_date < %s"
         if return_sql:
             return "Previous count: %s<br />Current count: %s" % (sql_query_i % lower, g)
         initial_quantity = len(filter(lambda x: x[0] in ids, run_sql(sql_query_i, (lower, ))))
@@ -180,7 +180,7 @@ def get_keyevent_trend_search_frequency(args, return_sql=False):
     """
 
     return _get_keyevent_trend(args, _get_sql_query("date", args["granularity"],
-                "query INNER JOIN user_query ON id=id_query"),
+                "query INNER JOIN `user_query` ON id=id_query"),
                             return_sql=return_sql)
 
 
@@ -234,12 +234,12 @@ def get_keyevent_trend_search_type_distribution(args, return_sql=False):
     """
     # SQL to determine all simple searches:
     simple = _get_sql_query("date", args["granularity"],
-                    "query INNER JOIN user_query ON id=id_query",
+                    "query INNER JOIN `user_query` ON id=id_query",
                     conditions="urlargs LIKE '%%p=%%'")
 
     # SQL to determine all advanced searches:
     advanced = _get_sql_query("date", args["granularity"],
-                    "query INNER JOIN user_query ON id=id_query",
+                    "query INNER JOIN `user_query` ON id=id_query",
                     conditions="urlargs LIKE '%%as=1%%'")
 
     # Compute the trend for both types
@@ -394,7 +394,7 @@ def get_keyevent_loan_statistics(args, return_sql=False):
     lower = _to_datetime(args['t_start'], args['t_format']).isoformat()
     upper = _to_datetime(args['t_end'], args['t_format']).isoformat()
 
-    sql_from = "FROM crcLOAN l "
+    sql_from = "FROM `crcLOAN` l "
     sql_where = "WHERE loaned_on > %s AND loaned_on < %s "
 
     param = [lower, upper]
@@ -407,7 +407,7 @@ def get_keyevent_loan_statistics(args, return_sql=False):
         param.append(args['item_status'])
     if 'publication_date' in args and args['publication_date'] != '':
         sql_where += "AND l.id_bibrec IN ( SELECT brb.id_bibrec \
-FROM bibrec_bib26x brb, bib26x b WHERE brb.id_bibxxx = b.id AND tag='260__c' \
+FROM `bibrec_bib26x` brb, bib26x b WHERE brb.id_bibxxx = b.id AND tag='260__c' \
 AND value LIKE %s)"
         param.append('%%%s%%' % args['publication_date'])
     if 'creation_date' in args and args['creation_date'] != '':
@@ -425,7 +425,7 @@ AND value LIKE %s)"
         if items_in_book_coll == "":
             total_items_sql = 0
         else:
-            total_items_sql = "SELECT COUNT(*) FROM crcITEM WHERE %s" % \
+            total_items_sql = "SELECT COUNT(*) FROM `crcITEM` WHERE %s" % \
                                     items_in_book_coll
     else: # The rest take all the items
         total_items_sql = "SELECT COUNT(*) FROM crcITEM"
@@ -522,7 +522,7 @@ def get_keyevent_loan_lists(args, return_sql=False, limit=50):
         param.append(args['loan_period'])
     if 'publication_date' in args and args['publication_date'] != '':
         sql_where.append("i.id_bibrec IN ( SELECT brb.id_bibrec \
-FROM bibrec_bib26x brb, bib26x b WHERE brb.id_bibxxx = b.id AND tag='260__c' \
+FROM `bibrec_bib26x` brb, bib26x b WHERE brb.id_bibxxx = b.id AND tag='260__c' \
 AND value LIKE %s)")
         param.append('%%%s%%' % args['publication_date'])
     if 'creation_date' in args and args['creation_date'] != '':
@@ -545,24 +545,24 @@ AND value LIKE %s)")
         check_num_loans += "COUNT(*) <= %s" % args['max_loans']
     # Optimized to get all the data in only one query (not call get_fieldvalues several times)
     mldocs_sql = "SELECT i.id_bibrec, COUNT(*) \
-FROM crcLOAN l, crcITEM i%s %s l.barcode=i.barcode AND type = 'normal' AND \
+FROM `crcLOAN` l, crcITEM i%s %s l.barcode=i.barcode AND type = 'normal' AND \
 loaned_on > %%s AND loaned_on < %%s GROUP BY i.id_bibrec %s" % \
         (sql_from, sql_where, check_num_loans)
     limit_n = ""
     if limit > 0:
         limit_n = "LIMIT %d" % limit
-    nldocs_sql = "SELECT id_bibrec, COUNT(*) FROM crcITEM i%s %s \
-barcode NOT IN (SELECT id_bibrec FROM crcLOAN WHERE loaned_on > %%s AND \
+    nldocs_sql = "SELECT id_bibrec, COUNT(*) FROM `crcITEM` i%s %s \
+barcode NOT IN (SELECT id_bibrec FROM `crcLOAN` WHERE loaned_on > %%s AND \
 loaned_on < %%s AND type = 'normal') GROUP BY id_bibrec ORDER BY COUNT(*) DESC %s" % \
         (sql_from, sql_where, limit_n)
 
-    items_sql = "SELECT id_bibrec, COUNT(*) items FROM crcITEM GROUP BY id_bibrec"
-    creation_date_sql = "SELECT creation_date FROM bibrec WHERE id=%s"
-    authors_sql = "SELECT bx.value FROM bib10x bx, bibrec_bib10x bibx \
+    items_sql = "SELECT id_bibrec, COUNT(*) items FROM `crcITEM` GROUP BY id_bibrec"
+    creation_date_sql = "SELECT creation_date FROM `bibrec` WHERE id=%s"
+    authors_sql = "SELECT bx.value FROM `bib10x` bx, bibrec_bib10x bibx \
 WHERE bx.id = bibx.id_bibxxx AND bx.tag LIKE '100__a' AND bibx.id_bibrec=%s"
-    title_sql = "SELECT GROUP_CONCAT(bx.value SEPARATOR ' ') value FROM bib24x bx, bibrec_bib24x bibx \
+    title_sql = "SELECT GROUP_CONCAT(bx.value SEPARATOR ' ') value FROM `bib24x` bx, bibrec_bib24x bibx \
 WHERE bx.id = bibx.id_bibxxx AND bx.tag LIKE %s AND bibx.id_bibrec=%s GROUP BY bibx.id_bibrec"
-    edition_sql = "SELECT bx.value FROM bib25x bx, bibrec_bib25x AS bibx \
+    edition_sql = "SELECT bx.value FROM `bib25x` bx, bibrec_bib25x AS bibx \
 WHERE bx.id = bibx.id_bibxxx AND bx.tag LIKE '250__a' AND bibx.id_bibrec=%s"
 
     if return_sql:
@@ -630,7 +630,7 @@ def get_keyevent_renewals_lists(args, return_sql=False, limit=50):
     lower = _to_datetime(args['t_start'], args['t_format']).isoformat()
     upper = _to_datetime(args['t_end'], args['t_format']).isoformat()
 
-    sql_from = "FROM crcLOAN l, crcITEM i "
+    sql_from = "FROM `crcLOAN` l, crcITEM i "
     sql_where = "WHERE loaned_on > %s AND loaned_on < %s AND i.barcode = l.barcode "
     param = [lower, upper]
     if 'udc' in args and args['udc'] != '':
@@ -689,7 +689,7 @@ def get_keyevent_returns_table(args, return_sql=False):
     upper = _to_datetime(args['t_end'], args['t_format']).isoformat()
 
     # Overdue returns:
-    sql = "SELECT COUNT(*) FROM crcLOAN l WHERE loaned_on > %s AND loaned_on < %s AND \
+    sql = "SELECT COUNT(*) FROM `crcLOAN` l WHERE loaned_on > %s AND loaned_on < %s AND \
 due_date < NOW() AND (returned_on IS NULL OR returned_on > due_date)"
 
     if return_sql:
@@ -778,7 +778,7 @@ def get_keyevent_ill_requests_statistics(args, return_sql=False):
     lower = _to_datetime(args['t_start'], args['t_format']).isoformat()
     upper = _to_datetime(args['t_end'], args['t_format']).isoformat()
 
-    sql_from = "FROM crcILLREQUEST ill "
+    sql_from = "FROM `crcILLREQUEST` ill "
     sql_where = "WHERE period_of_interest_from > %s AND period_of_interest_from < %s "
 
     param = [lower, upper]
@@ -862,7 +862,7 @@ def get_keyevent_ill_requests_lists(args, return_sql=False, limit=50):
     lower = _to_datetime(args['t_start'], args['t_format']).isoformat()
     upper = _to_datetime(args['t_end'], args['t_format']).isoformat()
 
-    sql_from = "FROM crcILLREQUEST ill "
+    sql_from = "FROM `crcILLREQUEST` ill "
     sql_where = "WHERE status != '%s' AND request_date > %%s AND request_date < %%s " \
                     % CFG_BIBCIRCULATION_ITEM_STATUS_CANCELLED
 
@@ -986,7 +986,7 @@ def get_keyevent_items_statistics(args, return_sql=False):
     lower = _to_datetime(args['t_start'], args['t_format']).isoformat()
     upper = _to_datetime(args['t_end'], args['t_format']).isoformat()
 
-    sql_from = "FROM crcITEM i "
+    sql_from = "FROM `crcITEM` i "
     sql_where = "WHERE "
 
     param = []
@@ -1027,7 +1027,7 @@ def get_keyevent_items_lists(args, return_sql=False, limit=50):
     @type args['status']: str
     """
 
-    sql_from = "FROM crcITEM i "
+    sql_from = "FROM `crcITEM` i "
     sql_where = "WHERE "
 
     param = []
@@ -1102,7 +1102,7 @@ def get_keyevent_loan_request_statistics(args, return_sql=False):
     lower = _to_datetime(args['t_start'], args['t_format']).isoformat()
     upper = _to_datetime(args['t_end'], args['t_format']).isoformat()
 
-    sql_from = "FROM crcLOANREQUEST lr "
+    sql_from = "FROM `crcLOANREQUEST` lr "
     sql_where = "WHERE request_date > %s AND request_date < %s "
 
     param = [lower, upper]
@@ -1161,7 +1161,7 @@ def get_keyevent_loan_request_lists(args, return_sql=False, limit=50):
     lower = _to_datetime(args['t_start'], args['t_format']).isoformat()
     upper = _to_datetime(args['t_end'], args['t_format']).isoformat()
 
-    sql_from = "FROM crcLOANREQUEST lr "
+    sql_from = "FROM `crcLOANREQUEST` lr "
     sql_where = "WHERE request_date > %s AND request_date < %s "
 
     param = [lower, upper]
@@ -1217,8 +1217,8 @@ def get_keyevent_user_statistics(args, return_sql=False):
     lower = _to_datetime(args['t_start'], args['t_format']).isoformat()
     upper = _to_datetime(args['t_end'], args['t_format']).isoformat()
 
-    sql_from_ill = "FROM crcILLREQUEST ill "
-    sql_from_loan = "FROM crcLOAN l "
+    sql_from_ill = "FROM `crcILLREQUEST` ill "
+    sql_from_loan = "FROM `crcLOAN` l "
     sql_where_ill = "WHERE request_date > %s AND request_date < %s "
     sql_where_loan = "WHERE loaned_on > %s AND loaned_on < %s "
     param = (lower, upper, lower, upper)
@@ -1260,9 +1260,9 @@ def get_keyevent_user_lists(args, return_sql=False, limit=50):
     else:
         limit = ""
     sql = "SELECT user, SUM(trans) FROM \
-((SELECT id_crcBORROWER user, COUNT(*) trans FROM crcILLREQUEST ill \
+((SELECT id_crcBORROWER user, COUNT(*) trans FROM `crcILLREQUEST` ill \
 WHERE request_date > %%s AND request_date < %%s GROUP BY id_crcBORROWER) UNION \
-(SELECT id_crcBORROWER user, COUNT(*) trans FROM crcLOAN l WHERE loaned_on > %%s AND \
+(SELECT id_crcBORROWER user, COUNT(*) trans FROM `crcLOAN` l WHERE loaned_on > %%s AND \
 loaned_on < %%s GROUP BY id_crcBORROWER)) res GROUP BY user ORDER BY SUM(trans) DESC \
 %s" % (limit)
 
@@ -1307,7 +1307,7 @@ def get_keyevent_snapshot_bibsched_status():
     @return: Information about the number of tasks in the different status modes.
     @type: [(str, int)]
     """
-    sql = "SELECT status, COUNT(status) FROM schTASK GROUP BY status"
+    sql = "SELECT status, COUNT(status) FROM `schTASK` GROUP BY status"
     return [(x[0], int(x[1])) for x in run_sql(sql)]
 
 
@@ -1320,7 +1320,7 @@ def get_keyevent_snapshot_sessions():
     """
     # SQL to retrieve sessions in the Guests
     sql = "SELECT COUNT(session_expiry) " + \
-          "FROM session INNER JOIN user ON uid=id " + \
+          "FROM `session` INNER JOIN `user` ON uid=id " + \
           "WHERE email = '' AND " + \
           "session_expiry-%d < unix_timestamp() AND " \
           % WEBSTAT_SESSION_LENGTH + \
@@ -1329,7 +1329,7 @@ def get_keyevent_snapshot_sessions():
 
     # SQL to retrieve sessions in the Logged in users
     sql = "SELECT COUNT(session_expiry) " + \
-          "FROM session INNER JOIN user ON uid=id " + \
+          "FROM `session` INNER JOIN `user` ON uid=id " + \
           "WHERE email <> '' AND " + \
           "session_expiry-%d < unix_timestamp() AND " \
           % WEBSTAT_SESSION_LENGTH + \
@@ -1356,12 +1356,12 @@ def get_keyevent_bibcirculation_report(freq='yearly'):
         datefrom = datetime.date.today().strftime("%Y-01-01 00:00:00")
     loans, renewals = run_sql("SELECT COUNT(*), \
 SUM(number_of_renewals) \
-FROM crcLOAN WHERE loaned_on > %s", (datefrom, ))[0]
-    returns = run_sql("SELECT COUNT(*) FROM crcLOAN \
+FROM `crcLOAN` WHERE loaned_on > %s", (datefrom, ))[0]
+    returns = run_sql("SELECT COUNT(*) FROM `crcLOAN` \
 WHERE returned_on!='0000-00-00 00:00:00' and loaned_on > %s", (datefrom, ))[0][0]
-    illrequests = run_sql("SELECT COUNT(*) FROM crcILLREQUEST WHERE request_date > %s",
+    illrequests = run_sql("SELECT COUNT(*) FROM `crcILLREQUEST` WHERE request_date > %s",
                           (datefrom, ))[0][0]
-    holdrequest = run_sql("SELECT COUNT(*) FROM crcLOANREQUEST WHERE request_date > %s",
+    holdrequest = run_sql("SELECT COUNT(*) FROM `crcLOANREQUEST` WHERE request_date > %s",
                           (datefrom, ))[0][0]
     return (loans, renewals, returns, illrequests, holdrequest)
 
@@ -1375,13 +1375,13 @@ def get_last_updates():
     """
     try:
         last_index = convert_datestruct_to_dategui(convert_datetext_to_datestruct \
-                    (str(run_sql('SELECT last_updated FROM idxINDEX WHERE \
+                    (str(run_sql('SELECT last_updated FROM `idxINDEX` WHERE \
                     name="global"')[0][0])))
         last_rank = convert_datestruct_to_dategui(convert_datetext_to_datestruct \
-                    (str(run_sql('SELECT last_updated FROM rnkMETHOD ORDER BY \
+                    (str(run_sql('SELECT last_updated FROM `rnkMETHOD` ORDER BY \
                             last_updated DESC LIMIT 1')[0][0])))
         last_sort = convert_datestruct_to_dategui(convert_datetext_to_datestruct \
-                    (str(run_sql('SELECT last_updated FROM bsrMETHODDATA ORDER BY \
+                    (str(run_sql('SELECT last_updated FROM `bsrMETHODDATA` ORDER BY \
                             last_updated DESC LIMIT 1')[0][0])))
         file_coll_last_update = open(CFG_CACHE_LAST_UPDATED_TIMESTAMP_FILE, 'r')
         last_coll = convert_datestruct_to_dategui(convert_datetext_to_datestruct \
@@ -1415,18 +1415,18 @@ def get_list_link(process, category=None):
     @type: string
     """
     if process == "index":
-        list_registers = run_sql('SELECT id FROM bibrec WHERE \
+        list_registers = run_sql('SELECT id FROM `bibrec` WHERE \
                             modification_date > (SELECT last_updated FROM \
                             idxINDEX WHERE name=%s)', (category,))
     elif process == "rank":
-        list_registers = run_sql('SELECT id FROM bibrec WHERE \
+        list_registers = run_sql('SELECT id FROM `bibrec` WHERE \
                             modification_date > (SELECT last_updated FROM \
                             rnkMETHOD WHERE name=%s)', (category,))
     elif process == "sort":
-        list_registers = run_sql('SELECT id FROM bibrec WHERE \
+        list_registers = run_sql('SELECT id FROM `bibrec` WHERE \
                             modification_date > (SELECT last_updated FROM \
                             bsrMETHODDATA WHERE id_bsrMETHOD=(SELECT id \
-                            FROM bsrMETHOD WHERE name=%s))', (category,))
+                            FROM `bsrMETHOD` WHERE name=%s))', (category,))
     elif process == "collect":
         file_coll_last_update = open(CFG_CACHE_LAST_UPDATED_TIMESTAMP_FILE, 'r')
         coll_last_update = file_coll_last_update.read()
@@ -1479,7 +1479,7 @@ def get_ingestion_matching_records(request=None, limit=25):
         return records
 
     # order by most recent modification date
-    query = 'SELECT id FROM bibrec WHERE '
+    query = 'SELECT id FROM `bibrec` WHERE '
     for r in records:
         query += 'id="' + str(r) + '" OR '
     query = query[:len(query)-4]
@@ -1502,23 +1502,23 @@ def get_record_ingestion_status(record_id):
     @type: int
     """
     counter = 0
-    counter += run_sql('SELECT COUNT(*) FROM bibrec WHERE \
+    counter += run_sql('SELECT COUNT(*) FROM `bibrec` WHERE \
                         id=%s AND modification_date > (SELECT last_updated FROM \
                         idxINDEX WHERE name="global")', (record_id, ))[0][0]
 
-    counter += run_sql('SELECT COUNT(*) FROM bibrec WHERE \
+    counter += run_sql('SELECT COUNT(*) FROM `bibrec` WHERE \
                         id=%s AND modification_date > (SELECT last_updated FROM \
                         rnkMETHOD ORDER BY last_updated DESC LIMIT 1)', \
                         (record_id, ))[0][0]
 
-    counter = run_sql('SELECT COUNT(*) FROM bibrec WHERE \
+    counter = run_sql('SELECT COUNT(*) FROM `bibrec` WHERE \
                         id=%s AND modification_date > (SELECT last_updated FROM \
                         bsrMETHODDATA ORDER BY last_updated DESC LIMIT 1)', \
                         (record_id, ))[0][0]
     file_coll_last_update = open(CFG_CACHE_LAST_UPDATED_TIMESTAMP_FILE, 'r')
     last_coll = file_coll_last_update.read()
     file_coll_last_update.close()
-    counter += run_sql('SELECT COUNT(*) FROM bibrec WHERE \
+    counter += run_sql('SELECT COUNT(*) FROM `bibrec` WHERE \
                         id=%s AND \
                         modification_date >\
                          %s', (record_id, last_coll,))[0][0]
@@ -1550,38 +1550,38 @@ def get_specific_ingestion_status(record_id, process, method=None):
                    Last time the method was updated if it is waiting
     @type: date/time string
     """
-    exist = run_sql('SELECT COUNT(*) FROM bibrec WHERE id=%s', (record_id, ))
+    exist = run_sql('SELECT COUNT(*) FROM `bibrec` WHERE id=%s', (record_id, ))
     if exist[0][0] == 0:
         return "REG not in DB"
 
     if process == "index":
-        list_registers = run_sql('SELECT COUNT(*) FROM bibrec WHERE \
+        list_registers = run_sql('SELECT COUNT(*) FROM `bibrec` WHERE \
                                 id=%s AND modification_date > (SELECT \
-                                last_updated FROM idxINDEX WHERE name=%s)',
+                                last_updated FROM `idxINDEX` WHERE name=%s)',
                                 (record_id, method,))
-        last_time = run_sql ('SELECT last_updated FROM idxINDEX WHERE \
+        last_time = run_sql ('SELECT last_updated FROM `idxINDEX` WHERE \
                             name=%s', (method,))[0][0]
     elif process == "rank":
-        list_registers = run_sql('SELECT COUNT(*) FROM bibrec WHERE \
+        list_registers = run_sql('SELECT COUNT(*) FROM `bibrec` WHERE \
                                 id=%s AND modification_date > (SELECT \
-                                last_updated FROM rnkMETHOD WHERE name=%s)',
+                                last_updated FROM `rnkMETHOD` WHERE name=%s)',
                                 (record_id, method,))
-        last_time = run_sql ('SELECT last_updated FROM rnkMETHOD WHERE \
+        last_time = run_sql ('SELECT last_updated FROM `rnkMETHOD` WHERE \
                             name=%s', (method,))[0][0]
     elif process == "sort":
-        list_registers = run_sql('SELECT COUNT(*) FROM bibrec WHERE \
+        list_registers = run_sql('SELECT COUNT(*) FROM `bibrec` WHERE \
                                 id=%s AND modification_date > (SELECT \
-                                last_updated FROM bsrMETHODDATA WHERE \
-                                id_bsrMETHOD=(SELECT id FROM bsrMETHOD \
+                                last_updated FROM `bsrMETHODDATA` WHERE \
+                                id_bsrMETHOD=(SELECT id FROM `bsrMETHOD` \
                                 WHERE name=%s))', (record_id, method,))
-        last_time = run_sql ('SELECT last_updated FROM bsrMETHODDATA WHERE \
-                            id_bsrMETHOD=(SELECT id FROM bsrMETHOD \
+        last_time = run_sql ('SELECT last_updated FROM `bsrMETHODDATA` WHERE \
+                            id_bsrMETHOD=(SELECT id FROM `bsrMETHOD` \
                             WHERE name=%s)', (method,))[0][0]
     elif process == "collect":
         file_coll_last_update = open(CFG_CACHE_LAST_UPDATED_TIMESTAMP_FILE, 'r')
         last_time = file_coll_last_update.read()
         file_coll_last_update.close()
-        list_registers = run_sql('SELECT COUNT(*) FROM bibrec WHERE id=%s \
+        list_registers = run_sql('SELECT COUNT(*) FROM `bibrec` WHERE id=%s \
                                 AND modification_date > %s',
                                 (record_id, last_time,))
     # no results means the register is up to date
@@ -1616,7 +1616,7 @@ def get_record_last_modification (record_id):
     @type: string
     """
     return convert_datestruct_to_dategui(convert_datetext_to_datestruct \
-                    (str(run_sql('SELECT modification_date FROM bibrec \
+                    (str(run_sql('SELECT modification_date FROM `bibrec` \
                     WHERE id=%s', (record_id,))[0][0])))
 
 def get_general_status():
@@ -1627,7 +1627,7 @@ def get_general_status():
     @return: number of processes not updated
     @type: int
     """
-    return run_sql('SELECT COUNT(*) FROM bibrec WHERE \
+    return run_sql('SELECT COUNT(*) FROM `bibrec` WHERE \
                     modification_date > (SELECT last_updated FROM \
                     idxINDEX WHERE name="global")')[0][0]
 
@@ -1788,7 +1788,7 @@ def get_customevent_dump(args):
         # Get the event col names
         try:
             event_cols[event_id] = cPickle.loads(run_sql(
-                    "SELECT cols FROM staEVENT WHERE id = %s",
+                    "SELECT cols FROM `staEVENT` WHERE id = %s",
                     (event_id, ))[0][0])
         except TypeError:
             event_cols[event_id] = ["Unnamed"]
@@ -1813,7 +1813,7 @@ def get_customevent_table(event_id):
     event table name.
     """
     res = run_sql(
-        "SELECT CONCAT('staEVENT', number) FROM staEVENT WHERE id = %s", (event_id, ))
+        "SELECT CONCAT('staEVENT', number) FROM `staEVENT` WHERE id = %s", (event_id, ))
     try:
         return res[0][0]
     except IndexError:
@@ -1826,7 +1826,7 @@ def get_customevent_args(event_id):
     Helper function that for a certain event id retrives the corresponding
     event argument (column) names.
     """
-    res = run_sql("SELECT cols FROM staEVENT WHERE id = %s", (event_id, ))
+    res = run_sql("SELECT cols FROM `staEVENT` WHERE id = %s", (event_id, ))
     try:
         if res[0][0]:
             return cPickle.loads(res[0][0])
@@ -2764,7 +2764,7 @@ def _get_item_doctype():
     """Returns all the possible types of document for an item"""
     dts = []
     for dat in run_sql("""SELECT DISTINCT(request_type)
-        FROM crcILLREQUEST ORDER BY request_type ASC"""):
+        FROM `crcILLREQUEST` ORDER BY request_type ASC"""):
         dts.append((dat[0], dat[0]))
     return dts
 
@@ -2772,7 +2772,7 @@ def _get_item_doctype():
 def _get_request_statuses():
     """Returns all the possible statuses for an ILL request"""
     dts = []
-    for dat in run_sql("SELECT DISTINCT(status) FROM crcILLREQUEST ORDER BY status ASC"):
+    for dat in run_sql("SELECT DISTINCT(status) FROM `crcILLREQUEST` ORDER BY status ASC"):
         dts.append((dat[0], dat[0]))
     return dts
 
@@ -2780,7 +2780,7 @@ def _get_request_statuses():
 def _get_libraries():
     """Returns all the possible libraries"""
     dts = []
-    for dat in run_sql("SELECT name FROM crcLIBRARY ORDER BY name ASC"):
+    for dat in run_sql("SELECT name FROM `crcLIBRARY` ORDER BY name ASC"):
         if not CFG_CERN_SITE or not "CERN" in dat[0]: # do not add internal libraries for CERN site
             dts.append((dat[0], dat[0]))
     return dts
@@ -2789,7 +2789,7 @@ def _get_libraries():
 def _get_loan_periods():
     """Returns all the possible loan periods for an item"""
     dts = []
-    for dat in run_sql("SELECT DISTINCT(loan_period) FROM crcITEM ORDER BY loan_period ASC"):
+    for dat in run_sql("SELECT DISTINCT(loan_period) FROM `crcITEM` ORDER BY loan_period ASC"):
         dts.append((dat[0], dat[0]))
     return dts
 
@@ -2798,10 +2798,10 @@ def _get_tag_name(tag):
     """
     For a specific MARC tag, it returns the human-readable name
     """
-    res = run_sql("SELECT name FROM tag WHERE value LIKE %s", ('%' + tag + '%',))
+    res = run_sql("SELECT name FROM `tag` WHERE value LIKE %s", ('%' + tag + '%',))
     if res:
         return res[0][0]
-    res = run_sql("SELECT name FROM tag WHERE value LIKE %s", ('%' + tag[:-1] + '%',))
+    res = run_sql("SELECT name FROM `tag` WHERE value LIKE %s", ('%' + tag[:-1] + '%',))
     if res:
         return res[0][0]
     return ''
@@ -2814,7 +2814,7 @@ def _get_collection_recids_for_sql_query(coll):
 
 def _check_udc_value_where():
     return "id_bibrec IN (SELECT brb.id_bibrec \
-FROM bibrec_bib08x brb, bib08x b WHERE brb.id_bibxxx = b.id AND tag='080__a' \
+FROM `bibrec_bib08x` brb, bib08x b WHERE brb.id_bibxxx = b.id AND tag='080__a' \
 AND value LIKE %s) "
 
 def _get_udc_truncated(udc):

@@ -41,7 +41,7 @@ def get_creation_date(sysno, fmt="%Y-%m-%dT%H:%M:%SZ"):
     @rtype: string
     """
     out = ""
-    res = run_sql("SELECT DATE_FORMAT(creation_date, '%%Y-%%m-%%d %%H:%%i:%%s') FROM bibrec WHERE id=%s", (sysno,), 1)
+    res = run_sql("SELECT DATE_FORMAT(creation_date, '%%Y-%%m-%%d %%H:%%i:%%s') FROM `bibrec` WHERE id=%s", (sysno,), 1)
     if res[0][0]:
         out = localtime_to_utc(res[0][0], fmt)
     return out
@@ -56,7 +56,7 @@ def get_modification_date(sysno, fmt="%Y-%m-%dT%H:%M:%SZ"):
     @rtype: string
     """
     out = ""
-    res = run_sql("SELECT DATE_FORMAT(modification_date,'%%Y-%%m-%%d %%H:%%i:%%s') FROM bibrec WHERE id=%s", (sysno,), 1)
+    res = run_sql("SELECT DATE_FORMAT(modification_date,'%%Y-%%m-%%d %%H:%%i:%%s') FROM `bibrec` WHERE id=%s", (sysno,), 1)
     if res and res[0][0]:
         out = localtime_to_utc(res[0][0], fmt)
     return out
@@ -69,7 +69,7 @@ def get_tag_from_name(name):
     @param name: name for which we want to retrieve the tag
     @return: a tag corresponding to X{name} or None if not found
     """
-    res = run_sql("SELECT value FROM tag WHERE name LIKE %s", (name,))
+    res = run_sql("SELECT value FROM `tag` WHERE name LIKE %s", (name,))
     if len(res)>0:
         return res[0][0]
     else:
@@ -83,7 +83,7 @@ def get_tags_from_name(name):
     @param name: name for which we want to retrieve the tags
     @return: list of tags corresponding to X{name} or None if not found
     """
-    res = run_sql("SELECT value FROM tag WHERE name LIKE %s ORDER BY value", (name,))
+    res = run_sql("SELECT value FROM `tag` WHERE name LIKE %s ORDER BY value", (name,))
     if len(res)>0:
         return list(res[0])
     else:
@@ -96,7 +96,7 @@ def tag_exists_for_name(name):
     @param name: name for which we want to check if a tag exist
     @return: True if a tag exist for X{name} or False
     """
-    rows = run_sql("SELECT value FROM tag WHERE name LIKE %s", (name,))
+    rows = run_sql("SELECT value FROM `tag` WHERE name LIKE %s", (name,))
     if len(rows) > 0:
         return True
     return False
@@ -108,7 +108,7 @@ def get_name_from_tag(tag):
     @param tag: tag to consider
     @return: a name corresponding to X{tag}
     """
-    res = run_sql("SELECT name FROM tag WHERE value LIKE %s", (tag,))
+    res = run_sql("SELECT name FROM `tag` WHERE value LIKE %s", (tag,))
     if len(res)>0:
         return res[0][0]
     else:
@@ -121,7 +121,7 @@ def name_exists_for_tag(tag):
     @param tag: tag for which we want to check if a name exist
     @return: True if a name exist for X{tag} or False
     """
-    rows = run_sql("SELECT name FROM tag WHERE value LIKE %s", (tag,))
+    rows = run_sql("SELECT name FROM `tag` WHERE value LIKE %s", (tag,))
     if len(rows) > 0:
         return True
     return False
@@ -198,7 +198,7 @@ def remove_output_format(code):
     if output_format_id is None:
         return
 
-    query = "DELETE FROM formatname WHERE id_format='%s'" % output_format_id
+    query = "DELETE FROM `formatname` WHERE id_format='%s'" % output_format_id
     run_sql(query)
     query = "DELETE FROM format WHERE id='%s'" % output_format_id
     run_sql(query)
@@ -234,7 +234,7 @@ def set_output_format_description(code, description):
     if output_format_id is None:
         add_output_format(code, "", description)
 
-    query = "UPDATE format SET description=%s WHERE code=%s"
+    query = "UPDATE `format` SET description=%s WHERE code=%s"
     params = (description, code.lower())
     run_sql(query, params)
 
@@ -268,7 +268,7 @@ def set_output_format_visibility(code, visibility):
     if output_format_id is None:
         add_output_format(code, "", "", "", visibility)
 
-    query = "UPDATE format SET visibility=%s WHERE code=%s"
+    query = "UPDATE `format` SET visibility=%s WHERE code=%s"
     params = (visibility, code.lower())
     run_sql(query, params)
 
@@ -323,7 +323,7 @@ def set_output_format_content_type(code, content_type):
         # add one if not exist (should not happen)
         add_output_format(code, "", "", content_type)
 
-    query = "UPDATE format SET content_type=%s WHERE code=%s"
+    query = "UPDATE `format` SET content_type=%s WHERE code=%s"
     params = (content_type, code.lower())
     run_sql(query, params)
 
@@ -358,7 +358,7 @@ def get_output_format_names(code):
     if len(res) > 0:
         out['generic'] = res[0][0]
 
-    query = "SELECT type, ln, value FROM formatname WHERE id_format='%s'" % output_format_id
+    query = "SELECT type, ln, value FROM `formatname` WHERE id_format='%s'" % output_format_id
     res = run_sql(query)
     for row in res:
         if row[0] == 'sn' or row[0] == 'ln':
@@ -395,7 +395,7 @@ def set_output_format_name(code, name, lang="generic", type='ln'):
 
     if lang =="generic" and type.lower()=="ln":
         # Save inside format table for main name
-        query = "UPDATE format SET name=%s WHERE code=%s"
+        query = "UPDATE `format` SET name=%s WHERE code=%s"
         params = (name, code.lower())
         run_sql(query, params)
     else:
@@ -415,7 +415,7 @@ def change_output_format_code(old_code, new_code):
     if output_format_id is None:
         return
 
-    query = "UPDATE format SET code=%s WHERE id=%s"
+    query = "UPDATE `format` SET code=%s WHERE id=%s"
     params = (new_code.lower(), output_format_id)
     run_sql(query, params)
 
@@ -468,7 +468,7 @@ def get_preformatted_record_date(recID, of):
     else:
         run_on_slave = True # for other formats, we can use DB slave
     # Try to fetch preformatted record
-    query = "SELECT last_updated FROM bibfmt WHERE id_bibrec='%s' AND format='%s'" % (recID, of)
+    query = "SELECT last_updated FROM `bibfmt` WHERE id_bibrec='%s' AND format='%s'" % (recID, of)
     res = run_sql(query, run_on_slave=run_on_slave)
     if res:
         # record 'recID' is formatted in 'of', so return it
@@ -515,12 +515,12 @@ def save_preformatted_record(recID, of, res, needs_2nd_pass=False,
 
 ##         if get_format_from_db(output_format) is None:
 ##             #Add new
-##             query = "UPDATE TABLE format "
+##             query = "UPDATE `TABLE` format "
 ##         else:
 ##             #Update
-##             query = "UPDATE TABLE format "
+##             query = "UPDATE `TABLE` format "
 
-##     query = "UPDATE TABLE format "
+##     query = "UPDATE `TABLE` format "
 ##     res = run_sql(query)
 ##     for row in res:
 ##         if not row[0] in output_formats:

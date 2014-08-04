@@ -25,11 +25,11 @@ def info():
     return "New Run_PlotExtractor WebSubmit function"
 
 def do_upgrade():
-    run_sql("""INSERT INTO sbmALLFUNCDESCR VALUES ('Run_PlotExtractor','Run PlotExtractor on the current record')""")
-    run_sql("""INSERT INTO sbmFUNDESC VALUES ('Run_PlotExtractor','with_docname')""")
-    run_sql("""INSERT INTO sbmFUNDESC VALUES ('Run_PlotExtractor','with_doctype')""")
-    run_sql("""INSERT INTO sbmFUNDESC VALUES ('Run_PlotExtractor','with_docformat')""")
-    run_sql("""INSERT INTO sbmFUNDESC VALUES ('Run_PlotExtractor','extract_plots_switch_file')""")
+    run_sql("""INSERT INTO `sbmALLFUNCDESCR` VALUES ('Run_PlotExtractor','Run PlotExtractor on the current record')""")
+    run_sql("""INSERT INTO `sbmFUNDESC` VALUES ('Run_PlotExtractor','with_docname')""")
+    run_sql("""INSERT INTO `sbmFUNDESC` VALUES ('Run_PlotExtractor','with_doctype')""")
+    run_sql("""INSERT INTO `sbmFUNDESC` VALUES ('Run_PlotExtractor','with_docformat')""")
+    run_sql("""INSERT INTO `sbmFUNDESC` VALUES ('Run_PlotExtractor','extract_plots_switch_file')""")
 
 def estimate():
     """  Estimate running time of upgrade in seconds (optional). """

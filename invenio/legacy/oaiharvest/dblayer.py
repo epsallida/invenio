@@ -233,7 +233,7 @@ def get_entry_logs_size(oai_src_id):
 
 
 def delete_holdingpen_entry(hpupdate_id):
-    query = "DELETE FROM bibHOLDINGPEN WHERE changeset_id=%s"
+    query = "DELETE FROM `bibHOLDINGPEN` WHERE changeset_id=%s"
     run_sql(query, (hpupdate_id, ))
 
 
@@ -244,7 +244,7 @@ def get_holdingpen_day_fragment(year, month, day, limit, start, filter_key):
     filtersql = ""
     if filter_key != "":
         filtersql = " and oai_id like '%%%s%%' " % (filter_key, )
-    query = "SELECT oai_id, changeset_date, changeset_id FROM bibHOLDINGPEN WHERE changeset_date > '%i-%i-%i 00:00:00' and changeset_date <= '%i-%i-%i 23:59:59' %s ORDER BY changeset_date LIMIT %i, %i" % (
+    query = "SELECT oai_id, changeset_date, changeset_id FROM `bibHOLDINGPEN` WHERE changeset_date > '%i-%i-%i 00:00:00' and changeset_date <= '%i-%i-%i 23:59:59' %s ORDER BY changeset_date LIMIT %i, %i" % (
         year, month, day, year, month, day, filtersql, start, limit)
     query_results = run_sql(query)
     return query_results
@@ -257,7 +257,7 @@ def get_holdingpen_day_size(year, month, day, filter_key):
     filtersql = ""
     if filter_key != "":
         filtersql = " and oai_id like '%%%s%%' " % (filter_key, )
-    query = "SELECT count(*) FROM bibHOLDINGPEN WHERE year(changeset_date) = '%i' and month(changeset_date) = '%i' and day(changeset_date) = '%i' %s" % (
+    query = "SELECT count(*) FROM `bibHOLDINGPEN` WHERE year(changeset_date) = '%i' and month(changeset_date) = '%i' and day(changeset_date) = '%i' %s" % (
         year, month, day, filtersql)
     query_results = run_sql(query)
     return int(query_results[0][0])
@@ -306,5 +306,5 @@ def get_holdingpen_entry_details(hpupdate_id):
     Returning the detials of the Holding Pen entry, the result of this function is a tuple:
     (oai_id, record_id,  date_inserted, content)
     """
-    query = "SELECT oai_id, id_bibrec, changeset_date, changeset_xml FROM bibHOLDINGPEN WHERE changeset_id=%s"
+    query = "SELECT oai_id, id_bibrec, changeset_date, changeset_xml FROM `bibHOLDINGPEN` WHERE changeset_id=%s"
     return run_sql(query, (hpupdate_id,))[0]

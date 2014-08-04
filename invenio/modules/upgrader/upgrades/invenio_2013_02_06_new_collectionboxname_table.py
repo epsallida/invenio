@@ -26,7 +26,7 @@ def info():
 
 def do_upgrade():
     run_sql("""
-CREATE TABLE IF NOT EXISTS collectionboxname (
+CREATE TABLE IF NOT EXISTS `collectionboxname` (
   id_collection mediumint(9) unsigned NOT NULL,
   ln char(5) NOT NULL default '',
   type char(1) NOT NULL default 'r',

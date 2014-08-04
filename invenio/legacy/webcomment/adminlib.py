@@ -53,7 +53,7 @@ def get_nb_reviews(recID, count_deleted=True):
     if count_deleted is True, deleted reviews are also counted
     """
     query = """SELECT count(*)
-            FROM cmtRECORDCOMMENT c
+            FROM `cmtRECORDCOMMENT` c
             WHERE c.id_bibrec = %s and c.star_score > 0
             """
 
@@ -71,7 +71,7 @@ def get_nb_comments(recID, count_deleted=True):
     if count_deleted is True, deleted comments are also counted
     """
     query = """SELECT count(*)
-            FROM cmtRECORDCOMMENT c
+            FROM `cmtRECORDCOMMENT` c
             WHERE c.id_bibrec = %s and c.star_score = 0
             """
 
@@ -366,7 +366,7 @@ def query_get_comments(uid, cmtID, recID, reviews, ln, abuse=False, user_collect
                       c.status, c.nb_abuse_reports,
                       %s
                       u.email, u.nickname
-               FROM cmtRECORDCOMMENT c LEFT JOIN user u
+               FROM `cmtRECORDCOMMENT` c LEFT JOIN `user` u
                                        ON c.id_user = u.id
                %s
                ORDER BY c.nb_abuse_reports DESC, c.nb_votes_yes DESC, c.date_creation
@@ -436,7 +436,7 @@ def query_get_hot(comments, ln, top, user_collections, collection):
                DATE_FORMAT(max(c.date_creation), '%%Y-%%m-%%d %%H:%%i:%%S') as date_last_comment,
                count(distinct c.id_user) as users,
                count(*) as count
-               FROM cmtRECORDCOMMENT c
+               FROM `cmtRECORDCOMMENT` c
                %s
                GROUP BY c.id_bibrec
                ORDER BY count(*) DESC
@@ -482,7 +482,7 @@ def query_get_latest(comments, ln, top, user_collections, collection):
                       c.nb_abuse_reports,
                       %s
                       u.nickname
-                      FROM cmtRECORDCOMMENT c LEFT JOIN user u
+                      FROM `cmtRECORDCOMMENT` c LEFT JOIN `user` u
                       ON c.id_user = u.id
                %s
                ORDER BY c.date_creation DESC
@@ -627,7 +627,7 @@ def query_suppress_abuse_report(comID):
     """ suppress abuse report for a given comment
     @return: integer 1 if successful, integer 0 if not
     """
-    query = "UPDATE cmtRECORDCOMMENT SET nb_abuse_reports=0, status='ap' WHERE id=%s"
+    query = "UPDATE `cmtRECORDCOMMENT` SET nb_abuse_reports=0, status='ap' WHERE id=%s"
     params = (comID,)
     res = run_sql(query, params)
     return int(res)
@@ -637,7 +637,7 @@ def query_delete_comment_mod(comID):
     delete comment with id comID
     @return: integer 1 if successful, integer 0 if not
     """
-    query1 = "UPDATE cmtRECORDCOMMENT SET status='dm' WHERE id=%s"
+    query1 = "UPDATE `cmtRECORDCOMMENT` SET status='dm' WHERE id=%s"
     params1 = (comID,)
     res1 = run_sql(query1, params1)
     return int(res1)
@@ -647,7 +647,7 @@ def query_delete_comment_auth(comID):
     delete comment with id comID
     @return: integer 1 if successful, integer 0 if not
     """
-    query1 = "UPDATE cmtRECORDCOMMENT SET status='da' WHERE id=%s"
+    query1 = "UPDATE `cmtRECORDCOMMENT` SET status='da' WHERE id=%s"
     params1 = (comID,)
     res1 = run_sql(query1, params1)
     return int(res1)
@@ -657,14 +657,14 @@ def query_undel_single_comment(comID):
     undelete comment with id comID
     @return: integer 1 if successful, integer 0 if not
     """
-    query = "UPDATE cmtRECORDCOMMENT SET status='ok' WHERE id=%s"
+    query = "UPDATE `cmtRECORDCOMMENT` SET status='ok' WHERE id=%s"
     params = (comID,)
     res = run_sql(query, params)
     return int(res)
 
 def check_user_is_author(user_id, com_id):
     """ Check if the user is the author of the given comment """
-    res = run_sql("SELECT id, id_user FROM cmtRECORDCOMMENT WHERE id=%s and id_user=%s", (str(com_id), str(user_id)))
+    res = run_sql("SELECT id, id_user FROM `cmtRECORDCOMMENT` WHERE id=%s and id_user=%s", (str(com_id), str(user_id)))
     if res:
         return 1
     return 0
@@ -676,15 +676,15 @@ def migrate_comments_populate_threads_index():
     are displayed correctly.
     """
     # Update WebComment comments
-    res = run_sql("SELECT id FROM cmtRECORDCOMMENT WHERE reply_order_cached_data is NULL")
+    res = run_sql("SELECT id FROM `cmtRECORDCOMMENT` WHERE reply_order_cached_data is NULL")
     for row in res:
         reply_order_cached_data = get_reply_order_cache_data(row[0])
-        run_sql("UPDATE cmtRECORDCOMMENT set reply_order_cached_data=%s WHERE id=%s",
+        run_sql("UPDATE `cmtRECORDCOMMENT` set reply_order_cached_data=%s WHERE id=%s",
                 (reply_order_cached_data, row[0]))
 
     # Update WebBasket comments
-    res = run_sql("SELECT id FROM bskRECORDCOMMENT WHERE reply_order_cached_data is NULL")
+    res = run_sql("SELECT id FROM `bskRECORDCOMMENT` WHERE reply_order_cached_data is NULL")
     for row in res:
         reply_order_cached_data = get_reply_order_cache_data(row[0])
-        run_sql("UPDATE cmtRECORDCOMMENT set reply_order_cached_data=%s WHERE id=%s",
+        run_sql("UPDATE `cmtRECORDCOMMENT` set reply_order_cached_data=%s WHERE id=%s",
                 (reply_order_cached_data, row[0]))

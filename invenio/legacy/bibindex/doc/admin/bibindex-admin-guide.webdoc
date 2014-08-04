@@ -191,7 +191,7 @@ CFG_SOLR_URL = http://localhost:8983/solr
 <p>Third, Solr is set to index fulltext:</p>
 <blockquote>
 <pre>
-UPDATE idxINDEX SET indexer='SOLR' WHERE name='fulltext'
+UPDATE `idxINDEX` SET indexer='SOLR' WHERE name='fulltext'
 </pre>
 </blockquote>
 
@@ -254,7 +254,7 @@ to shape are commands like: (assuming the problem is with the index ID
 
 <blockquote>
 <pre>
-  $ echo "DELETE FROM idxWORD01R WHERE type='TEMPORARY' or type='FUTURE';" | \
+  $ echo "DELETE FROM `idxWORD01R` WHERE type='TEMPORARY' or type='FUTURE';" | \
     /opt/invenio/bin/dbexec
 </pre>
 </blockquote>
@@ -280,7 +280,7 @@ browsable while the indexes are being rebuilt. The steps to perform are:</p>
 <blockquote>
 <pre>
   $ bibindex --reindex -f50000 -wcollection # reindex the collection index (fast)
-  $ echo "UPDATE collection SET reclist=NULL;" | \
+  $ echo "UPDATE `collection` SET reclist=NULL;" | \
     /opt/invenio/bin/dbexec # clean collection cache
   $ webcoll -f # recreate the collection cache
   $ bibsched # run the two above-submitted tasks
@@ -307,7 +307,7 @@ browsable while the indexes are being rebuilt. The steps to perform are:</p>
   $ cd invenio-0.92.1 # source dir
   $ grep rnkWORD ./modules/miscutil/sql/tabbibclean.sql | \
     /opt/invenio/bin/dbexec # truncate rank indexes
-  $ echo "UPDATE rnkMETHOD SET last_updated='0000-00-00 00:00:00';" | \
+  $ echo "UPDATE `rnkMETHOD` SET last_updated='0000-00-00 00:00:00';" | \
     /opt/invenio/bin/dbexec # rewind the last ranking time
 </pre>
 </blockquote></p>

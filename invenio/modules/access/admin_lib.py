@@ -1021,7 +1021,7 @@ def perform_modifyaccountstatus(req, userID, email_user_pattern, limit_to, maxpa
     output = ""
     if res:
         if res[0][2] in [0, "0", None]:
-            res2 = run_sql("UPDATE user SET note=1 WHERE id=%s", (userID, ))
+            res2 = run_sql("UPDATE `user` SET note=1 WHERE id=%s", (userID, ))
             output += """<b><span class="info">The account '%s' has been activated.</span></b>""" % res[0][1]
             if CFG_ACCESS_CONTROL_NOTIFY_USER_ABOUT_ACTIVATION == 1:
                 emailsent = send_account_activated_message(res[0][1], res[0][1], '*****')
@@ -1031,7 +1031,7 @@ def perform_modifyaccountstatus(req, userID, email_user_pattern, limit_to, maxpa
                     output += """<br /><b><span class="info">Could not send an email to the owner of the account.</span></b>"""
 
         elif res[0][2] in [1, "1"]:
-            res2 = run_sql("UPDATE user SET note=0 WHERE id=%s", (userID, ))
+            res2 = run_sql("UPDATE `user` SET note=0 WHERE id=%s", (userID, ))
             output += """<b><span class="info">The account '%s' has been set inactive.</span></b>""" % res[0][1]
     else:
         output += '<b><span class="info">The account id given does not exist.</span></b>'
@@ -1167,12 +1167,12 @@ def perform_modifylogindata(req, userID, nickname='', email='', password='', cal
             if res:
                 output += '<b><span class="info">Sorry, the specified nickname is already used.</span></b>'
             else:
-                res = run_sql("UPDATE user SET email=%s WHERE id=%s", (email, userID))
+                res = run_sql("UPDATE `user` SET email=%s WHERE id=%s", (email, userID))
                 if password:
-                    res = run_sql("UPDATE user SET password=AES_ENCRYPT(email,%s) WHERE id=%s", (password, userID))
+                    res = run_sql("UPDATE `user` SET password=AES_ENCRYPT(email,%s) WHERE id=%s", (password, userID))
                 else:
                     output += '<b><span class="info">Password not modified.</span></b> '
-                res = run_sql("UPDATE user SET nickname=%s WHERE id=%s", (nickname, userID))
+                res = run_sql("UPDATE `user` SET nickname=%s WHERE id=%s", (nickname, userID))
                 output += '<b><span class="info">Nickname/email and/or password  modified.</span></b>'
         elif confirm in [1, "1"]:
             output += '<b><span class="info">Please specify an valid email-address.</span></b>'
@@ -1276,9 +1276,9 @@ def perform_modifyapikeydata(req, userID, keyID='', status='' , callback='yes', 
     subtitle = """<a name="4"></a>4. Edit REST API Keys.&nbsp;&nbsp;&nbsp;<small>[<a title="See guide" href="%s/help/admin/webaccess-admin-guide#4">?</a>]</small>""" % CFG_SITE_SECURE_URL
 
     if confirm in [1, "1"]:
-        run_sql("UPDATE webapikey SET status=%s WHERE id=%s", (status, keyID))
+        run_sql("UPDATE `webapikey` SET status=%s WHERE id=%s", (status, keyID))
 
-    res = run_sql("SELECT id, description, status FROM webapikey WHERE id_user=%s", (userID, ))
+    res = run_sql("SELECT id, description, status FROM `webapikey` WHERE id_user=%s", (userID, ))
     output = ""
     if res:
         for key_info in res:
@@ -1679,7 +1679,11 @@ def perform_delegate_adduserrole(req, id_role=0, email_user_pattern='', id_user=
                 # users that are connected
                 try:
                     users2 = run_sql("""SELECT DISTINCT u.id, u.email
+<<<<<<< HEAD
                     FROM user u LEFT JOIN user_accROLE ur ON u.id = ur.id_user
+=======
+                    FROM `user` u LEFT JOIN `user_accROLE` ur ON u.id = ur.id_user
+>>>>>>> 53be1c7... general: postgres fixes
                     WHERE ur.id_accROLE = %s AND u.email RLIKE %s
                     ORDER BY u.email """,  (id_role, email_user_pattern))
                 except OperationalError:
@@ -2326,7 +2330,7 @@ def perform_adduserrole(req, id_role='0', email_user_pattern='', id_user='0', co
             # users that are connected
             try:
                 users2 = run_sql("""SELECT DISTINCT u.id, u.email
-                FROM user u LEFT JOIN user_accROLE ur ON u.id = ur.id_user
+                FROM `user` u LEFT JOIN `user_accROLE` ur ON u.id = ur.id_user
                 WHERE ur.id_accROLE = %s AND u.email RLIKE %s
                 ORDER BY u.email """, (id_role, email_user_pattern))
             except OperationalError:
@@ -2581,7 +2585,11 @@ def perform_deleteuserrole(req, id_role='0', id_user='0', reverse=0, confirm=0):
         adminarea = 5
         # show only if user is connected to a role, get users connected to roles
         users = run_sql("""SELECT DISTINCT(u.id), u.email, u.note
+<<<<<<< HEAD
         FROM user u LEFT JOIN user_accROLE ur
+=======
+        FROM `user` u LEFT JOIN `user_accROLE` ur
+>>>>>>> 53be1c7... general: postgres fixes
         ON u.id = ur.id_user
         WHERE ur.id_accROLE != 'NULL' AND u.email != ''
         ORDER BY u.email """)

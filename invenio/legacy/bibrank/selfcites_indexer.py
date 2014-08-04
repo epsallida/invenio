@@ -170,7 +170,7 @@ def fetch_references(recid):
     We need to store the references to make sure that when we do incremental
     updates of the table, we update all the related records properly
     """
-    sql = "SELECT `references` FROM rnkSELFCITES WHERE id_bibrec = %s"
+    sql = "SELECT `references` FROM `rnkSELFCITES` WHERE id_bibrec = %s"
     try:
         references = run_sql(sql, (recid, ))[0][0]
     except IndexError:
@@ -195,7 +195,7 @@ def get_precomputed_self_cites_list(recids):
 
 def get_precomputed_self_cites(recid):
     """Fetch pre-computed self-cites data for given record"""
-    sql = "SELECT count FROM rnkSELFCITES WHERE id_bibrec = %s"
+    sql = "SELECT count FROM `rnkSELFCITES` WHERE id_bibrec = %s"
     try:
         r = run_sql(sql, (recid, ))[0][0]
     except IndexError:
@@ -273,7 +273,7 @@ def store_record(recid, authors):
 
     Returns true if the database has been modified
     """
-    sql = 'SELECT authorid FROM rnkRECORDSCACHE WHERE id_bibrec = %s'
+    sql = 'SELECT authorid FROM `rnkRECORDSCACHE` WHERE id_bibrec = %s'
     rows = run_sql(sql, (recid, ))
     old_authors = set(r[0] for r in rows)
 
@@ -302,8 +302,8 @@ def get_author_coauthors_list(personids, config):
     cluster_threshold = config['friends_threshold']
     in_sql = ','.join('%s' for r in personids)
     coauthors = (r[0] for r in run_sql("""
-        SELECT a.authorid FROM rnkRECORDSCACHE as a
-        JOIN rnkRECORDSCACHE as b ON a.id_bibrec = b.id_bibrec
+        SELECT a.authorid FROM `rnkRECORDSCACHE` as a
+        JOIN `rnkRECORDSCACHE` as b ON a.id_bibrec = b.id_bibrec
         WHERE b.authorid IN (%s)
         GROUP BY a.authorid
         HAVING count(a.authorid) >= %s""" % (in_sql, cluster_threshold),
@@ -321,7 +321,7 @@ def store_record_coauthors(recid, authors, deleted_authors,
         to_process = added_authors
 
     for personid in get_author_coauthors_list(deleted_authors, config):
-        run_sql('DELETE FROM rnkEXTENDEDAUTHORS WHERE'
+        run_sql('DELETE FROM `rnkEXTENDEDAUTHORS` WHERE'
                 ' id = %s AND authorid = %s', (recid, personid))
 
     for personid in get_author_coauthors_list(to_process, config):
@@ -334,7 +334,7 @@ def get_record_coauthors(recid):
     Get all the authors that have written a paper with any of the authors of
     given bibrec
     """
-    sql = 'SELECT authorid FROM rnkEXTENDEDAUTHORS WHERE id = %s'
+    sql = 'SELECT authorid FROM `rnkEXTENDEDAUTHORS` WHERE id = %s'
     return (r[0] for r in run_sql(sql, (recid, )))
 
 

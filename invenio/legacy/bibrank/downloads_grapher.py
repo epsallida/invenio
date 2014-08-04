@@ -57,7 +57,7 @@ def create_download_history_graph_and_box(id_bibrec, ln=CFG_SITE_LANG):
         # download count graph
         id_bibdocs = intbitset(run_sql("select distinct id_bibdoc from rnkDOWNLOADS where id_bibrec=%s", (id_bibrec, )))
 
-        id_existing_bibdocs = intbitset(run_sql("SELECT id_bibdoc FROM bibrec_bibdoc JOIN bibdoc ON id_bibdoc=id WHERE id_bibrec=%s AND status<>'DELETED'", (id_bibrec, )))
+        id_existing_bibdocs = intbitset(run_sql("SELECT id_bibdoc FROM `bibrec_bibdoc` JOIN `bibdoc` ON id_bibdoc=id WHERE id_bibrec=%s AND status<>'DELETED'", (id_bibrec, )))
 
         ## FIXME: when bibdocs are deleted we loose the stats. What shall we do with them?
         id_bibdocs &= id_existing_bibdocs
@@ -136,9 +136,9 @@ def draw_downloads_statistics(id_bibrec, id_bibdoc_list):
     local_month = local_time.tm_mon
     local_year = local_time.tm_year
 
-    creation_date_res = run_sql("""SELECT DATE_FORMAT(creation_date,"%%Y-%%m") FROM bibrec WHERE id=%s;""" % id_bibrec)
+    creation_date_res = run_sql("""SELECT DATE_FORMAT(creation_date,"%%Y-%%m") FROM `bibrec` WHERE id=%s;""" % id_bibrec)
     if creation_date_res == ():
-        creation_date_res = run_sql("""SELECT DATE_FORMAT(MIN(download_time),"%%Y-%%m") FROM rnkDOWNLOADS where id_bibrec=%s;""" % id_bibrec)
+        creation_date_res = run_sql("""SELECT DATE_FORMAT(MIN(download_time),"%%Y-%%m") FROM `rnkDOWNLOADS` where id_bibrec=%s;""" % id_bibrec)
     if creation_date_res == (('0000-00',),):
         creation_date_year = local_year - 1
         creation_date_month = local_month

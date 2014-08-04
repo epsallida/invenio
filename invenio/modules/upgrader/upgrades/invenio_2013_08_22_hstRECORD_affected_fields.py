@@ -26,7 +26,7 @@ def info():
 
 def do_upgrade():
     #first step: change the table
-    create_statement = run_sql('SHOW CREATE TABLE hstRECORD')[0][1]
+    create_statement = run_sql('SHOW CREATE TABLE `hstRECORD`')[0][1]
     if 'affected_fields' not in create_statement:
         run_sql("ALTER TABLE hstRECORD ADD COLUMN affected_fields text NOT NULL default '' AFTER job_details")
     #second step: nothing

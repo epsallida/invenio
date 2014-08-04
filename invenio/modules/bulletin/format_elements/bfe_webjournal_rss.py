@@ -86,7 +86,7 @@ def format_element(bfo, categories, label="Subscribe by RSS",
             pattern.append(dbquery)
             res = None
             if not must_use_pattern:
-                res = run_sql("SELECT name FROM collection WHERE dbquery=%s",
+                res = run_sql("SELECT name FROM `collection` WHERE dbquery=%s",
                               (dbquery,))
             if res:
                 collections.append(res[0][0])
@@ -94,7 +94,7 @@ def format_element(bfo, categories, label="Subscribe by RSS",
                 # Could not find corresponding collection. Maybe
                 # replace '980__a' by 'collection'?
                 if not must_use_pattern:
-                    res = run_sql("SELECT name FROM collection WHERE dbquery=%s",
+                    res = run_sql("SELECT name FROM `collection` WHERE dbquery=%s",
                                   (dbquery.replace('980__a', 'collection'),))
                 if res:
                     collections.append(res[0][0])

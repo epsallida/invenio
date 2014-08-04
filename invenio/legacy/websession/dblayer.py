@@ -41,7 +41,7 @@ def get_groups_by_user_status(uid, user_status, login_method='INTERNAL'):
     query = """SELECT g.id,
                       g.name,
                       g.description
-               FROM usergroup g, user_usergroup ug
+               FROM `usergroup` g, user_usergroup ug
                WHERE ug.id_user=%s AND
                      ug.id_usergroup=g.id AND
                      ug.user_status=%s AND
@@ -62,7 +62,7 @@ def get_groups_by_login_method(uid, login_method):
     query = """SELECT g.id,
                       g.name,
                       g.description
-               FROM usergroup g, user_usergroup ug
+               FROM `usergroup` g, user_usergroup ug
                WHERE ug.id_user=%s AND
                      ug.id_usergroup=g.id AND
                      g.login_method=%s
@@ -82,7 +82,7 @@ def get_groups_with_description(uid):
     query = """SELECT g.id,
                       g.name,
                       g.description
-               FROM usergroup g, user_usergroup ug
+               FROM `usergroup` g, user_usergroup ug
                WHERE ug.id_user=%s AND
                      ug.id_usergroup=g.id
                ORDER BY g.name"""
@@ -102,7 +102,7 @@ def get_external_groups(uid):
     query = """SELECT g.id,
                       g.name,
                       g.description
-               FROM usergroup g, user_usergroup ug
+               FROM `usergroup` g, user_usergroup ug
                WHERE ug.id_user=%s AND
                      ug.id_usergroup=g.id AND
                      g.login_method != 'INTERNAL'
@@ -115,7 +115,7 @@ def get_external_groups(uid):
 def get_groups(uid):
     """Select all the groups id the user is member of."""
     query = """SELECT g.id, g.name
-               FROM usergroup g, user_usergroup ug
+               FROM `usergroup` g, user_usergroup ug
                WHERE ug.id_user=%s AND
                      ug.id_usergroup=g.id
             """
@@ -136,7 +136,7 @@ def get_login_method_groups(uid, login_method='INTERNAL'):
     """
     return run_sql("""
         SELECT g.name as name, g.id as id
-        FROM user_usergroup as u JOIN usergroup as g
+        FROM `user_usergroup` as u JOIN `usergroup` as g
         ON u.id_usergroup = g.id
         WHERE u.id_user = %s and g.login_method = %s""",
         (uid, login_method,))
@@ -162,7 +162,6 @@ def get_all_users_with_groups_with_login_method(login_method):
         FROM user AS u JOIN user_usergroup AS uu ON u.id = uu.id_user
         JOIN usergroup AS ug ON ug.id = uu.id_usergroup
         WHERE ug.login_method = %s""", (login_method,)))
-
 
 
 def get_visible_group_list(uid, pattern=""):
@@ -208,7 +207,7 @@ def insert_new_group(uid,
                      join_policy,
                      login_method='INTERNAL'):
     """Create a new group and affiliate a user."""
-    query1 = """INSERT INTO usergroup (id, name, description, join_policy,
+    query1 = """INSERT INTO `usergroup` (id, name, description, join_policy,
                    login_method)
                 VALUES (NULL,%s,%s,%s,%s)
                 """
@@ -220,7 +219,7 @@ def insert_new_group(uid,
 
     date = convert_datestruct_to_datetext(localtime())
     uid = int(uid)
-    query2 = """INSERT INTO user_usergroup (id_user, id_usergroup, user_status,
+    query2 = """INSERT INTO `user_usergroup` (id_user, id_usergroup, user_status,
                    user_status_date)
                 VALUES (%s,%s,'A',%s)
                 """
@@ -236,7 +235,7 @@ def insert_only_new_group(new_group_name,
     @return: its id
     """
 
-    query = """INSERT INTO usergroup (name, description, join_policy, login_method)
+    query = """INSERT INTO `usergroup` (name, description, join_policy, login_method)
                VALUES (%s, %s, %s, %s)
             """
     res = run_sql(query, (new_group_name, new_group_description, join_policy, login_method))
@@ -246,7 +245,7 @@ def insert_new_member(uid,
                       grpID,
                       status):
     """Insert new member."""
-    query = """INSERT INTO user_usergroup (id_user, id_usergroup, user_status,
+    query = """INSERT INTO `user_usergroup` (id_user, id_usergroup, user_status,
                    user_status_date)
                VALUES (%s,%s,%s,%s)
             """
@@ -278,7 +277,7 @@ def update_group_infos(grpID,
                        group_description,
                        join_policy):
     """Update group."""
-    res = run_sql("""UPDATE usergroup
+    res = run_sql("""UPDATE `usergroup`
                         SET name=%s, description=%s, join_policy=%s
                       WHERE id=%s""",
                   (group_name, group_description, join_policy, grpID))
@@ -286,7 +285,7 @@ def update_group_infos(grpID,
 
 def get_user_status(uid, grpID):
     """Get the status of the user for the given group."""
-    query = """SELECT user_status FROM user_usergroup
+    query = """SELECT user_status FROM `user_usergroup`
                 WHERE id_user = %s
                 AND id_usergroup=%s"""
     uid = int(uid)
@@ -301,7 +300,7 @@ def get_users_by_status(grpID, status, ln=CFG_SITE_LANG):
     """
     _ = gettext_set_language(ln)
     res = run_sql("""SELECT ug.id_user, u.nickname
-                       FROM user_usergroup ug, user u
+                       FROM `user_usergroup` ug, user u
                       WHERE ug.id_usergroup = %s
                         AND ug.id_user=u.id
                         AND user_status = %s""",
@@ -317,7 +316,7 @@ def get_users_by_status(grpID, status, ln=CFG_SITE_LANG):
 
 def delete_member(grpID, member_id):
     """Delete member."""
-    query = """DELETE FROM user_usergroup
+    query = """DELETE FROM `user_usergroup`
                WHERE id_usergroup = %s
                AND id_user = %s"""
     member_id = int(member_id)
@@ -327,11 +326,11 @@ def delete_member(grpID, member_id):
 
 def delete_group_and_members(grpID):
     """Delete the group and its members."""
-    query = """DELETE FROM usergroup
+    query = """DELETE FROM `usergroup`
                WHERE id = %s
                """
     res = run_sql(query, (grpID,))
-    query = """DELETE FROM user_usergroup
+    query = """DELETE FROM `user_usergroup`
                WHERE id_usergroup = %s
                """
     res = run_sql(query, (grpID,))
@@ -341,7 +340,7 @@ def add_pending_member(grpID, member_id, user_status):
     """Change user status:
     Pending member becomes normal member"""
     date = convert_datestruct_to_datetext(localtime())
-    res = run_sql("""UPDATE user_usergroup
+    res = run_sql("""UPDATE `user_usergroup`
                         SET user_status = %s, user_status_date = %s
                         WHERE id_usergroup = %s
                         AND id_user = %s""",
@@ -351,7 +350,7 @@ def add_pending_member(grpID, member_id, user_status):
 
 def leave_group(grpID, uid):
     """Remove user from the group member list."""
-    query = """DELETE FROM user_usergroup
+    query = """DELETE FROM `user_usergroup`
                WHERE id_usergroup=%s
                AND id_user=%s"""
     uid = int(uid)

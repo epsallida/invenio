@@ -42,7 +42,7 @@ def get_remote_server_auth(id_remoteserver):
                            'url_servicedocument':''}
 
     qstr = '''SELECT host, username, password, realm, url_servicedocument ''' \
-           ''' FROM swrREMOTESERVER WHERE id=%s'''
+           ''' FROM `swrREMOTESERVER` WHERE id=%s'''
     qres = run_sql(qstr, (id_remoteserver, ))
 
     if len(qres) == 0 :
@@ -74,7 +74,7 @@ def update_servicedocument(xml_servicedocument, id_remoteserver):
     current_type = datetime.datetime.now()
     formatted_current_time = time.mktime(current_type.timetuple())
 
-    qstr =    '''UPDATE swrREMOTESERVER ''' \
+    qstr =    '''UPDATE `swrREMOTESERVER` ''' \
               '''SET xml_servicedocument=%s, last_update=%s ''' \
               '''WHERE id=%s'''
     qres = run_sql(qstr, (xml_servicedocument, formatted_current_time,
@@ -91,7 +91,7 @@ def select_servicedocument(id_remoteserver):
     '''
 
     qstr = '''SELECT xml_servicedocument ''' \
-           '''FROM swrREMOTESERVER ''' \
+           '''FROM `swrREMOTESERVER` ''' \
            '''WHERE id=%s'''
     qres = run_sql(qstr, (id_remoteserver, ))
 
@@ -110,7 +110,7 @@ def get_last_update(id_remoteserver):
     '''
 
     qstr = '''SELECT last_update ''' \
-           '''FROM swrREMOTESERVER ''' \
+           '''FROM `swrREMOTESERVER` ''' \
            '''WHERE id=%s '''
     qres = run_sql(qstr, (id_remoteserver, ))
 
@@ -135,7 +135,7 @@ def get_all_remote_server(id_server):
         qstr = '''SELECT id, name, host FROM swrREMOTESERVER'''
         qres = run_sql(qstr)
     else :
-        qstr = ''' SELECT id, name, host FROM swrREMOTESERVER WHERE id=%s'''
+        qstr = ''' SELECT id, name, host FROM `swrREMOTESERVER` WHERE id=%s'''
         qres = run_sql(qstr, (id_server, ))
 
 
@@ -158,7 +158,7 @@ def is_record_sent_to_server(id_server, id_record):
         return : True if a value was found, false else
     '''
 
-    qstr = '''SELECT COUNT(*) FROM swrCLIENTDATA ''' \
+    qstr = '''SELECT COUNT(*) FROM `swrCLIENTDATA` ''' \
            '''WHERE id_swrREMOTESERVER=%s AND id_record=%s ''' \
            '''AND status NOT LIKE 'removed' '''
     qres = run_sql(qstr, (id_server, id_record, ))
@@ -202,7 +202,7 @@ def insert_into_swr_clientdata(id_swr_remoteserver,
     xml_media_deposit.replace("\"", "\'")
     xml_metadata_submit.encode('utf-8')
 
-    qstr = '''INSERT INTO swrCLIENTDATA (id_swrREMOTESERVER, id_record, ''' \
+    qstr = '''INSERT INTO `swrCLIENTDATA` (id_swrREMOTESERVER, id_record, ''' \
              '''report_no, id_remote, id_user, user_name, user_email,  ''' \
              '''xml_media_deposit, xml_metadata_submit, submission_date, ''' \
              '''link_medias, link_metadata, link_status, last_update) ''' \
@@ -233,7 +233,7 @@ def delete_from_swr_clientdata(id_submit):
         result : boolean, true if deleted, false else
     '''
 
-    qstr = ''' DELETE FROM swrCLIENTDATA WHERE id=%s '''
+    qstr = ''' DELETE FROM `swrCLIENTDATA` WHERE id=%s '''
     qres = run_sql(qstr, (id_submit, ))
 
     return qres
@@ -260,7 +260,7 @@ def select_submitted_record_infos(first_row=0, offset=10, row_id=''):
            '''d.user_name, d.user_email, d.submission_date, ''' \
            '''d.publication_date, d.removal_date, d.link_medias, ''' \
            '''d.link_metadata, d.link_status, d.status, r.url_base_record ''' \
-           '''FROM swrCLIENTDATA as d inner join swrREMOTESERVER ''' \
+           '''FROM `swrCLIENTDATA` as d inner join `swrREMOTESERVER` ''' \
            '''as r ON d.id_swrREMOTESERVER = r.id ''' + wstr + \
            '''ORDER BY d.last_update DESC LIMIT %s,%s'''
     if wstr != '' :
@@ -307,19 +307,19 @@ def update_submission_status(id_record, status, remote_id=''):
     current_date = time.strftime("%Y-%m-%d %H:%M:%S")
 
     if status == CFG_SUBMISSION_STATUS_PUBLISHED and remote_id != '' :
-        qstr = '''UPDATE swrCLIENTDATA SET status=%s, id_remote=%s, ''' \
+        qstr = '''UPDATE `swrCLIENTDATA` SET status=%s, id_remote=%s, ''' \
                  '''publication_date=%s, last_update=%s WHERE id=%s '''
         qres = run_sql(qstr, (status, remote_id, current_date, current_date,
                             id_record, ))
 
 
     if status == CFG_SUBMISSION_STATUS_REMOVED :
-        qstr = '''UPDATE swrCLIENTDATA SET status=%s, removal_date=%s, ''' \
+        qstr = '''UPDATE `swrCLIENTDATA` SET status=%s, removal_date=%s, ''' \
                  '''last_update=%s WHERE id=%s '''
         qres = run_sql(qstr, (status, current_date, current_date, id_record, ))
 
     else :
-        qstr = '''UPDATE swrCLIENTDATA SET status=%s, last_update=%s ''' \
+        qstr = '''UPDATE `swrCLIENTDATA` SET status=%s, last_update=%s ''' \
                  '''WHERE id=%s '''
         qres = run_sql(qstr, (status, current_date, id_record, ))
 
@@ -345,7 +345,7 @@ def select_remote_server_infos(id_server):
 
     qstr = '''SELECT id, name, host, username, password, email, realm, ''' \
            '''url_base_record, url_servicedocument ''' \
-           '''FROM swrREMOTESERVER WHERE id = %s '''
+           '''FROM `swrREMOTESERVER` WHERE id = %s '''
     qres = run_sql(qstr, (id_server, ))
 
     result = qres[0]

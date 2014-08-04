@@ -28,7 +28,7 @@ def info():
 
 def do_upgrade():
     run_sql("""
-CREATE TABLE IF NOT EXISTS rnkCITATIONDATAERR (
+CREATE TABLE IF NOT EXISTS `rnkCITATIONDATAERR` (
   `type` ENUM('multiple-matches', 'not-well-formed'),
   citinfo varchar(255) NOT NULL default '',
   PRIMARY KEY (`type`, citinfo)

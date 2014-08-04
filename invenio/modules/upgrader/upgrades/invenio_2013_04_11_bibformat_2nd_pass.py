@@ -26,7 +26,7 @@ def info():
               is required on the cached template"""
 
 def do_upgrade():
-    create_statement = run_sql('SHOW CREATE TABLE bibfmt')[0][1]
+    create_statement = run_sql('SHOW CREATE TABLE `bibfmt`')[0][1]
     if 'needs_2nd_pass' not in create_statement:
         run_sql("ALTER TABLE bibfmt ADD COLUMN needs_2nd_pass TINYINT(1) DEFAULT 0")
 

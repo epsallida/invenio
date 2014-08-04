@@ -102,18 +102,18 @@ def update_linkback_status(linkbackid, new_status, user_info = None):
         user_info = {}
         user_info['uid'] = CFG_WEBLINKBACK_DEFAULT_USER
 
-    run_sql("""UPDATE lnkENTRY
+    run_sql("""UPDATE `lnkENTRY`
                   SET status=%s
                   WHERE id=%s
             """, (new_status, linkbackid))
 
-    logid = run_sql("""INSERT INTO lnkLOG (id_user, action, log_time)
+    logid = run_sql("""INSERT INTO `lnkLOG` (id_user, action, log_time)
                           VALUES
                           (%s, %s, NOW());
                        SELECT LAST_INSERT_ID();
                     """, (user_info['uid'], new_status))
 
-    run_sql("""INSERT INTO lnkENTRYLOG (id_lnkENTRY , id_lnkLOG)
+    run_sql("""INSERT INTO `lnkENTRYLOG` (id_lnkENTRY , id_lnkLOG)
                   VALUES
                   (%s, %s);
             """, (linkbackid, logid))
@@ -129,19 +129,19 @@ def create_linkback(origin_url, recid, additional_properties, linkback_type, use
     @param user_info: user info
     @return id of the created linkback
     """
-    linkbackid = run_sql("""INSERT INTO lnkENTRY (origin_url, id_bibrec, additional_properties, type, status, insert_time)
+    linkbackid = run_sql("""INSERT INTO `lnkENTRY` (origin_url, id_bibrec, additional_properties, type, status, insert_time)
                                VALUES
                                (%s, %s, %s, %s, %s, NOW());
                             SELECT LAST_INSERT_ID();
                          """, (origin_url, recid, str(additional_properties), linkback_type, CFG_WEBLINKBACK_STATUS['PENDING']))
 
-    logid = run_sql("""INSERT INTO lnkLOG (id_user, action, log_time)
+    logid = run_sql("""INSERT INTO `lnkLOG` (id_user, action, log_time)
                           VALUES
                           (%s, %s, NOW());
                        SELECT LAST_INSERT_ID();
                     """, (user_info['uid'], CFG_WEBLINKBACK_STATUS['INSERTED']))
 
-    run_sql("""INSERT INTO lnkENTRYLOG (id_lnkENTRY, id_lnkLOG)
+    run_sql("""INSERT INTO `lnkENTRYLOG` (id_lnkENTRY, id_lnkLOG)
                   VALUES
                   (%s, %s);
             """, (linkbackid, logid))
@@ -157,7 +157,7 @@ def create_linkback(origin_url, recid, additional_properties, linkback_type, use
             manual_set_title = 1
             title = additional_properties['title']
 
-        run_sql("""INSERT INTO lnkENTRYURLTITLE (url, title, manual_set)
+        run_sql("""INSERT INTO `lnkENTRYURLTITLE` (url, title, manual_set)
                       VALUES
                       (%s, %s, %s)
                 """, (origin_url, title, manual_set_title))
@@ -249,17 +249,17 @@ def add_url_to_list(url, list_type, user_info):
     @param user_info: user info
     @return id of the created url
     """
-    urlid = run_sql("""INSERT INTO lnkADMINURL (url, list)
+    urlid = run_sql("""INSERT INTO `lnkADMINURL` (url, list)
                           VALUES
                           (%s, %s);
                        SELECT LAST_INSERT_ID();
                     """, (url, list_type))
-    logid = run_sql("""INSERT INTO lnkLOG (id_user, action, log_time)
+    logid = run_sql("""INSERT INTO `lnkLOG` (id_user, action, log_time)
                           VALUES
                           (%s, %s, NOW());
                        SELECT LAST_INSERT_ID();
                     """, (user_info['uid'], CFG_WEBLINKBACK_STATUS['INSERTED']))
-    run_sql("""INSERT INTO lnkADMINURLLOG (id_lnkADMINURL, id_lnkLOG)
+    run_sql("""INSERT INTO `lnkADMINURLLOG` (id_lnkADMINURL, id_lnkLOG)
                   VALUES
                   (%s, %s);
             """, (urlid, logid))
@@ -277,8 +277,8 @@ def remove_url(url):
                        WHERE url=%s
                     """, (url, ))[0][0]
     logids = run_sql("""SELECT log.id
-                        FROM lnkLOG log
-                        JOIN lnkADMINURLLOG url_log
+                        FROM `lnkLOG` log
+                        JOIN `lnkADMINURLLOG` url_log
                           ON log.id=url_log.id_lnkLOG
                         WHERE url_log.id_lnkADMINURL=%s
                     """, (urlid, ))
@@ -327,7 +327,7 @@ def update_url_title(url, title):
     @param url: URL
     @param title: new title
     """
-    run_sql("""UPDATE lnkENTRYURLTITLE
+    run_sql("""UPDATE `lnkENTRYURLTITLE`
                   SET title=%s,
                       manual_set=0,
                       broken_count=0,
@@ -341,7 +341,7 @@ def remove_url_title(url):
     Remove URL title
     @param url: URL
     """
-    run_sql("""DELETE FROM lnkENTRYURLTITLE
+    run_sql("""DELETE FROM `lnkENTRYURLTITLE`
                WHERE url=%s
             """, (url, ))
 
@@ -355,7 +355,7 @@ def set_url_broken(url):
                              FROM lnkENTRY
                              WHERE origin_url=%s
                           """, (url, ))
-    run_sql("""UPDATE lnkENTRYURLTITLE
+    run_sql("""UPDATE `lnkENTRYURLTITLE`
                   SET title=%s,
                       broken=1
                   WHERE url=%s
@@ -388,7 +388,7 @@ def increment_broken_count(url):
     Increment broken count a URL
     @param url: URL
     """
-    run_sql("""UPDATE lnkENTRYURLTITLE
+    run_sql("""UPDATE `lnkENTRYURLTITLE`
                   SET broken_count=broken_count+1
                   WHERE url=%s
             """, (url, ))
@@ -401,19 +401,19 @@ def remove_linkback(linkbackid):
     """
     # get ids
     logids = run_sql("""SELECT log.id
-                        FROM lnkLOG log
-                        JOIN lnkENTRYLOG entry_log
+                        FROM `lnkLOG` log
+                        JOIN `lnkENTRYLOG` entry_log
                           ON log.id=entry_log.id_lnkLOG
                         WHERE entry_log.id_lnkENTRY=%s
                     """, (linkbackid, ))
     # delete linkback entry and entry log
-    run_sql("""DELETE FROM lnkENTRY
+    run_sql("""DELETE FROM `lnkENTRY`
                WHERE id=%s;
                DELETE FROM lnkENTRYLOG
                WHERE id_lnkENTRY=%s
             """, (linkbackid, linkbackid))
     # delete log
     for logid in logids:
-        run_sql("""DELETE FROM lnkLOG
+        run_sql("""DELETE FROM `lnkLOG`
                    WHERE id=%s
                 """, (logid[0], ))

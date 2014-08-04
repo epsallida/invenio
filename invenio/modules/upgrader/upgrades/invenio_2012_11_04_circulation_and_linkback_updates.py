@@ -38,7 +38,7 @@ def do_upgrade():
     ## Firstly, BibCirculation tables:
 
     # crcBORROWER
-    create_statement = run_sql('SHOW CREATE TABLE crcBORROWER')[0][1]
+    create_statement = run_sql('SHOW CREATE TABLE `crcBORROWER`')[0][1]
     if '`ccid` int(15)' not in create_statement:
         run_sql("ALTER TABLE crcBORROWER ADD COLUMN ccid int(15) " \
                 "unsigned NULL default NULL AFTER id")
@@ -50,13 +50,13 @@ def do_upgrade():
         run_sql("ALTER TABLE crcBORROWER ADD KEY email (email)")
 
     # crcILLREQUEST
-    create_statement = run_sql('SHOW CREATE TABLE crcILLREQUEST')[0][1]
+    create_statement = run_sql('SHOW CREATE TABLE `crcILLREQUEST`')[0][1]
     if '`budget_code` varchar(60)' not in create_statement:
         run_sql("ALTER TABLE crcILLREQUEST ADD COLUMN budget_code varchar(60) " \
                 "NOT NULL default '' AFTER cost")
 
     # crcITEM.expected_arrival_date
-    create_statement = run_sql('SHOW CREATE TABLE crcITEM')[0][1]
+    create_statement = run_sql('SHOW CREATE TABLE `crcITEM`')[0][1]
     if '`expected_arrival_date` varchar(60)' not in create_statement:
         run_sql("ALTER TABLE crcITEM ADD COLUMN expected_arrival_date varchar(60) " \
                 "NOT NULL default '' AFTER status")
@@ -64,7 +64,7 @@ def do_upgrade():
     ## Secondly, WebLinkback tables:
 
     run_sql("""
-CREATE TABLE IF NOT EXISTS lnkENTRY (
+CREATE TABLE IF NOT EXISTS `lnkENTRY` (
   id int(15) NOT NULL auto_increment,
   origin_url varchar(100) NOT NULL, -- url of the originating resource
   id_bibrec mediumint(8) unsigned NOT NULL, -- bibrecord
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS lnkENTRY (
 """)
 
     run_sql("""
-CREATE TABLE IF NOT EXISTS lnkENTRYURLTITLE (
+CREATE TABLE IF NOT EXISTS `lnkENTRYURLTITLE` (
   id int(15) unsigned NOT NULL auto_increment,
   url varchar(100) NOT NULL,
   title varchar(100) NOT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS lnkENTRYURLTITLE (
 """)
 
     run_sql("""
-CREATE TABLE IF NOT EXISTS lnkENTRYLOG (
+CREATE TABLE IF NOT EXISTS `lnkENTRYLOG` (
   id_lnkENTRY int(15) unsigned NOT NULL,
   id_lnkLOG int(15) unsigned NOT NULL,
   FOREIGN KEY (id_lnkENTRY) REFERENCES lnkENTRY(id),
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS lnkENTRYLOG (
 """)
 
     run_sql("""
-CREATE TABLE IF NOT EXISTS lnkLOG (
+CREATE TABLE IF NOT EXISTS `lnkLOG` (
   id int(15) unsigned NOT NULL auto_increment,
   id_user int(15) unsigned,
   action varchar(30) NOT NULL,
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS lnkLOG (
 """)
 
     run_sql("""
-CREATE TABLE IF NOT EXISTS lnkADMINURL (
+CREATE TABLE IF NOT EXISTS `lnkADMINURL` (
   id int(15) unsigned NOT NULL auto_increment,
   url varchar(100) NOT NULL,
   list varchar(30) NOT NULL,
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS lnkADMINURL (
 """)
 
     run_sql("""
-CREATE TABLE IF NOT EXISTS lnkADMINURLLOG (
+CREATE TABLE IF NOT EXISTS `lnkADMINURLLOG` (
   id_lnkADMINURL int(15) unsigned NOT NULL,
   id_lnkLOG int(15) unsigned NOT NULL,
   FOREIGN KEY (id_lnkADMINURL) REFERENCES lnkADMINURL(id),

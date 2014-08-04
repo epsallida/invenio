@@ -52,7 +52,7 @@ def fetch_last_updated(fmt):
 
 
 def store_last_updated(fmt, iso_date):
-    sql = "UPDATE format SET last_updated = %s " \
+    sql = "UPDATE `format` SET last_updated = %s " \
         "WHERE code = %s AND (last_updated < %s or last_updated IS NULL)"
     run_sql(sql, (iso_date, fmt.lower(), iso_date))
 
@@ -243,8 +243,8 @@ def all_records():
 
 def outdated_caches(fmt, last_updated, chunk_size=5000):
     sql = """SELECT br.id
-             FROM bibrec AS br
-             INNER JOIN bibfmt AS bf ON bf.id_bibrec = br.id
+             FROM `bibrec` AS br
+             INNER JOIN `bibfmt` AS bf ON bf.id_bibrec = br.id
              WHERE br.modification_date >= %s
              AND bf.format = %s
              AND bf.last_updated < br.modification_date
@@ -272,7 +272,7 @@ def missing_caches(fmt, chunk_size=100000):
     max_id = run_sql("SELECT max(id) FROM bibrec")[0][0] or 0
     for start in xrange(1, max_id + 1, chunk_size):
         end = start + chunk_size
-        sql = "SELECT id FROM bibrec WHERE id BETWEEN %s AND %s"
+        sql = "SELECT id FROM `bibrec` WHERE id BETWEEN %s AND %s"
         recids = intbitset(run_sql(sql, (start, end)))
         sql = """SELECT id_bibrec FROM bibfmt
                  WHERE id_bibrec BETWEEN %s AND %s

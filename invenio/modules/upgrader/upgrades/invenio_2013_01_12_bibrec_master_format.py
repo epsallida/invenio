@@ -26,7 +26,7 @@ def info():
     return "New bibrec.master_format column"
 
 def do_upgrade():
-    create_statement = run_sql('SHOW CREATE TABLE bibrec')[0][1]
+    create_statement = run_sql('SHOW CREATE TABLE `bibrec`')[0][1]
     if '`master_format` varchar(16)' not in create_statement:
         run_sql("ALTER TABLE bibrec ADD COLUMN master_format varchar(16) NOT NULL default 'marc'")
 

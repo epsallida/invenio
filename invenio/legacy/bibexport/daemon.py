@@ -76,7 +76,7 @@ def _detect_export_method(jobname):
 def _update_job_lastrun_time(jobname):
     """Update expJOB table and set lastrun time of JOBNAME to the task
     starting time."""
-    run_sql("UPDATE expJOB SET lastrun=%s WHERE jobname=%s",
+    run_sql("UPDATE `expJOB` SET lastrun=%s WHERE jobname=%s",
             (task_get_task_param('task_starting_time'), jobname,))
 
 def task_run_core():
@@ -114,7 +114,7 @@ def task_submit_check_options():
         if jobnames:
             jobnames = jobnames.split(',')
             for jobname in jobnames:
-                res = run_sql("SELECT COUNT(*) FROM expJOB WHERE jobname=%s", (jobname,))
+                res = run_sql("SELECT COUNT(*) FROM `expJOB` WHERE jobname=%s", (jobname,))
                 if res and res[0][0]:
                     # okay, jobname exists
                     pass

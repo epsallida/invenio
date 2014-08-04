@@ -113,21 +113,21 @@ def get_citation_dict(dictname):
 
 def get_refers_to(recordid):
     """Return a list of records referenced by this record"""
-    rows = run_sql("SELECT citee FROM rnkCITATIONDICT WHERE citer = %s",
+    rows = run_sql("SELECT citee FROM `rnkCITATIONDICT` WHERE citer = %s",
                    [recordid])
     return set(r[0] for r in rows)
 
 
 def get_cited_by(recordid):
     """Return a list of records that cite recordid"""
-    rows = run_sql("SELECT citer FROM rnkCITATIONDICT WHERE citee = %s",
+    rows = run_sql("SELECT citer FROM `rnkCITATIONDICT` WHERE citee = %s",
                    [recordid])
     return set(r[0] for r in rows)
 
 
 def get_cited_by_count(recordid):
     """Return how many records cite given RECORDID."""
-    rows = run_sql("SELECT 1 FROM rnkCITATIONDICT WHERE citee = %s",
+    rows = run_sql("SELECT 1 FROM `rnkCITATIONDICT` WHERE citee = %s",
                    [recordid])
     return len(rows)
 

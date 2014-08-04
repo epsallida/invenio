@@ -28,7 +28,7 @@ def info():
 
 def do_upgrade():
     """ Implement your upgrades here  """
-    run_sql("""CREATE TABLE IF NOT EXISTS bibARXIVPDF (
+    run_sql("""CREATE TABLE IF NOT EXISTS `bibARXIVPDF` (
   id_bibrec mediumint(8) unsigned NOT NULL,
   status ENUM('ok', 'missing') NOT NULL,
   date_harvested datetime NOT NULL,

@@ -128,11 +128,11 @@ from invenio.legacy.search_engine import get_fieldvalues
 def count_baskets(uid):
     """Return (nb personal baskets, nb group baskets, nb external
     baskets) tuple for given user"""
-    query1 = "SELECT COUNT(id) FROM bskBASKET WHERE id_owner=%s"
+    query1 = "SELECT COUNT(id) FROM `bskBASKET` WHERE id_owner=%s"
     res1 = run_sql(query1, (int(uid),))
     personal = __wash_sql_count(res1)
     query2 = """SELECT count(ugbsk.id_bskbasket)
-                FROM usergroup_bskBASKET ugbsk LEFT JOIN user_usergroup uug
+                FROM `usergroup_bskBASKET` ugbsk LEFT JOIN `user_usergroup` uug
                                                ON ugbsk.id_usergroup=uug.id_usergroup
                 WHERE uug.id_user=%s AND uug.user_status!=%s
                 GROUP BY ugbsk.id_usergroup"""
@@ -149,7 +149,7 @@ def check_user_owns_baskets(uid, bskids):
     """ Return 1 if user is owner of every basket in list bskids"""
     if not((type(bskids) is list) or (type(bskids) is tuple)):
         bskids = [bskids]
-    query = """SELECT id_owner FROM bskBASKET WHERE %s GROUP BY id_owner"""
+    query = """SELECT id_owner FROM `bskBASKET` WHERE %s GROUP BY id_owner"""
     sep = ' OR '
     query %= sep.join(['id=%s'] * len(bskids))
     res = run_sql(query, tuple(bskids))
@@ -160,7 +160,7 @@ def check_user_owns_baskets(uid, bskids):
 
 def get_max_user_rights_on_basket(uid, bskid):
     """Return the max rights a user has on this basket"""
-    query_owner = "SELECT count(id_owner) FROM bskBASKET WHERE id_owner=%s and id=%s"
+    query_owner = "SELECT count(id_owner) FROM `bskBASKET` WHERE id_owner=%s and id=%s"
     params_owner = (int(uid), int(bskid))
     res = run_sql(query_owner, params_owner)
     if res and res[0][0]:
@@ -169,7 +169,7 @@ def get_max_user_rights_on_basket(uid, bskid):
     # not owner => group member ?
     query_group_baskets = """
     SELECT share_level
-    FROM user_usergroup AS ug LEFT JOIN usergroup_bskBASKET AS ub
+    FROM `user_usergroup` AS ug LEFT JOIN `usergroup_bskBASKET` AS ub
                               ON ug.id_usergroup=ub.id_usergroup
     WHERE ug.id_user=%s AND ub.id_bskBASKET=%s AND NOT(ub.share_level='NO') AND ug.user_status!=%s
     """
@@ -212,11 +212,11 @@ def get_personal_baskets_info_for_topic(uid, topic):
                             bsk.nb_views,
                             count(rec.id_bibrec_or_bskEXTREC),
                             DATE_FORMAT(max(rec.date_added), '%%Y-%%m-%%d %%H:%%i:%%s')
-                FROM        user_bskBASKET AS ubsk
-                JOIN        bskBASKET AS bsk
+                FROM        `user_bskBASKET` AS ubsk
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=ubsk.id_bskBASKET
                     AND     bsk.id_owner=%s
-                LEFT JOIN   bskREC AS rec
+                LEFT JOIN   `bskREC` AS rec
                     ON      rec.id_bskBASKET=bsk.id
                 WHERE       ubsk.id_user=%s
                 AND         ubsk.topic=%s
@@ -234,8 +234,8 @@ def get_all_user_personal_basket_ids_by_topic(uid):
 
     query = """ SELECT      ubsk.topic,
                             GROUP_CONCAT(bsk.id)
-                FROM        user_bskBASKET AS ubsk
-                JOIN        bskBASKET AS bsk
+                FROM        `user_bskBASKET` AS ubsk
+                JOIN        `bskBASKET` AS bsk
                 ON          ubsk.id_bskBASKET=bsk.id
                 AND         ubsk.id_user=bsk.id_owner
                 WHERE       bsk.id_owner=%s
@@ -254,7 +254,7 @@ def get_all_personal_baskets_names(uid):
     SELECT bsk.id,
            bsk.name,
            ubsk.topic
-    FROM user_bskBASKET ubsk JOIN bskBASKET bsk
+    FROM `user_bskBASKET` ubsk JOIN `bskBASKET` bsk
                              ON ubsk.id_bskBASKET=bsk.id
                              AND ubsk.id_user=bsk.id_owner
     WHERE bsk.id_owner=%s
@@ -265,7 +265,7 @@ def get_all_personal_baskets_names(uid):
 
 def get_basket_name(bskid):
     """return the name of a given basket"""
-    query = 'SELECT name FROM bskBASKET where id=%s'
+    query = 'SELECT name FROM `bskBASKET` where id=%s'
     res = run_sql(query, (int(bskid), ))
     if res:
         return res[0][0]
@@ -316,7 +316,7 @@ def get_personal_topics_infos(uid):
     @return: a list of tuples (topic name, nb of baskets)
     """
     query = """SELECT topic, count(b.id)
-               FROM   user_bskBASKET ub JOIN bskBASKET b
+               FROM   `user_bskBASKET` ub JOIN `bskBASKET` b
                                         ON ub.id_bskBASKET=b.id AND
                                            b.id_owner=ub.id_user
                WHERE  ub.id_user=%s
@@ -336,7 +336,7 @@ def get_basket_ids_and_names(bskids, limit=0):
 
     query = """ SELECT      bsk.id,
                             bsk.name
-                FROM        bskBASKET AS bsk
+                FROM        `bskBASKET` AS bsk
                 WHERE       %s
                 ORDER BY    bsk.name
                 %s"""
@@ -351,11 +351,11 @@ def get_basket_ids_and_names(bskids, limit=0):
 
 def rename_basket(bskid, new_name):
     """Rename basket to new_name"""
-    run_sql("UPDATE bskBASKET SET name=%s WHERE id=%s", (new_name, bskid))
+    run_sql("UPDATE `bskBASKET` SET name=%s WHERE id=%s", (new_name, bskid))
 
 def rename_topic(uid, old_topic, new_topic):
     """Rename topic to new_topic """
-    res = run_sql("UPDATE user_bskBASKET SET topic=%s WHERE id_user=%s AND topic=%s",
+    res = run_sql("UPDATE `user_bskBASKET` SET topic=%s WHERE id_user=%s AND topic=%s",
                   (new_topic, uid, old_topic))
     return res
 
@@ -363,7 +363,7 @@ def move_baskets_to_topic(uid, bskids, new_topic):
     """Move given baskets to another topic"""
     if not((type(bskids) is list) or (type(bskids) is tuple)):
         bskids = [bskids]
-    query = "UPDATE user_bskBASKET SET topic=%s WHERE id_user=%s AND ("
+    query = "UPDATE `user_bskBASKET` SET topic=%s WHERE id_user=%s AND ("
     query += ' OR '.join(['id_bskBASKET=%s'] * len(bskids))
     query += ")"
     params = (new_topic, uid) + tuple(bskids)
@@ -376,29 +376,29 @@ def delete_basket(bskid):
     # TODO: check if any alerts are automaticly adding items to the given basket.
     bskid = int(bskid)
 
-    query1 = "DELETE FROM bskBASKET WHERE id=%s"
+    query1 = "DELETE FROM `bskBASKET` WHERE id=%s"
     res = run_sql(query1, (bskid,))
 
-    query2A = "SELECT id_bibrec_or_bskEXTREC FROM bskREC WHERE id_bskBASKET=%s"
+    query2A = "SELECT id_bibrec_or_bskEXTREC FROM `bskREC` WHERE id_bskBASKET=%s"
     local_and_external_ids = run_sql(query2A, (bskid,))
     external_ids = [local_and_external_id[0] for local_and_external_id in \
                     local_and_external_ids if local_and_external_id[0]<0]
     for external_id in external_ids:
         delete_item(bskid=bskid, recid=external_id, update_date_modification=False)
 
-    query2B = "DELETE FROM bskREC WHERE id_bskBASKET=%s"
+    query2B = "DELETE FROM `bskREC` WHERE id_bskBASKET=%s"
     run_sql(query2B, (bskid,))
 
-    query3 = "DELETE FROM bskRECORDCOMMENT WHERE id_bskBASKET=%s"
+    query3 = "DELETE FROM `bskRECORDCOMMENT` WHERE id_bskBASKET=%s"
     run_sql(query3, (bskid,))
 
-    query4 = "DELETE FROM user_bskBASKET WHERE id_bskBASKET=%s"
+    query4 = "DELETE FROM `user_bskBASKET` WHERE id_bskBASKET=%s"
     run_sql(query4, (bskid,))
 
-    query5 = "DELETE FROM usergroup_bskBASKET WHERE id_bskBASKET=%s"
+    query5 = "DELETE FROM `usergroup_bskBASKET` WHERE id_bskBASKET=%s"
     run_sql(query5, (bskid,))
 
-    query6 = "DELETE FROM user_query_basket WHERE id_basket=%s"
+    query6 = "DELETE FROM `user_query_basket` WHERE id_basket=%s"
     run_sql(query6, (bskid,))
 
     return int(res)
@@ -406,10 +406,10 @@ def delete_basket(bskid):
 def create_basket(uid, basket_name, topic):
     """Create new basket for given user in given topic"""
     now = convert_datestruct_to_datetext(localtime())
-    id_bsk = run_sql("""INSERT INTO bskBASKET (id_owner, name, date_modification)
+    id_bsk = run_sql("""INSERT INTO `bskBASKET` (id_owner, name, date_modification)
                         VALUES                (%s, %s, %s)""",
                      (uid, basket_name, now))
-    run_sql("""INSERT INTO user_bskBASKET (id_user, id_bskBASKET, topic)
+    run_sql("""INSERT INTO `user_bskBASKET` (id_user, id_bskBASKET, topic)
                VALUES                     (%s, %s, %s)""",
             (uid, id_bsk, topic))
     return id_bsk
@@ -435,11 +435,11 @@ def get_all_items_in_user_personal_baskets(uid,
                             bsk.name,
                             ubsk.topic,
                             GROUP_CONCAT(rec.id_bibrec_or_bskEXTREC)
-                FROM        bskREC AS rec
-                JOIN        bskBASKET AS bsk
+                FROM        `bskREC` AS rec
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=rec.id_bskBASKET
                     AND     bsk.id_owner=%%s
-                JOIN        user_bskBASKET AS ubsk
+                JOIN        `user_bskBASKET` AS ubsk
                     ON      ubsk.id_bskBASKET=rec.id_bskBASKET
                     AND     ubsk.id_user=%%s
                     %s
@@ -454,15 +454,15 @@ def get_all_items_in_user_personal_baskets(uid,
                             ubsk.topic,
                             rec.id_bibrec_or_bskEXTREC,
                             ext.value
-                FROM        bskREC AS rec
-                JOIN        bskBASKET AS bsk
+                FROM        `bskREC` AS rec
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=rec.id_bskBASKET
                     AND     bsk.id_owner=%%s
-                JOIN        user_bskBASKET AS ubsk
+                JOIN        `user_bskBASKET` AS ubsk
                     ON      ubsk.id_bskBASKET=rec.id_bskBASKET
                     AND     ubsk.id_user=%%s
                     %s
-                JOIN        bskEXTFMT AS ext
+                JOIN        `bskEXTFMT` AS ext
                     ON      ext.id_bskEXTREC=-rec.id_bibrec_or_bskEXTREC
                     AND     ext.format=%%s
                 WHERE       rec.id_bibrec_or_bskEXTREC < 0
@@ -492,11 +492,11 @@ def get_all_items_in_user_personal_baskets_by_matching_notes(uid,
                             bsk.name,
                             ubsk.topic,
                             GROUP_CONCAT(DISTINCT(notes.id_bibrec_or_bskEXTREC))
-                FROM        bskRECORDCOMMENT AS notes
-                JOIN        bskBASKET AS bsk
+                FROM        `bskRECORDCOMMENT` AS notes
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=notes.id_bskBASKET
                     AND     bsk.id_owner=%%s
-                JOIN        user_bskBASKET AS ubsk
+                JOIN        `user_bskBASKET` AS ubsk
                     ON      ubsk.id_bskBASKET=notes.id_bskBASKET
                     AND     ubsk.id_user=%%s
                     %s
@@ -512,8 +512,8 @@ def get_all_user_topics(uid):
     """Return a list of the user's topics."""
 
     query = """ SELECT      ubsk.topic
-                FROM        bskBASKET AS bsk
-                JOIN        user_bskBASKET AS ubsk
+                FROM        `bskBASKET` AS bsk
+                JOIN        `user_bskBASKET` AS ubsk
                     ON      ubsk.id_bskBASKET=bsk.id
                     AND     ubsk.id_user=bsk.id_owner
                 WHERE       bsk.id_owner=%s
@@ -546,13 +546,13 @@ def get_basket_record(bskid, recid, format='hb'):
            DATE_FORMAT(max(cmt.date_creation), '%%%%Y-%%%%m-%%%%d %%%%H:%%%%i:%%%%s'),
            fmt.value
 
-    FROM bskREC LEFT JOIN user
+    FROM `bskREC` LEFT JOIN `user`
                 ON bskREC.id_user_who_added_item=user.id
-                LEFT JOIN bskRECORDCOMMENT cmt
+                LEFT JOIN `bskRECORDCOMMENT` cmt
                 ON bskREC.id_bibrec_or_bskEXTREC=cmt.id_bibrec_or_bskEXTREC
-                LEFT JOIN %(rec_table)s record
+                LEFT JOIN `%(rec_table)s` record
                 ON (%(sign)sbskREC.id_bibrec_or_bskEXTREC=record.id)
-                LEFT JOIN %(format_table)s fmt
+                LEFT JOIN `%(format_table)s` fmt
                 ON (record.id=fmt.%(id_field)s)
 
     WHERE bskREC.id_bskBASKET=%%s AND
@@ -581,21 +581,21 @@ def get_basket_content(bskid, format='hb'):
                             intern.value as int_val,
                             rec.score
 
-                FROM        bskREC AS rec
+                FROM        `bskREC` AS rec
 
-                LEFT JOIN   bskRECORDCOMMENT AS cmt
+                LEFT JOIN   `bskRECORDCOMMENT` AS cmt
                     ON     (rec.id_bibrec_or_bskEXTREC=cmt.id_bibrec_or_bskEXTREC
                     AND     rec.id_bskBASKET=cmt.id_bskBASKET)
 
-                LEFT JOIN   bskEXTFMT AS extern
+                LEFT JOIN   `bskEXTFMT` AS extern
                     ON     (-rec.id_bibrec_or_bskEXTREC=extern.id_bskEXTREC
                     AND     extern.format=%s)
 
-                LEFT JOIN   bibfmt AS intern
+                LEFT JOIN   `bibfmt` AS intern
                     ON     (rec.id_bibrec_or_bskEXTREC=intern.id_bibrec
                     AND     intern.format=%s)
 
-                LEFT JOIN   bskEXTREC AS extrec
+                LEFT JOIN   `bskEXTREC` AS extrec
                     ON      extrec.id=-rec.id_bibrec_or_bskEXTREC
 
                 WHERE       rec.id_bskBASKET=%s
@@ -609,7 +609,7 @@ def get_basket_content(bskid, format='hb'):
     res = run_sql(query, params)
 
     if res:
-        query2 = "UPDATE bskBASKET SET nb_views=nb_views+1 WHERE id=%s"
+        query2 = "UPDATE `bskBASKET` SET nb_views=nb_views+1 WHERE id=%s"
         run_sql(query2, (int(bskid),))
         return res
     return ()
@@ -624,20 +624,20 @@ def get_basket_item(bskid, recid, format='hb'):
                             extern.value as ext_val,
                             intern.value as int_val,
                             rec.score
-                FROM        bskREC rec
-                LEFT JOIN   bskRECORDCOMMENT cmt
+                FROM        `bskREC` rec
+                LEFT JOIN   `bskRECORDCOMMENT` cmt
                 ON          (rec.id_bibrec_or_bskEXTREC=cmt.id_bibrec_or_bskEXTREC
                              AND
                              rec.id_bskBASKET=cmt.id_bskBASKET)
-                LEFT JOIN   bskEXTFMT extern
+                LEFT JOIN   `bskEXTFMT` extern
                 ON          (-rec.id_bibrec_or_bskEXTREC=extern.id_bskEXTREC
                              AND
                              extern.format=%s)
-                LEFT JOIN   bibfmt intern
+                LEFT JOIN   `bibfmt` intern
                 ON          (rec.id_bibrec_or_bskEXTREC=intern.id_bibrec
                              AND
                              intern.format=%s)
-                LEFT JOIN   bskEXTREC AS extrec
+                LEFT JOIN   `bskEXTREC` AS extrec
                     ON      extrec.id=-rec.id_bibrec_or_bskEXTREC
                 WHERE       rec.id_bskBASKET=%s
                 AND         rec.id_bibrec_or_bskEXTREC=%s
@@ -646,7 +646,7 @@ def get_basket_item(bskid, recid, format='hb'):
     params = (format, format, bskid, recid)
     res = run_sql(query, params)
     if res:
-        queryU = """UPDATE bskBASKET SET nb_views=nb_views+1 WHERE id=%s"""
+        queryU = """UPDATE `bskBASKET` SET nb_views=nb_views+1 WHERE id=%s"""
         paramsU = (bskid,)
         run_sql(queryU, paramsU)
         score = res[0][6]
@@ -709,7 +709,7 @@ def get_basket_item_title_and_URL(recid):
         query = """ SELECT  rec.collection_id,
                             rec.original_url,
                             fmt.value
-                    FROM    bskEXTREC as rec,
+                    FROM    `bskEXTREC` as rec,
                             bskEXTFMT as fmt
                     WHERE   rec.id=%s
                         AND fmt.id_bskEXTREC=%s
@@ -757,7 +757,7 @@ def update_rights(bskid, group_rights):
         params += (int(group_id), int(bskid), now, str(share_level))
 
     run_sql(query1, params)
-    query2 = """DELETE FROM usergroup_bskBASKET WHERE share_level='NO'"""
+    query2 = """DELETE FROM `usergroup_bskBASKET` WHERE share_level='NO'"""
     run_sql(query2)
 
 def move_item(bskid, recid, direction):
@@ -781,14 +781,14 @@ def move_item(bskid, recid, direction):
             switch_index = len(recids) - 1
             if current_index != len(recids)-1:
                 switch_index = current_index + 1
-        query2 = """UPDATE bskREC
+        query2 = """UPDATE `bskREC`
                     SET score=%s
                     WHERE id_bskBASKET=%s AND id_bibrec_or_bskEXTREC=%s"""
         res1 = run_sql(query2, (scores[switch_index], bskid, recids[current_index]))
         res2 = run_sql(query2, (scores[current_index], bskid, recids[switch_index]))
         if res1 and res2:
             now = convert_datestruct_to_datetext(localtime())
-            query3 = "UPDATE bskBASKET SET date_modification=%s WHERE id=%s"
+            query3 = "UPDATE `bskBASKET` SET date_modification=%s WHERE id=%s"
             params3 = (now, int(bskid))
             run_sql(query3, params3)
 
@@ -801,7 +801,7 @@ def delete_item(bskid, recid, update_date_modification=True):
         if ncopies and ncopies[0][0]<=1:
             # uncomment the following 5 lines and comment the following 2 to delete cached records
             # only for external sources and not for external records
-            #query0B = "SELECT collection_id FROM bskEXTREC WHERE id=%s" % (-int(recid))
+            #query0B = "SELECT collection_id FROM `bskEXTREC` WHERE id=%s" % (-int(recid))
             #colid = run_sql(query0B)
             #if colid and colid[0][0]==0:
                 #query0C = "DELETE from bskEXTFMT WHERE id_bskEXTREC=%s" % (-int(recid))
@@ -812,14 +812,14 @@ def delete_item(bskid, recid, update_date_modification=True):
             run_sql(query0D)
             query0E = "DELETE from bskEXTREC WHERE id=%s" % (-int(recid))
             run_sql(query0E)
-    query_notes = "DELETE FROM bskRECORDCOMMENT WHERE id_bskBASKET=%s AND id_bibrec_or_bskEXTREC=%s"
+    query_notes = "DELETE FROM `bskRECORDCOMMENT` WHERE id_bskBASKET=%s AND id_bibrec_or_bskEXTREC=%s"
     run_sql(query_notes, (bskid, recid,))
     query1 = "DELETE from bskREC WHERE id_bskBASKET=%s AND id_bibrec_or_bskEXTREC=%s"
     params1 = (int(bskid), int(recid))
     res = run_sql(query1, params1)
     if update_date_modification and res:
         now = convert_datestruct_to_datetext(localtime())
-        query2 = "UPDATE bskBASKET SET date_modification=%s WHERE id=%s"
+        query2 = "UPDATE `bskBASKET` SET date_modification=%s WHERE id=%s"
         params2 = (now, int(bskid))
         run_sql(query2, params2)
     return res
@@ -861,7 +861,7 @@ def add_to_basket(uid,
             #existing_recids = [ids[1] for ids in res_existing]
             #new_recids = list(set(recids)-set(existing_recids))
             if new_recids:
-                query_new = """ INSERT INTO bskEXTREC (external_id,
+                query_new = """ INSERT INTO `bskEXTREC` (external_id,
                                                        collection_id,
                                                        creation_date,
                                                        modification_date)
@@ -878,7 +878,7 @@ def add_to_basket(uid,
             else:
                 recids = [-int(recid) for recid in existing_ids]
         elif colid < 0:
-            query_external = """INSERT INTO bskEXTREC (collection_id,
+            query_external = """INSERT INTO `bskEXTREC` (collection_id,
                                                        original_url,
                                                        creation_date,
                                                        modification_date)
@@ -908,7 +908,7 @@ def add_to_basket(uid,
             i += 1
         run_sql(query_insert, params_insert)
 
-        query_update = """  UPDATE  bskBASKET
+        query_update = """  UPDATE  `bskBASKET`
                             SET     date_modification=%s
                             WHERE   id=%s"""
         params_update = (now, bskid)
@@ -930,7 +930,7 @@ def move_to_basket(uid,
         for recid in recids:
             # Prevent duplication of items
             query = """ SELECT  '1'
-                        FROM    bskREC
+                        FROM    `bskREC`
                         WHERE   id_bskBASKET=%s
                                 AND
                                 id_bibrec_or_bskEXTREC=%s
@@ -941,7 +941,7 @@ def move_to_basket(uid,
 
             if len(res) == 0:
                 # Change the item's pointer to basket
-                query = """ UPDATE  bskREC
+                query = """ UPDATE  `bskREC`
                             SET     id_bskBASKET=%s,
                                     id_user_who_added_item=%s
                             WHERE   id_bskBASKET=%s
@@ -956,7 +956,7 @@ def move_to_basket(uid,
         # Update 'modification date'
         if len(moved_recids) > 0 and update_date_modification:
             now = convert_datestruct_to_datetext(localtime())
-            query = "UPDATE bskBASKET SET date_modification=%s WHERE id=%s"
+            query = "UPDATE `bskBASKET` SET date_modification=%s WHERE id=%s"
 
             params = (now, int(old_bskid))
             run_sql(query, params)
@@ -972,7 +972,7 @@ def add_to_many_baskets(uid, recids=[], colid=0, bskids=[], es_title="", es_desc
     if (len(recids) or colid == -1) and len(bskids):
         query1 = """SELECT   id_bskBASKET,
                              max(score)
-                    FROM     bskREC
+                    FROM     `bskREC`
                     WHERE    %s
                     GROUP BY id_bskBASKET"""
         bskids = [bskid for bskid in bskids if int(bskid) >= 0]
@@ -985,7 +985,7 @@ def add_to_many_baskets(uid, recids=[], colid=0, bskids=[], es_title="", es_desc
         if colid > 0:
             query2A = """SELECT id,
                                 external_id
-                         FROM   bskEXTREC
+                         FROM   `bskEXTREC`
                          WHERE  %s
                          AND    collection_id=%s"""
             query2A %= (sep_or.join(['external_id=%s'] * len(recids)), colid)
@@ -1051,7 +1051,7 @@ def add_to_many_baskets(uid, recids=[], colid=0, bskids=[], es_title="", es_desc
                 i += 1
         run_sql(query2, params)
 
-        query3 = """UPDATE bskBASKET
+        query3 = """UPDATE `bskBASKET`
                     SET    date_modification=%s
                     WHERE """
         query3 += sep_or.join(["id=%s"] * len(bskids))
@@ -1086,8 +1086,8 @@ def get_external_records(recids, of="hb"):
         query = """ SELECT  rec.collection_id,
                             fmt.id_bskEXTREC,
                             fmt.value
-                    FROM    bskEXTFMT AS fmt
-                    JOIN    bskEXTREC AS rec
+                    FROM    `bskEXTFMT` AS fmt
+                    JOIN    `bskEXTREC` AS rec
                         ON  rec.id=fmt.id_bskEXTREC
                     WHERE   format=%%s
                     AND     ( %s )"""
@@ -1105,8 +1105,7 @@ def store_external_records(records, of="hb"):
     """Store formatted external records to the database."""
 
     if records:
-        query = """INSERT
-                    INTO bskEXTFMT
+        query = """INSERT INTO `bskEXTFMT`
                         (id_bskEXTREC,
                         format,
                         last_updated,
@@ -1136,7 +1135,7 @@ def store_external_source(es_id, es_title, es_desc, es_url, of="hb"):
     """Store formatted external sources to the database."""
 
     if es_id and es_title and es_desc:
-        query = """INSERT INTO  bskEXTFMT
+        query = """INSERT INTO  `bskEXTFMT`
                                 (id_bskEXTREC,
                                  format,
                                  last_updated,
@@ -1154,7 +1153,7 @@ def get_external_colid_and_url(recid):
         query = """SELECT
                     collection_id,
                     original_url
-                    FROM bskEXTREC
+                    FROM `bskEXTREC`
                     WHERE id=%s"""
         params = (-recid,)
         res = run_sql(query,params)
@@ -1180,10 +1179,10 @@ def get_group_baskets_info_for_group(grpid):
                             DATE_FORMAT(max(rec.date_added), '%%Y-%%m-%%d %%H:%%i:%%s'),
                             ugbsk.share_level,
                             bsk.id_owner
-                FROM        usergroup_bskBASKET AS ugbsk
-                JOIN        bskBASKET AS bsk
+                FROM        `usergroup_bskBASKET` AS ugbsk
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=ugbsk.id_bskBASKET
-                LEFT JOIN   bskREC AS rec
+                LEFT JOIN   `bskREC` AS rec
                     ON      rec.id_bskBASKET=bsk.id
                 WHERE       ugbsk.id_usergroup=%s
                 AND         ugbsk.share_level!='NO'
@@ -1200,7 +1199,7 @@ def get_group_name(gid):
     """Given its id return the group's name."""
 
     query = """ SELECT  name
-                FROM    usergroup
+                FROM    `usergroup`
                 WHERE   id=%s"""
     params = (gid,)
     res = run_sql(query, params)
@@ -1213,12 +1212,12 @@ def get_all_user_group_basket_ids_by_group(uid):
     query = """ SELECT      ug.id,
                             ug.name,
                             GROUP_CONCAT(ugbsk.id_bskBASKET)
-                FROM        usergroup AS ug
-                JOIN        usergroup_bskBASKET AS ugbsk
+                FROM        `usergroup` AS ug
+                JOIN        `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_usergroup=ug.id
-                JOIN        bskBASKET AS bsk
+                JOIN        `bskBASKET` AS bsk
                     ON      ugbsk.id_bskBASKET=bsk.id
-                JOIN        user_usergroup AS uug
+                JOIN        `user_usergroup` AS uug
                     ON      ug.id=uug.id_usergroup
                     AND     uug.id_user=%s
                 GROUP BY    ug.name
@@ -1234,16 +1233,16 @@ def get_all_user_group_basket_ids_by_group_with_add_rights(uid):
 
     query = """ SELECT      ug.name,
                             GROUP_CONCAT(ugbsk.id_bskBASKET)
-                FROM        usergroup AS ug
-                JOIN        usergroup_bskBASKET AS ugbsk
+                FROM        `usergroup` AS ug
+                JOIN        `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_usergroup=ug.id
                     AND     ugbsk.share_level!='NO'
                     AND     ugbsk.share_level!='RI'
                     AND     ugbsk.share_level!='RC'
                     AND     ugbsk.share_level!='AC'
-                JOIN        bskBASKET AS bsk
+                JOIN        `bskBASKET` AS bsk
                     ON      ugbsk.id_bskBASKET=bsk.id
-                JOIN        user_usergroup AS uug
+                JOIN        `user_usergroup` AS uug
                     ON      ug.id=uug.id_usergroup
                     AND     uug.id_user=%s
                 GROUP BY    ug.name
@@ -1275,9 +1274,9 @@ def get_all_group_baskets_names(uid,
         SELECT bsk.id,
                bsk.name,
                ug.name
-        FROM usergroup ug JOIN usergroup_bskBASKET ugbsk
+        FROM `usergroup` ug JOIN `usergroup_bskBASKET` ugbsk
                           ON ug.id=ugbsk.id_usergroup
-                          JOIN bskBASKET bsk
+                          JOIN `bskBASKET` bsk
                           ON bsk.id=ugbsk.id_bskBASKET
         WHERE %s AND NOT(ugbsk.share_level='NO')
         ORDER BY ug.name""" % where_clause
@@ -1296,7 +1295,7 @@ def is_shared_to(bskids):
     query = """SELECT b.id,
                       min(u.id_usergroup)
                FROM
-                      bskBASKET b LEFT JOIN usergroup_bskBASKET u
+                      `bskBASKET` b LEFT JOIN `usergroup_bskBASKET` u
                       ON (b.id=u.id_bskBASKET) """
     if len(bskids) != 0:
         query += " WHERE "
@@ -1317,8 +1316,8 @@ def get_basket_share_level(bskid):
     Will return 0 if the basket is both group and publicly shared."""
 
     query = """ SELECT      MIN(ugbsk.id_usergroup)
-                FROM        bskBASKET AS bsk
-                LEFT JOIN   usergroup_bskBASKET AS ugbsk
+                FROM        `bskBASKET` AS bsk
+                LEFT JOIN   `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_bskBASKET=bsk.id
                 WHERE       bsk.id=%s
                 GROUP BY    bsk.id"""
@@ -1352,16 +1351,16 @@ def get_all_items_in_user_group_baskets(uid,
                             ug.name,
                             ugbsk.share_level,
                             GROUP_CONCAT(rec.id_bibrec_or_bskEXTREC)
-                FROM        bskREC AS rec
-                JOIN        bskBASKET AS bsk
+                FROM        `bskREC` AS rec
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=rec.id_bskBASKET
-                JOIN        usergroup_bskBASKET AS ugbsk
+                JOIN        `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_bskBASKET=rec.id_bskBASKET
                     %s
-                JOIN        user_usergroup AS uug
+                JOIN        `user_usergroup` AS uug
                     ON      uug.id_usergroup=ugbsk.id_usergroup
                     AND     uug.id_user=%%s
-                JOIN        usergroup AS ug
+                JOIN        `usergroup` AS ug
                     ON      ug.id=uug.id_usergroup
                 WHERE       rec.id_bibrec_or_bskEXTREC > 0
                 GROUP BY    rec.id_bskBASKET""" % (group_clause,)
@@ -1376,18 +1375,18 @@ def get_all_items_in_user_group_baskets(uid,
                             ugbsk.share_level,
                             rec.id_bibrec_or_bskEXTREC,
                             ext.value
-                FROM        bskREC AS rec
-                JOIN        bskBASKET AS bsk
+                FROM        `bskREC` AS rec
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=rec.id_bskBASKET
-                JOIN        usergroup_bskBASKET AS ugbsk
+                JOIN        `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_bskBASKET=rec.id_bskBASKET
                     %s
-                JOIN        user_usergroup AS uug
+                JOIN        `user_usergroup` AS uug
                     ON      uug.id_usergroup=ugbsk.id_usergroup
                     AND     uug.id_user=%%s
-                JOIN        usergroup AS ug
+                JOIN        `usergroup` AS ug
                     ON      ug.id=uug.id_usergroup
-                JOIN        bskEXTFMT AS ext
+                JOIN        `bskEXTFMT` AS ext
                     ON      ext.id_bskEXTREC=-rec.id_bibrec_or_bskEXTREC
                     AND     ext.format=%%s
                 WHERE       rec.id_bibrec_or_bskEXTREC < 0
@@ -1419,19 +1418,19 @@ def get_all_items_in_user_group_baskets_by_matching_notes(uid,
                             ug.name,
                             ugbsk.share_level,
                             GROUP_CONCAT(DISTINCT(notes.id_bibrec_or_bskEXTREC))
-                FROM        bskRECORDCOMMENT AS notes
-                JOIN        bskBASKET AS bsk
+                FROM        `bskRECORDCOMMENT` AS notes
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=notes.id_bskBASKET
-                JOIN        usergroup_bskBASKET AS ugbsk
+                JOIN        `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_bskBASKET=notes.id_bskBASKET
                     AND     ugbsk.share_level IS NOT NULL
                     AND     ugbsk.share_level!='NO'
                     AND     ugbsk.share_level!='RI'
                     %s
-                JOIN        user_usergroup AS uug
+                JOIN        `user_usergroup` AS uug
                     ON      uug.id_usergroup=ugbsk.id_usergroup
                     AND     uug.id_user=%%s
-                JOIN        usergroup AS ug
+                JOIN        `usergroup` AS ug
                     ON      ug.id=uug.id_usergroup
                 WHERE       notes.title like %%s
                 OR          notes.body like %%s
@@ -1446,10 +1445,10 @@ def is_group_basket_valid(uid, bskid):
     is a member of and is valid."""
 
     query = """ SELECT  id
-                FROM    bskBASKET AS bsk
-                JOIN    usergroup_bskBASKET AS ugbsk
+                FROM    `bskBASKET` AS bsk
+                JOIN    `usergroup_bskBASKET` AS ugbsk
                     ON  ugbsk.id_bskBASKET=bsk.id
-                JOIN    user_usergroup AS uug
+                JOIN    `user_usergroup` AS uug
                     ON  uug.id_usergroup=ugbsk.id_usergroup
                     AND uug.id_user=%s
                 WHERE   id=%s"""
@@ -1475,10 +1474,10 @@ def get_all_user_groups(uid):
 
     query = """ SELECT      ug.id,
                             ug.name
-                FROM        user_usergroup AS uug
-                JOIN        usergroup AS ug
+                FROM        `user_usergroup` AS uug
+                JOIN        `usergroup` AS ug
                     ON      ug.id=uug.id_usergroup
-                JOIN        usergroup_bskBASKET AS ugbsk
+                JOIN        `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_usergroup=uug.id_usergroup
                 WHERE       uug.id_user=%s
                 GROUP BY    uug.id_usergroup"""
@@ -1498,11 +1497,11 @@ def get_external_baskets_infos(uid):
            count(rec.id_bibrec_or_bskEXTREC),
            DATE_FORMAT(max(rec.date_added), '%%Y-%%m-%%d %%H:%%i:%%s'),
            ugbsk.share_level
-    FROM   bskBASKET bsk JOIN user_bskBASKET ubsk
+    FROM   `bskBASKET` bsk JOIN `user_bskBASKET` ubsk
                          ON (bsk.id=ubsk.id_bskBASKET AND ubsk.id_user=%s)
-                         LEFT JOIN bskREC rec
+                         LEFT JOIN `bskREC` rec
                          ON (bsk.id=rec.id_bskBASKET)
-                         LEFT JOIN usergroup_bskBASKET ugbsk
+                         LEFT JOIN `usergroup_bskBASKET` ugbsk
                          ON (ugbsk.id_bskBASKET=bsk.id AND ugbsk.id_usergroup=0)
 
     WHERE  bsk.id_owner!=%s
@@ -1526,10 +1525,10 @@ def get_external_basket_info(bskid):
                             count(rec.id_bibrec_or_bskEXTREC),
                             DATE_FORMAT(max(rec.date_added), '%%Y-%%m-%%d %%H:%%i:%%s'),
                             ugbsk.share_level
-                FROM        bskBASKET AS bsk
-                LEFT JOIN   bskREC AS rec
+                FROM        `bskBASKET` AS bsk
+                LEFT JOIN   `bskREC` AS rec
                 ON          bsk.id=rec.id_bskBASKET
-                JOIN        usergroup_bskBASKET AS ugbsk
+                JOIN        `usergroup_bskBASKET` AS ugbsk
                 ON          bsk.id=ugbsk.id_bskBASKET
                 AND         ugbsk.id_usergroup=0
                 WHERE       id=%s"""
@@ -1546,13 +1545,13 @@ def get_all_external_basket_ids_and_names(uid):
                             bsk.name,
                             count(rec.id_bibrec_or_bskEXTREC),
                             ugbsk.id_usergroup
-                FROM        user_bskBASKET AS ubsk
-                JOIN        bskBASKET AS bsk
+                FROM        `user_bskBASKET` AS ubsk
+                JOIN        `bskBASKET` AS bsk
                     ON      ubsk.id_bskBASKET=bsk.id
                     AND     ubsk.id_user!=bsk.id_owner
-                LEFT JOIN   bskREC AS rec
+                LEFT JOIN   `bskREC` AS rec
                     ON      ubsk.id_bskBASKET=rec.id_bskBASKET
-                LEFT JOIN   usergroup_bskBASKET AS ugbsk
+                LEFT JOIN   `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_usergroup=0
                     AND     ugbsk.id_bskBASKET=bsk.id
                 WHERE       ubsk.id_user=%s
@@ -1567,8 +1566,8 @@ def count_external_baskets(uid):
     """Returns the number of external baskets the user is subscribed to."""
 
     query = """ SELECT      COUNT(ubsk.id_bskBASKET)
-                FROM        user_bskBASKET ubsk
-                LEFT JOIN   bskBASKET bsk
+                FROM        `user_bskBASKET` ubsk
+                LEFT JOIN   `bskBASKET` bsk
                     ON      (bsk.id=ubsk.id_bskBASKET AND ubsk.id_user=%s)
                 WHERE       bsk.id_owner!=%s"""
 
@@ -1597,9 +1596,9 @@ def get_all_external_baskets_names(uid,
     query = """
     SELECT bsk.id,
            bsk.name
-    FROM bskBASKET bsk JOIN usergroup_bskBASKET ugbsk
+    FROM `bskBASKET` bsk JOIN `usergroup_bskBASKET` ugbsk
                        ON bsk.id=ugbsk.id_bskBASKET
-                       JOIN user_bskBASKET ubsk
+                       JOIN `user_bskBASKET` ubsk
                        ON ubsk.id_bskBASKET=bsk.id
     WHERE ugbsk.id_usergroup=0 AND
           ubsk.id_user=%s AND
@@ -1620,14 +1619,14 @@ def get_all_items_in_user_public_baskets(uid,
                             bsk.name,
                             ugbsk.share_level,
                             GROUP_CONCAT(rec.id_bibrec_or_bskEXTREC)
-                FROM        bskREC AS rec
-                JOIN        bskBASKET AS bsk
+                FROM        `bskREC` AS rec
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=rec.id_bskBASKET
                     AND     bsk.id_owner!=%s
-                JOIN        user_bskBASKET AS ubsk
+                JOIN        `user_bskBASKET` AS ubsk
                     ON      ubsk.id_bskBASKET=rec.id_bskBASKET
                     AND     ubsk.id_user=%s
-                JOIN        usergroup_bskBASKET AS ugbsk
+                JOIN        `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_bskBASKET=rec.id_bskBASKET
                     AND     ugbsk.id_usergroup=0
                 WHERE       rec.id_bibrec_or_bskEXTREC > 0
@@ -1643,17 +1642,17 @@ def get_all_items_in_user_public_baskets(uid,
                             ugbsk.share_level,
                             rec.id_bibrec_or_bskEXTREC,
                             ext.value
-                FROM        bskREC AS rec
-                JOIN        bskBASKET AS bsk
+                FROM        `bskREC` AS rec
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=rec.id_bskBASKET
                     AND     bsk.id_owner!=%s
-                JOIN        user_bskBASKET AS ubsk
+                JOIN        `user_bskBASKET` AS ubsk
                     ON      ubsk.id_bskBASKET=rec.id_bskBASKET
                     AND     ubsk.id_user=%s
-                JOIN        usergroup_bskBASKET AS ugbsk
+                JOIN        `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_bskBASKET=rec.id_bskBASKET
                     AND     ugbsk.id_usergroup=0
-                JOIN        bskEXTFMT AS ext
+                JOIN        `bskEXTFMT` AS ext
                     ON      ext.id_bskEXTREC=-rec.id_bibrec_or_bskEXTREC
                     AND     ext.format=%s
                 WHERE       rec.id_bibrec_or_bskEXTREC < 0
@@ -1677,14 +1676,14 @@ def get_all_items_in_user_public_baskets_by_matching_notes(uid,
                             bsk.name,
                             ugbsk.share_level,
                             GROUP_CONCAT(DISTINCT(notes.id_bibrec_or_bskEXTREC))
-                FROM        bskRECORDCOMMENT AS notes
-                JOIN        bskBASKET AS bsk
+                FROM        `bskRECORDCOMMENT` AS notes
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=notes.id_bskBASKET
                     AND     bsk.id_owner!=%s
-                JOIN        user_bskBASKET AS ubsk
+                JOIN        `user_bskBASKET` AS ubsk
                     ON      ubsk.id_bskBASKET=notes.id_bskBASKET
                     AND     ubsk.id_user=%s
-                JOIN        usergroup_bskBASKET AS ugbsk
+                JOIN        `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_bskBASKET=notes.id_bskBASKET
                     AND     ugbsk.id_usergroup=0
                     AND     ugbsk.share_level IS NOT NULL
@@ -1709,10 +1708,10 @@ def get_all_items_in_all_public_baskets(format='hb'):
                             bsk.name,
                             ugbsk.share_level,
                             GROUP_CONCAT(rec.id_bibrec_or_bskEXTREC)
-                FROM        bskREC AS rec
-                JOIN        bskBASKET AS bsk
+                FROM        `bskREC` AS rec
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=rec.id_bskBASKET
-                JOIN        usergroup_bskBASKET AS ugbsk
+                JOIN        `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_bskBASKET=rec.id_bskBASKET
                     AND     ugbsk.id_usergroup=0
                 WHERE       rec.id_bibrec_or_bskEXTREC > 0
@@ -1726,13 +1725,13 @@ def get_all_items_in_all_public_baskets(format='hb'):
                             ugbsk.share_level,
                             rec.id_bibrec_or_bskEXTREC,
                             ext.value
-                FROM        bskREC AS rec
-                JOIN        bskBASKET AS bsk
+                FROM        `bskREC` AS rec
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=rec.id_bskBASKET
-                JOIN        usergroup_bskBASKET AS ugbsk
+                JOIN        `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_bskBASKET=rec.id_bskBASKET
                     AND     ugbsk.id_usergroup=0
-                JOIN        bskEXTFMT AS ext
+                JOIN        `bskEXTFMT` AS ext
                     ON      ext.id_bskEXTREC=-rec.id_bibrec_or_bskEXTREC
                     AND     ext.format=%s
                 WHERE       rec.id_bibrec_or_bskEXTREC < 0
@@ -1754,10 +1753,10 @@ def get_all_items_in_all_public_baskets_by_matching_notes(p=""):
                             bsk.name,
                             ugbsk.share_level,
                             GROUP_CONCAT(DISTINCT(notes.id_bibrec_or_bskEXTREC))
-                FROM        bskRECORDCOMMENT AS notes
-                JOIN        bskBASKET AS bsk
+                FROM        `bskRECORDCOMMENT` AS notes
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=notes.id_bskBASKET
-                JOIN        usergroup_bskBASKET AS ugbsk
+                JOIN        `usergroup_bskBASKET` AS ugbsk
                     ON      ugbsk.id_bskBASKET=notes.id_bskBASKET
                     AND     ugbsk.id_usergroup=0
                     AND     ugbsk.share_level IS NOT NULL
@@ -1785,14 +1784,14 @@ def get_public_basket_infos(bskid):
                        bsk.nb_views,
                        bsk.id_owner,
                        user.nickname
-                FROM bskBASKET bsk LEFT JOIN user
+                FROM `bskBASKET` bsk LEFT JOIN `user`
                                    ON bsk.id_owner=user.id
                 WHERE bsk.id=%s"""
     res1 = run_sql(query1, (int(bskid),))
     if len(res1):
         basket = list(res1[0])
         query2 = """SELECT share_level
-                    FROM usergroup_bskBASKET
+                    FROM `usergroup_bskBASKET`
                     WHERE id_usergroup=0 and id_bskBASKET=%s"""
         res2 = run_sql(query2, (int(bskid),))
         if res2:
@@ -1812,10 +1811,10 @@ def get_public_basket_info(bskid):
                             COUNT(rec.id_bibrec_or_bskEXTREC),
                             GROUP_CONCAT(rec.id_bibrec_or_bskEXTREC),
                             ubsk.share_level
-                FROM        bskBASKET AS bsk
-                LEFT JOIN   bskREC AS rec
+                FROM        `bskBASKET` AS bsk
+                LEFT JOIN   `bskREC` AS rec
                     ON      rec.id_bskBASKET=bsk.id
-                JOIN        usergroup_bskBASKET AS ubsk
+                JOIN        `usergroup_bskBASKET` AS ubsk
                     ON      ubsk.id_bskBASKET=bsk.id
                     AND     ubsk.id_usergroup=0
                 WHERE       bsk.id=%s
@@ -1838,14 +1837,14 @@ def get_basket_general_infos(bskid):
                       count(rec.id_bibrec_or_bskEXTREC),
                       bsk.id_owner
 
-    FROM   bskBASKET bsk LEFT JOIN bskREC rec
+    FROM   `bskBASKET` bsk LEFT JOIN `bskREC` rec
                          ON bsk.id=rec.id_bskBASKET
     WHERE bsk.id=%s
 
     GROUP BY bsk.id"""
     res = run_sql(query, (int(bskid),))
     if res:
-        query2 = "UPDATE bskBASKET SET nb_views=nb_views+1 WHERE id=%s"
+        query2 = "UPDATE `bskBASKET` SET nb_views=nb_views+1 WHERE id=%s"
         run_sql(query2, (int(bskid),))
         return res[0]
     return ()
@@ -1884,9 +1883,9 @@ def get_public_baskets_list(inf_limit, max_number, order=1, asc=1):
                       bsk.nb_views,
                       u.id,
                       u.nickname
-               FROM   bskBASKET bsk LEFT JOIN usergroup_bskBASKET ugbsk
+               FROM   `bskBASKET` bsk LEFT JOIN `usergroup_bskBASKET` ugbsk
                                     on bsk.id=ugbsk.id_bskBASKET
-                                    LEFT JOIN user u
+                                    LEFT JOIN `user` u
                                     on bsk.id_owner=u.id
                WHERE ugbsk.id_usergroup=0
     """
@@ -1935,12 +1934,12 @@ def get_list_public_baskets(page, max_number, sort='name', asc=1):
                             DATE_FORMAT(bsk.date_modification, '%%Y-%%m-%%d %%H:%%i:%%s'),
                             COUNT(rec.id_bibrec_or_bskEXTREC) AS items,
                             bsk.nb_views
-                FROM        usergroup_bskBASKET AS ugbsk
-                JOIN        bskBASKET AS bsk
+                FROM        `usergroup_bskBASKET` AS ugbsk
+                JOIN        `bskBASKET` AS bsk
                     ON      bsk.id=ugbsk.id_bskBASKET
-                LEFT JOIN   bskREC AS rec
+                LEFT JOIN   `bskREC` AS rec
                     ON      rec.id_bskBASKET=bsk.id
-                LEFT JOIN   user AS u
+                LEFT JOIN   `user` AS u
                     ON      u.id=bsk.id_owner
                 WHERE       ugbsk.id_usergroup=0
                 GROUP BY    bsk.id"""
@@ -2012,7 +2011,7 @@ def subscribe(uid, bskid):
         # The user is either the owner of the basket or is already subscribed.
         return False
     else:
-        query2 = """INSERT INTO user_bskBASKET (id_user, id_bskBASKET)
+        query2 = """INSERT INTO `user_bskBASKET` (id_user, id_bskBASKET)
                                    VALUES      (%s, %s)"""
 
         params2 = (uid, bskid)
@@ -2055,8 +2054,8 @@ def is_user_subscribed_to_basket(uid, bskid):
     or ((0,),) if the user is not subscribed or is the owner of the basket."""
 
     query = """ SELECT  COUNT(ubsk.id_bskBASKET)
-                FROM    user_bskBASKET AS ubsk
-                JOIN    bskBASKET AS bsk
+                FROM    `user_bskBASKET` AS ubsk
+                JOIN    `bskBASKET` AS bsk
                     ON  bsk.id=ubsk.id_bskBASKET
                     AND bsk.id_owner!=ubsk.id_user
                 WHERE   ubsk.id_user=%s
@@ -2109,7 +2108,7 @@ def get_groups_subscribing_to_basket(bskid):
     query = """SELECT ugb.id_usergroup,
                       ug.name,
                       ugb.share_level
-               FROM usergroup_bskBASKET ugb LEFT JOIN usergroup ug
+               FROM `usergroup_bskBASKET` ugb LEFT JOIN `usergroup` ug
                                             ON ugb.id_usergroup=ug.id
                WHERE ugb.id_bskBASKET=%s
                ORDER BY ugb.id_usergroup"""
@@ -2133,8 +2132,8 @@ def count_public_basket_subscribers(bskid):
     """Return the number of users subscribed to the given public basket."""
 
     query = """ SELECT  COUNT(ubsk.id_user)
-                FROM    user_bskBASKET AS ubsk
-                JOIN    bskBASKET AS bsk
+                FROM    `user_bskBASKET` AS ubsk
+                JOIN    `bskBASKET` AS bsk
                     ON  bsk.id=ubsk.id_bskBASKET
                     AND bsk.id_owner!=ubsk.id_user
                 WHERE   ubsk.id_bskBASKET=%s"""
@@ -2160,7 +2159,7 @@ def get_notes(bskid, recid):
            bskcmt.id,
            bskcmt.in_reply_to_id_bskRECORDCOMMENT
 
-    FROM   bskRECORDCOMMENT bskcmt LEFT JOIN user
+    FROM   `bskRECORDCOMMENT` bskcmt LEFT JOIN `user`
                                    ON (bskcmt.id_user=user.id)
 
     WHERE  bskcmt.id_bskBASKET=%s AND
@@ -2187,7 +2186,7 @@ def get_note(cmtid):
            DATE_FORMAT(bskcmt.date_creation, '%%Y-%%m-%%d %%H:%%i:%%s'),
            bskcmt.priority
 
-    FROM   bskRECORDCOMMENT bskcmt LEFT JOIN user
+    FROM   `bskRECORDCOMMENT` bskcmt LEFT JOIN `user`
                                    ON (bskcmt.id_user=user.id)
 
     WHERE  bskcmt.id=%s
@@ -2219,7 +2218,7 @@ def save_note(uid, bskid, recid, title, body, date_creation=None, reply_to=None)
     else: #the date comes with the proper format
         date = date_creation
 
-    res = run_sql("""INSERT INTO bskRECORDCOMMENT (id_user, id_bskBASKET,
+    res = run_sql("""INSERT INTO `bskRECORDCOMMENT` (id_user, id_bskBASKET,
                        id_bibrec_or_bskEXTREC, title, body, date_creation, in_reply_to_id_bskRECORDCOMMENT)
                      VALUES (%s, %s, %s, %s, %s, %s, %s)""",
                   (int(uid), int(bskid), int(recid), title, body, date, reply_to or 0))
@@ -2230,7 +2229,7 @@ def save_note(uid, bskid, recid, title, body, date_creation=None, reply_to=None)
             parent_reply_order = ''
         else:
             parent_reply_order = parent_reply_order[0][0]
-        run_sql("""UPDATE bskRECORDCOMMENT SET reply_order_cached_data=%s WHERE id=%s""",
+        run_sql("""UPDATE `bskRECORDCOMMENT` SET reply_order_cached_data=%s WHERE id=%s""",
                 (parent_reply_order + get_reply_order_cache_data(new_comid), new_comid))
         return int(res)
     return 0
@@ -2266,7 +2265,7 @@ def get_note_ancestors(cmtid, depth=None):
     if depth == 0:
         return []
 
-    res = run_sql("SELECT in_reply_to_id_bskRECORDCOMMENT FROM bskRECORDCOMMENT WHERE id=%s", (cmtid,))
+    res = run_sql("SELECT in_reply_to_id_bskRECORDCOMMENT FROM `bskRECORDCOMMENT` WHERE id=%s", (cmtid,))
     if res:
         parent_cmtid = res[0][0]
         if parent_cmtid == 0:
@@ -2307,8 +2306,8 @@ def get_number_of_notes_per_record_in_basket(bskid, recids):
     # Single element tuples would cause the query to fail due to the syntax.
     query = """ SELECT      rec.id_bibrec_or_bskEXTREC,
                             COUNT(cmt.id_bibrec_or_bskEXTREC)
-                FROM        bskREC as rec
-                LEFT JOIN   bskRECORDCOMMENT as cmt
+                FROM        `bskREC` as rec
+                LEFT JOIN   `bskRECORDCOMMENT` as cmt
                     ON      cmt.id_bibrec_or_bskEXTREC = rec.id_bibrec_or_bskEXTREC
                 WHERE       rec.id_bskBASKET=%%s
                     AND     rec.id_bibrec_or_bskEXTREC IN (%s)
@@ -2328,8 +2327,8 @@ def get_group_infos(uid):
     query = """SELECT g.id,
                       g.name,
                       count(ugb.id_bskBASKET)
-               FROM usergroup g LEFT JOIN (user_usergroup ug,
-                                           usergroup_bskBASKET ugb)
+               FROM `usergroup` g LEFT JOIN (user_usergroup ug,
+                                           `usergroup_bskBASKET` ugb)
                                 ON (g.id=ug.id_usergroup
                                             AND
                                     g.id=ugb.id_usergroup)
@@ -2363,7 +2362,7 @@ def get_groups_user_member_of(uid):
     query = """
     SELECT g.id,
            g.name
-    FROM usergroup g JOIN user_usergroup ug
+    FROM `usergroup` g JOIN `user_usergroup` ug
                    ON (g.id=ug.id_usergroup)
     WHERE ug.id_user=%s and ug.user_status!=%s
     ORDER BY g.name

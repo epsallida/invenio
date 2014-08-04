@@ -32,7 +32,7 @@ def get_kbs_info(kbtypeparam="", searchkbname=""):
        If the KB is dynamic, the dynamic kb key are added in the dict.
     """
     out = []
-    query = "SELECT id, name, description, kbtype FROM knwKB ORDER BY name"
+    query = "SELECT id, name, description, kbtype FROM `knwKB` ORDER BY name"
     res = run_sql(query)
     for row in res:
         doappend = 1 # by default
@@ -75,7 +75,7 @@ def get_all_kb_names():
 
 def get_kb_id(kb_name):
     """Returns the id of the kb with given name"""
-    res = run_sql("""SELECT id FROM knwKB WHERE name LIKE %s""",
+    res = run_sql("""SELECT id FROM `knwKB` WHERE name LIKE %s""",
                   (kb_name,))
     if len(res) > 0:
         return res[0][0]
@@ -89,7 +89,7 @@ def get_kb_name(kb_id):
     @param kb_id the id
     @return string
     """
-    res = run_sql("""SELECT name FROM knwKB WHERE id=%s""",
+    res = run_sql("""SELECT name FROM `knwKB` WHERE id=%s""",
                   (kb_id,))
     if len(res) > 0:
         return res[0][0]
@@ -101,7 +101,7 @@ def get_kb_type(kb_id):
     @param kb_id knowledge base id
     @return kb_type
     """
-    res = run_sql("""SELECT kbtype FROM knwKB WHERE id=%s""",
+    res = run_sql("""SELECT kbtype FROM `knwKB` WHERE id=%s""",
                   (kb_id,))
     if len(res) > 0:
         return res[0][0]
@@ -131,14 +131,14 @@ def get_kb_mappings(kb_name="", sortby="to", keylike="", valuelike="", match_typ
     if not kb_name:
         res = run_sql("""SELECT m.id, m.m_key, m.m_value, m.id_knwKB,
                          k.name
-                   FROM knwKBRVAL m, knwKB k
+                   FROM `knwKBRVAL` m, knwKB k
                    where m_key like %s
                    and m_value like %s
                    and m.id_knwKB = k.id""", (keylike, valuelike))
     else:
         res = run_sql("""SELECT m.id, m.m_key, m.m_value, m.id_knwKB,
                          k.name
-               FROM knwKBRVAL m, knwKB k
+               FROM `knwKBRVAL` m, knwKB k
                WHERE id_knwKB=%s
                and m.id_knwKB = k.id
                and m_key like %s
@@ -163,7 +163,7 @@ def get_kb_dyn_config(kb_id):
     @return dict
     """
     res = run_sql("""SELECT output_tag, search_expression, id_collection
-               FROM knwKBDDEF where
+               FROM `knwKBDDEF` where
                id_knwKB = %s""", (kb_id, ))
     mydict = {}
     for row in res:
@@ -192,8 +192,8 @@ def save_kb_dyn_config(kb_id, field, expression, collection=""):
         res = run_sql("""SELECT id from collection where name = %s""", (collection,))
         if res:
             coll_id = res[0][0]
-    run_sql("""DELETE FROM knwKBDDEF where id_knwKB = %s""", (kb_id, ))
-    run_sql("""INSERT INTO knwKBDDEF (id_knwKB, output_tag, search_expression, id_collection)
+    run_sql("""DELETE FROM `knwKBDDEF` where id_knwKB = %s""", (kb_id, ))
+    run_sql("""INSERT INTO `knwKBDDEF` (id_knwKB, output_tag, search_expression, id_collection)
                VALUES (%s,%s,%s,%s)""", (kb_id, field, expression, coll_id))
     return ""
 
@@ -204,7 +204,7 @@ def get_kb_description(kb_name):
     @return string
     """
     k_id = get_kb_id(kb_name)
-    res = run_sql("""SELECT description FROM knwKB WHERE id=%s""", (k_id,))
+    res = run_sql("""SELECT description FROM `knwKB` WHERE id=%s""", (k_id,))
     return res[0][0]
 
 def add_kb(kb_name, kb_description, kb_type=None):
@@ -234,16 +234,16 @@ def add_kb(kb_name, kb_description, kb_type=None):
 def delete_kb(kb_name):
     """Deletes the given kb"""
     k_id = get_kb_id(kb_name)
-    run_sql("""DELETE FROM knwKBRVAL WHERE id_knwKB = %s""", (k_id,))
-    run_sql("""DELETE FROM knwKB WHERE id = %s""", (k_id,))
+    run_sql("""DELETE FROM `knwKBRVAL` WHERE id_knwKB = %s""", (k_id,))
+    run_sql("""DELETE FROM `knwKB` WHERE id = %s""", (k_id,))
     #finally, delete from COLL table
-    run_sql("""DELETE FROM knwKBDDEF where id_knwKB = %s""", (k_id,))
+    run_sql("""DELETE FROM `knwKBDDEF` where id_knwKB = %s""", (k_id,))
     return True
 
 
 def kb_exists(kb_name):
     """Returns True if a kb with the given name exists"""
-    rows = run_sql("""SELECT id FROM knwKB WHERE name = %s""",
+    rows = run_sql("""SELECT id FROM `knwKB` WHERE name = %s""",
                    (kb_name,))
     if len(rows) > 0:
         return True
@@ -253,7 +253,7 @@ def kb_exists(kb_name):
 def update_kb(kb_name, new_name, new_description=''):
     """Updates given kb with new name and (optionally) new description"""
     k_id = get_kb_id(kb_name)
-    run_sql("""UPDATE knwKB
+    run_sql("""UPDATE `knwKB`
                   SET name = %s , description = %s
                 WHERE id = %s""", (new_name, new_description, k_id))
     return True
@@ -261,14 +261,14 @@ def update_kb(kb_name, new_name, new_description=''):
 def add_kb_mapping(kb_name, key, value):
     """Adds new mapping key->value in given kb"""
     k_id = get_kb_id(kb_name)
-    run_sql("""REPLACE INTO knwKBRVAL (m_key, m_value, id_knwKB)
+    run_sql("""REPLACE INTO `knwKBRVAL` (m_key, m_value, id_knwKB)
                 VALUES (%s, %s, %s)""", (key, value, k_id))
     return True
 
 def remove_kb_mapping(kb_name, key):
     """Removes mapping with given key from given kb"""
     k_id = get_kb_id(kb_name)
-    run_sql("""DELETE FROM knwKBRVAL
+    run_sql("""DELETE FROM `knwKBRVAL`
                 WHERE m_key = %s AND id_knwKB = %s""",
             (key, k_id))
     return True
@@ -277,7 +277,7 @@ def kb_mapping_exists(kb_name, key):
     """Returns true if the mapping with given key exists in the given kb"""
     if kb_exists(kb_name):
         k_id = get_kb_id(kb_name)
-        rows = run_sql("""SELECT id FROM knwKBRVAL
+        rows = run_sql("""SELECT id FROM `knwKBRVAL`
                            WHERE m_key = %s
                              AND id_knwKB = %s""", (key, k_id))
         if len(rows) > 0:
@@ -288,8 +288,8 @@ def kb_key_rules(key):
     """Returns a list of 4-tuples that have a key->value mapping in some KB
        The format of the tuples is [kb_id, kb_name,key,value] """
     res = run_sql("""SELECT f.id, f.name, m.m_key, m.m_value
-                     from knwKBRVAL as m JOIN
-                     knwKB as f on
+                     from `knwKBRVAL` as m JOIN
+                     `knwKB` as f on
                      m.id_knwKB=f.id WHERE
                      m.m_key = %s""", (key, ))
     return res
@@ -298,8 +298,8 @@ def kb_value_rules(value):
     """Returns a list of 4-tuples that have a key->value mapping in some KB
        The format of the tuples is [kb_id, kb_name,key,value] """
     res = run_sql("""SELECT f.id, f.name, m.m_key, m.m_value from
-                     knwKBRVAL as m JOIN
-                     knwKB as f on
+                     `knwKBRVAL` as m JOIN
+                     `knwKB` as f on
                      m.id_knwKB=f.id WHERE
                      m.m_value = %s""", (value, ))
     return res
@@ -314,7 +314,7 @@ def get_kb_mapping_value(kb_name, key):
     #@param default a default value to return if mapping is not found
     """
     k_id = get_kb_id(kb_name)
-    res = run_sql("""SELECT m_value FROM knwKBRVAL
+    res = run_sql("""SELECT m_value FROM `knwKBRVAL`
                       WHERE m_key LIKE %s
                         AND id_knwKB = %s LIMIT 1""",
                   (key, k_id))
@@ -326,7 +326,7 @@ def get_kb_mapping_value(kb_name, key):
 def update_kb_mapping(kb_name, key, new_key, new_value):
     """Updates the mapping given by key with new key and value"""
     k_id = get_kb_id(kb_name)
-    run_sql("""UPDATE knwKBRVAL
+    run_sql("""UPDATE `knwKBRVAL`
                   SET m_key = %s , m_value = %s
                 WHERE m_key = %s AND id_knwKB = %s""",
             (new_key, new_value, key, k_id))
@@ -349,7 +349,7 @@ def get_kba_values(kb_name, searchname="", searchtype="s"):
 
     if not searchname:
         searchname = '%'
-    res = run_sql("""SELECT m_value FROM knwKBRVAL
+    res = run_sql("""SELECT m_value FROM `knwKBRVAL`
                       WHERE m_value LIKE %s
                         AND id_knwKB = %s""",
                   (searchname, k_id))
@@ -373,7 +373,7 @@ def get_kbr_keys(kb_name, searchkey="", searchvalue="", searchtype='s'):
         searchvalue = '%'
     if not searchkey:
         searchkey = '%'
-    return run_sql("""SELECT m_key FROM knwKBRVAL
+    return run_sql("""SELECT m_key FROM `knwKBRVAL`
                       WHERE m_value LIKE %s
                       AND m_key LIKE %s
                         AND id_knwKB = %s""",
@@ -407,7 +407,7 @@ def get_kbr_values(kb_name, searchkey="%", searchvalue="", searchtype='s', use_m
         searchvalue = searchvalue+'%'
     if not searchvalue:
         searchvalue = '%'
-    return run_sql("""SELECT m_value FROM knwKBRVAL
+    return run_sql("""SELECT m_value FROM `knwKBRVAL`
                       WHERE m_value LIKE %s
                       AND m_key LIKE %s
                         AND id_knwKB = %s""",
@@ -435,7 +435,7 @@ def get_kbr_items(kb_name, searchkey="", searchvalue="", searchtype='s'):
     if not searchkey:
         searchkey = '%'
     res = []
-    rows = run_sql("""SELECT m_key, m_value FROM knwKBRVAL
+    rows = run_sql("""SELECT m_key, m_value FROM `knwKBRVAL`
                       WHERE m_value LIKE %s
                       AND m_key LIKE %s
                         AND id_knwKB = %s""",

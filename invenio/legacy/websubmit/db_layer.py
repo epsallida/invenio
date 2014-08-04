@@ -36,7 +36,7 @@ def get_storage_directory_of_action(action):
     ## Initialise directory to None for case in which action doesn't exist:
     directory = None
     ## Query the DB:
-    qstr = """SELECT dir FROM sbmACTION WHERE sactname=%s LIMIT 1"""
+    qstr = """SELECT dir FROM `sbmACTION` WHERE sactname=%s LIMIT 1"""
     qres = run_sql(qstr, (action,))
     if len(qres) > 0:
         ## The action exists - set the correct value of directory:
@@ -56,7 +56,7 @@ def get_longname_of_doctype(doctype):
     ## document-type doesn't exist:
     ldocname = None
     ## Query the DB:
-    qstr = """SELECT ldocname FROM sbmDOCTYPE WHERE sdocname=%s LIMIT 1"""
+    qstr = """SELECT ldocname FROM `sbmDOCTYPE` WHERE sdocname=%s LIMIT 1"""
     qres = run_sql(qstr, (doctype,))
     if len(qres) > 0:
         ## The doctype exists - get the doctype long-name:
@@ -77,7 +77,7 @@ def get_longname_of_action(action):
     ## action doesn't exist:
     lactname = None
     ## Query the DB:
-    qstr = """SELECT lactname FROM sbmACTION WHERE sactname=%s LIMIT 1"""
+    qstr = """SELECT lactname FROM `sbmACTION` WHERE sactname=%s LIMIT 1"""
     qres = run_sql(qstr, (action,))
     if len(qres) > 0:
         ## The action exists - get its long-name:
@@ -98,7 +98,7 @@ def doctype_has_submission(doctype, action):
     exists = 0 ## Flag indicating the submission's existence
 
     ## Execute the query to count the number of rows for this submission:
-    qstr = """SELECT count(docname) FROM sbmIMPLEMENT """ \
+    qstr = """SELECT count(docname) FROM `sbmIMPLEMENT` """ \
            """WHERE docname=%s AND actname=%s"""
     qres = run_sql(qstr, (doctype, action))
 
@@ -136,7 +136,7 @@ def get_num_pages_of_submission(submission):
     ## Initialise the number of pages to None
     numpages = None
     ## Query the DB:
-    qstr = """SELECT nbpg FROM sbmIMPLEMENT WHERE subname=%s LIMIT 1"""
+    qstr = """SELECT nbpg FROM `sbmIMPLEMENT` WHERE subname=%s LIMIT 1"""
     qres = run_sql(qstr, (submission,))
     if len(qres) > 0:
         ## The submission exists - set the correct value of directory:
@@ -161,7 +161,7 @@ def get_parameter_value_for_doctype(doctype, paramname):
         type; None if there was no value.
     """
     param_value = None
-    qstr = """SELECT value FROM sbmPARAMETERS """ \
+    qstr = """SELECT value FROM `sbmPARAMETERS` """ \
            """WHERE doctype=%s and name=%s """ \
            """LIMIT 1"""
     qres = run_sql(qstr, (doctype, paramname))
@@ -193,7 +193,7 @@ def submission_exists_in_log(doctype, action, subm_id, email):
     subm_exists = 0
     ## Get the number of rows existing in the submission-log
     ## for this submission:
-    qstr = """SELECT count(id) FROM sbmSUBMISSIONS """ \
+    qstr = """SELECT count(id) FROM `sbmSUBMISSIONS` """ \
            """WHERE doctype=%s AND action=%s """ \
            """AND id=%s AND email=%s"""
     qres = run_sql(qstr, (doctype, action, subm_id, email))
@@ -226,7 +226,7 @@ def log_new_pending_submission(doctype, action, subm_id, email):
        @return: (integer) - the number of rows inserted by the query.
     """
     ## Insert the details of the new submission into the DB:
-    qstr = """INSERT INTO sbmSUBMISSIONS """ \
+    qstr = """INSERT INTO `sbmSUBMISSIONS` """ \
            """(email, doctype, action, status, id, reference, cd, md) """ \
            """VALUES (%s, %s, %s, 'pending', %s, '', NOW(), NOW())"""
     qres = run_sql(qstr, (email, doctype, action, subm_id))
@@ -254,7 +254,7 @@ def log_new_completed_submission(doctype, action, subm_id, email, reportnum):
        @return: (integer) - the number of rows inserted by the query.
     """
     ## Insert the details of the new submission into the DB:
-    qstr = """INSERT INTO sbmSUBMISSIONS """ \
+    qstr = """INSERT INTO `sbmSUBMISSIONS` """ \
            """(email, doctype, action, status, id, reference, cd, md) """ \
            """VALUES (%s, %s, %s, 'finished', %s, %s, NOW(), NOW())"""
     qres = run_sql(qstr, (email, doctype, action, subm_id, reportnum))
@@ -273,7 +273,7 @@ def update_submission_modified_date_in_log(doctype, action, subm_id, email):
        @return: None
     """
     ## Update the modification date to NOW() in the log for the submission:
-    qstr = """UPDATE sbmSUBMISSIONS SET md=NOW() """ \
+    qstr = """UPDATE `sbmSUBMISSIONS` SET md=NOW() """ \
            """WHERE doctype=%s AND action=%s AND id=%s AND email=%s"""
     run_sql(qstr, (doctype, action, subm_id, email))
 
@@ -288,7 +288,7 @@ def update_submission_reference_in_log(doctype, subm_id, email, reference):
        @return: None
     """
     ## Update the reference for the submission in the log:
-    qstr = """UPDATE sbmSUBMISSIONS SET reference=%s """ \
+    qstr = """UPDATE `sbmSUBMISSIONS` SET reference=%s """ \
            """WHERE doctype=%s AND id=%s AND email=%s"""
     run_sql(qstr, (reference, doctype, subm_id, email))
 
@@ -311,7 +311,7 @@ def update_submission_reference_and_status_in_log(doctype,
         DEFAULTS TO 'finished'.
        @return: None
     """
-    qstr = """UPDATE sbmSUBMISSIONS """ \
+    qstr = """UPDATE `sbmSUBMISSIONS` """ \
            """SET md=NOW(), reference=%s, status=%s """ \
            """WHERE doctype=%s AND action=%s AND id=%s AND email=%s"""
     run_sql(qstr, (reference, status, doctype, action, subm_id, email))
@@ -331,7 +331,7 @@ def get_form_fields_on_submission_page(subname, pagenum):
     """
     qstr = """SELECT subname, pagenb, fieldnb, fidesc, fitext, """ \
            """level, sdesc, checkn, cd, md, fiefi1, fiefi2 """ \
-           """FROM sbmFIELD WHERE subname=%s AND pagenb=%s """ \
+           """FROM `sbmFIELD` WHERE subname=%s AND pagenb=%s """ \
            """ORDER BY fieldnb"""
     qres = run_sql(qstr, (subname, pagenum))
     return qres
@@ -350,7 +350,7 @@ def get_element_description(element):
     qstr = """SELECT name, alephcode, marccode, type, size, """ \
            """rows, cols, maxlength, val, fidesc, cd, md, """ \
            """modifytext, fddfi2 """ \
-           """FROM sbmFIELDDESC """ \
+           """FROM `sbmFIELDDESC` """ \
            """WHERE name=%s LIMIT 1"""
     qres = run_sql(qstr, (element,))
     if len(qres) > 0:
@@ -368,7 +368,7 @@ def get_element_check_description(check):
         description will be returned; If not, None is returned.
     """
     check_descr = None
-    qstr = """SELECT chdesc FROM sbmCHECKS WHERE chname=%s LIMIT 1"""
+    qstr = """SELECT chdesc FROM `sbmCHECKS` WHERE chname=%s LIMIT 1"""
     qres = run_sql(qstr, (check,))
     if len(qres) > 0:
         ## Check exists:
@@ -391,7 +391,7 @@ def get_form_fields_not_on_submission_page(subname, pagenum):
     """
     qstr = """SELECT subname, pagenb, fieldnb, fidesc, fitext, """ \
            """level, sdesc, checkn, cd, md, fiefi1, fiefi2 """ \
-           """FROM sbmFIELD WHERE subname=%s AND pagenb !=%s"""
+           """FROM `sbmFIELD` WHERE subname=%s AND pagenb !=%s"""
     qres = run_sql(qstr, (subname, pagenum))
     return qres
 
@@ -407,7 +407,7 @@ def function_step_is_last(doctype, action, step):
         functions of the submission; 0 if not.
     """
     last_step = 1
-    qstr = """SELECT step FROM sbmFUNCTIONS """ \
+    qstr = """SELECT step FROM `sbmFUNCTIONS` """ \
            """WHERE action=%s AND doctype=%s AND step > %s"""
     qres = run_sql(qstr, (action, doctype, step))
     if len(qres) > 0:
@@ -425,7 +425,7 @@ def get_collection_children_of_submission_collection(collection_id):
         ID of a 'collection' child of the given parent collection.
     """
     ## query to retrieve IDs of collections attached to a given collection:
-    qstr = """SELECT id_son FROM sbmCOLLECTION_sbmCOLLECTION """ \
+    qstr = """SELECT id_son FROM `sbmCOLLECTION_sbmCOLLECTION` """ \
            """WHERE id_father=%s ORDER BY catalogue_order ASC"""
     qres = run_sql(qstr, (collection_id,))
     return qres
@@ -440,7 +440,7 @@ def get_submission_collection_name(collection_id):
         returned as a string; otherwise, None is returned.
     """
     collection_name = None
-    qstr = """SELECT name FROM sbmCOLLECTION """ \
+    qstr = """SELECT name FROM `sbmCOLLECTION` """ \
            """WHERE id=%s LIMIT 1"""
     qres  = run_sql(qstr, (collection_id,))
     if len(qres) > 0:
@@ -458,7 +458,7 @@ def get_doctype_children_of_submission_collection(collection_id):
         ID of a 'doctype' child of the given parent collection.
     """
     qstr = """SELECT id_son """ \
-           """FROM sbmCOLLECTION_sbmDOCTYPE """ \
+           """FROM `sbmCOLLECTION_sbmDOCTYPE` """ \
            """WHERE id_father=%s """ \
            """ORDER BY catalogue_order ASC"""
     qres = run_sql(qstr, (collection_id,))
@@ -473,7 +473,7 @@ def get_categories_of_doctype(doctype):
        @return: (tuple) of tuples, where each tuple contains the details
         of a given category: (sname, lname, score).
     """
-    qstr = """SELECT sname, lname, score FROM sbmCATEGORIES """ \
+    qstr = """SELECT sname, lname, score FROM `sbmCATEGORIES` """ \
            """WHERE doctype=%s """ \
            """ORDER BY score ASC, lname ASC"""
     qres = run_sql(qstr, (doctype,))
@@ -491,7 +491,7 @@ def get_doctype_details(doctype):
     """
     doctype_details = None
     qstr = """SELECT ldocname, sdocname, cd, md, description """ \
-           """FROM sbmDOCTYPE """ \
+           """FROM `sbmDOCTYPE` """ \
            """WHERE sdocname=%s """ \
            """LIMIT 1"""
     qres = run_sql(qstr, (doctype,))
@@ -509,7 +509,7 @@ def get_actions_on_submission_page_for_doctype(doctype):
         of an action that should appear as a button on the
         document type's submission page.
     """
-    qstr = """SELECT actname FROM sbmIMPLEMENT """ \
+    qstr = """SELECT actname FROM `sbmIMPLEMENT` """ \
            """WHERE docname=%s AND displayed='Y' """ \
            """ORDER BY buttonorder"""
     qres = run_sql(qstr, (doctype,))
@@ -526,7 +526,7 @@ def get_action_details(action):
     """
     action_details = None
     qstr = """SELECT lactname, dir, cd, md, actionbutton, statustext """ \
-           """FROM sbmACTION """ \
+           """FROM `sbmACTION` """ \
            """WHERE sactname=%s"""
     qres = run_sql(qstr, (action,))
     if len(qres) > 0:
@@ -540,7 +540,7 @@ def get_parameters_of_function(function):
        @return: (tuple) of tuples - each tuple containing the
         name of a given parameter.
     """
-    qstr = """SELECT param FROM sbmFUNDESC """ \
+    qstr = """SELECT param FROM `sbmFUNDESC` """ \
            """WHERE function=%s"""
     qres = run_sql(qstr, (function,))
     return qres
@@ -563,7 +563,7 @@ def get_details_of_submission(doctype, action):
     qstr = """SELECT docname, actname, displayed, subname, """ \
            """nbpg, cd, md, buttonorder, statustext, level, """ \
            """score, stpage, endtxt """ \
-           """FROM sbmIMPLEMENT """ \
+           """FROM `sbmIMPLEMENT` """ \
            """WHERE docname=%s AND actname=%s LIMIT 1"""
     qres = run_sql(qstr, (doctype, action))
     if len(qres) > 0:
@@ -582,7 +582,7 @@ def get_functions_for_submission_step(doctype, action, step):
         given step: (function-name, score)
     """
     qstr = """SELECT function, score """ \
-           """FROM sbmFUNCTIONS """ \
+           """FROM `sbmFUNCTIONS` """ \
            """WHERE action=%s AND doctype=%s AND step=%s """ \
            """ORDER BY score ASC"""
     qres = run_sql(qstr, (action, doctype, step))
@@ -601,7 +601,7 @@ def get_submissions_at_level_X_with_score_above_N(doctype, level, score_N):
     qstr = """SELECT docname, actname, displayed, subname, """ \
            """nbpg, cd, md, buttonorder, statustext, level, """ \
            """score, stpage, endtxt """ \
-           """FROM sbmIMPLEMENT """ \
+           """FROM `sbmIMPLEMENT` """ \
            """WHERE docname=%s AND level !='0' AND level=%s AND score > %s """ \
            """ORDER BY score ASC"""
     qres = run_sql(qstr, (doctype, level, score_N))
@@ -623,7 +623,7 @@ def submission_is_finished(doctype, action, subm_id, email):
         a finished submission).
     """
     submission_finished = 0
-    qstr = """SELECT id FROM sbmSUBMISSIONS """ \
+    qstr = """SELECT id FROM `sbmSUBMISSIONS` """ \
            """WHERE doctype=%s AND action=%s AND id=%s """ \
            """AND email=%s AND status='finished'"""
     qres = run_sql(qstr, (doctype, action, subm_id, email))
@@ -650,7 +650,7 @@ def get_approval_request_notes(doctype, reportnumber):
        @return: (string or None) - String if there was a row for this approval
         request; None if not.
     """
-    qstr = """SELECT note FROM sbmAPPROVAL """ \
+    qstr = """SELECT note FROM `sbmAPPROVAL` """ \
            """WHERE doctype=%s AND rn=%s"""
     qres = run_sql(qstr, (doctype, reportnumber))
     try:
@@ -672,7 +672,7 @@ def get_simple_approval_status(doctype, reportnumber):
         for the document; else the value of the approval status.
     """
     approval_status = None
-    qstr = """SELECT status FROM sbmAPPROVAL """ \
+    qstr = """SELECT status FROM `sbmAPPROVAL` """ \
            """WHERE doctype=%s AND rn=%s"""
     qres = run_sql(qstr, (doctype, reportnumber))
     if len(qres) > 0:
@@ -693,7 +693,7 @@ def register_new_approval_request(doctype, category, reportnumber, note=""):
         request. (defaults to an empty string.)
        @return: None
     """
-    qstr = """INSERT INTO sbmAPPROVAL """ \
+    qstr = """INSERT INTO `sbmAPPROVAL` """ \
            """(doctype, categ, rn, status, """ \
            """dFirstReq, dLastReq, dAction, access, note) VALUES """ \
            """(%s, %s, %s, 'waiting', NOW(), NOW(), '', '', %s)"""
@@ -720,7 +720,7 @@ def update_approval_request_status(doctype, \
         waiting.
     """
     status = status.lower()
-    qstr = """UPDATE sbmAPPROVAL """ \
+    qstr = """UPDATE `sbmAPPROVAL` """ \
            """SET status=%s, """
     if status in ("approved", "rejected"):
         ## If this is the "final" approval or rejection update, set the
@@ -743,7 +743,7 @@ def get_approval_request_category(reportnumber):
        @return: (string or None) - String if there was a row for this approval
         request; None if not.
     """
-    qstr = """SELECT categ FROM sbmAPPROVAL """ \
+    qstr = """SELECT categ FROM `sbmAPPROVAL` """ \
            """WHERE rn=%s"""
     qres = run_sql(qstr, (reportnumber,))
     try:

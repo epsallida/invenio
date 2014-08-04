@@ -312,7 +312,7 @@ def get_gids_from_groupnames(groupnames):
     if not((type(groupnames) is list) or (type(groupnames) is tuple)):
         groupnames = [groupnames]
     groups = {}
-    query = "SELECT name, id FROM usergroup WHERE BINARY name IN ("
+    query = "SELECT name, id FROM `usergroup` WHERE BINARY name IN ("
     query_params = ()
     if len(groupnames) > 0:
         for groupname in groupnames:
@@ -379,7 +379,7 @@ def create_message(uid_from,
     @return: id of the created message
     """
     now = convert_datestruct_to_datetext(localtime())
-    msg_id = run_sql("""INSERT INTO msgMESSAGE(id_user_from,
+    msg_id = run_sql("""INSERT INTO `msgMESSAGE` (id_user_from,
                                       sent_to_user_nicks,
                                       sent_to_group_names,
                                       subject,
@@ -409,7 +409,7 @@ def send_message(uids_to, msgid, status=CFG_WEBMESSAGE_STATUS_CODE['NEW']):
     user_problem = []
     if len(uids_to) > 0:
         users_quotas = check_quota(CFG_WEBMESSAGE_MAX_NB_OF_MESSAGES - 1)
-        query = """INSERT INTO user_msgMESSAGE (id_user_to, id_msgMESSAGE,
+        query = """INSERT INTO `user_msgMESSAGE` (id_user_to, id_msgMESSAGE,
                     status) VALUES """
         fixed_value = ",%s,%s)"
         query_params = []
@@ -437,7 +437,7 @@ def check_quota(nb_messages):
     from invenio.modules.access.control import acc_is_user_in_role, acc_get_role_id
     no_quota_role_ids = [acc_get_role_id(role) for role in CFG_WEBMESSAGE_ROLES_WITHOUT_QUOTA]
     res = {}
-    for uid, n in run_sql("SELECT id_user_to, COUNT(id_user_to) FROM user_msgMESSAGE GROUP BY id_user_to HAVING COUNT(id_user_to) > %s", (nb_messages, )):
+    for uid, n in run_sql("SELECT id_user_to, COUNT(id_user_to) FROM `user_msgMESSAGE` GROUP BY id_user_to HAVING COUNT(id_user_to) > %s", (nb_messages, )):
         user_info = collect_user_info(uid)
         for role_id in no_quota_role_ids:
             if acc_is_user_in_role(user_info, role_id):
@@ -492,7 +492,7 @@ def get_groupnames_like(uid, pattern):
     groups = {}
     if pattern:
         # For this use case external groups are like invisible one
-        query1 = "SELECT id, name FROM usergroup WHERE name RLIKE %s AND join_policy like 'V%%' AND join_policy<>'VE'"
+        query1 = "SELECT id, name FROM `usergroup` WHERE name RLIKE %s AND join_policy like 'V%%' AND join_policy<>'VE'"
         try:
             res = run_sql(query1, (pattern,))
         except OperationalError:
@@ -501,7 +501,7 @@ def get_groupnames_like(uid, pattern):
         # assuming field0=key and field1=value
         map(lambda x: groups.setdefault(x[0], x[1]), res)
         query2 = """SELECT g.id, g.name
-                    FROM usergroup g, user_usergroup ug
+                    FROM `usergroup` g, user_usergroup ug
                     WHERE g.id=ug.id_usergroup AND ug.id_user=%s AND g.name RLIKE %s"""
         try:
             res = run_sql(query2, (uid, pattern))
@@ -527,8 +527,8 @@ def clean_messages():
     #find id and email from every user who has got an email
     query1 = """SELECT distinct(umsg.id_user_to),
                        user.email
-                FROM user_msgMESSAGE umsg
-                LEFT JOIN user ON
+                FROM `user_msgMESSAGE` umsg
+                LEFT JOIN `user` ON
                      umsg.id_user_to=user.id"""
     res1 = run_sql(query1)
     # if there is no email, user has disappeared
@@ -536,8 +536,8 @@ def clean_messages():
     # find ids from messages in user's inbox
     query2 = """SELECT distinct(umsg.id_msgMESSAGE),
                        msg.id
-                FROM user_msgMESSAGE umsg
-                LEFT JOIN msgMESSAGE msg ON
+                FROM `user_msgMESSAGE` umsg
+                LEFT JOIN `msgMESSAGE` msg ON
                      umsg.id_msgMESSAGE=msg.id"""
     res2 = run_sql(query2)
     # if there is no id, message was deleted from table msgMESSAGE...
@@ -546,7 +546,7 @@ def clean_messages():
         return str(el1) + ',' + str(el2)
     if len(users_deleted) or len(messages_deleted):
         # Suppress every referential error from user_msgMESSAGE
-        query3 = "DELETE FROM user_msgMESSAGE WHERE "
+        query3 = "DELETE FROM `user_msgMESSAGE` WHERE "
         query_params = []
         if len(users_deleted):
             query3 += "id_user_to IN (%s)"
@@ -559,8 +559,8 @@ def clean_messages():
         deleted_items = int(run_sql(query3, tuple(query_params)))
     # find every message that is nobody's inbox
     query4 = """SELECT msg.id
-                FROM msgMESSAGE msg
-                     LEFT JOIN user_msgMESSAGE umsg
+                FROM `msgMESSAGE` msg
+                     LEFT JOIN `user_msgMESSAGE` umsg
                                ON msg.id=umsg.id_msgMESSAGE
                 WHERE msg.sent_date<%s
                 GROUP BY umsg.id_msgMESSAGE
@@ -569,7 +569,7 @@ def clean_messages():
     res4 = map(lambda x: x[0], run_sql(query4, (sql_date, )))
     if len(res4):
         # delete these messages
-        query5 = "DELETE FROM msgMESSAGE WHERE "
+        query5 = "DELETE FROM `msgMESSAGE` WHERE "
         query5 += "id IN (%s)"
         deleted_items += int(run_sql(query5, (reduce(tuplize, res4), )))
     return deleted_items

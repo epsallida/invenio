@@ -905,7 +905,7 @@ def check_database():
     from invenio.legacy.dbquery import run_sql
 
     r1 = run_sql(""" SELECT it.barcode, it.status, ln.status
-                       FROM crcITEM it, crcLOAN ln
+                       FROM `crcITEM` it, crcLOAN ln
                       WHERE ln.barcode=it.barcode
                         AND it.status=%s
                         AND ln.status!=%s
@@ -917,7 +917,7 @@ def check_database():
                         CFG_BIBCIRCULATION_LOAN_STATUS_RETURNED))
 
     r2 = run_sql(""" SELECT it.barcode
-                       FROM crcITEM it, crcLOAN ln
+                       FROM `crcITEM` it, crcLOAN ln
                       WHERE ln.barcode=it.barcode
                         AND it.status=%s
                         AND (ln.status=%s or ln.status=%s)
@@ -928,7 +928,7 @@ def check_database():
     r3 = run_sql(""" SELECT l1.barcode, l1.id,
                             DATE_FORMAT(l1.loaned_on,'%%Y-%%m-%%d %%H:%%i:%%s'),
                             DATE_FORMAT(l2.loaned_on,'%%Y-%%m-%%d %%H:%%i:%%s')
-                       FROM crcLOAN l1,
+                       FROM `crcLOAN` l1,
                             crcLOAN l2
                       WHERE l1.id!=l2.id
                         AND l1.status!=%s

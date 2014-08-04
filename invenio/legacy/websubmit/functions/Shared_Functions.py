@@ -199,7 +199,7 @@ def get_nice_bibsched_related_message(curdir, ln=CFG_SITE_LANG):
     ## Our bibupload might be somewhere in it, but it's not really so important
     ## WRT informing the user.
     _ = gettext_set_language(ln)
-    res = run_sql("SELECT id,proc,runtime,status,priority FROM schTASK WHERE (status='WAITING' AND runtime<=NOW()) OR status='SLEEPING'")
+    res = run_sql("SELECT id,proc,runtime,status,priority FROM `schTASK` WHERE (status='WAITING' AND runtime<=NOW()) OR status='SLEEPING'")
     pre = _("Note that your submission has been inserted into the bibliographic task queue and is waiting for execution.\n")
     if server_pid():
         ## BibSched is up and running

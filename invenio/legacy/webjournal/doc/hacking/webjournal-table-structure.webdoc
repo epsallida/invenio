@@ -65,14 +65,14 @@ It is quite safe to delete, edit and add entries manually in these
 tables. If a journal editor released an issue by mistake, you can
 delete the corresponding issue from the table. Eg:
 
-$ echo "SELECT id FROM jrnJOURNAL WHERE name='AtlantisTimes'" | /opt/invenio/bin/dbexec
+$ echo "SELECT id FROM `jrnJOURNAL` WHERE name='AtlantisTimes'" | /opt/invenio/bin/dbexec
   ----
  | id |
   ----
  | 1  |
   ----
 
-$ echo "DELETE FROM jrnISSUE WHERE id_jrnJOURNAL=1 and issue_number='07/2009'" | /opt/invenio/bin/dbexec
+$ echo "DELETE FROM `jrnISSUE` WHERE id_jrnJOURNAL=1 and issue_number='07/2009'" | /opt/invenio/bin/dbexec
 
 Note however that articles remain visible on the main Invenio
 interface, in your journal collection.
@@ -82,7 +82,7 @@ If a journal editor grouped two issues by mistake, you can change the
 'issue_display' column value to be the same as the 'issue_number'
 column. Eg:
 
-$ echo "SELECT issue_number, issue_display FROM jrnISSUE WHERE id_jrnJOURNAL=1" | /opt/invenio/bin/dbexec
+$ echo "SELECT issue_number, issue_display FROM `jrnISSUE` WHERE id_jrnJOURNAL=1" | /opt/invenio/bin/dbexec
 
   -----------------------------
  | issue_number  issue_display |
@@ -91,8 +91,8 @@ $ echo "SELECT issue_number, issue_display FROM jrnISSUE WHERE id_jrnJOURNAL=1" 
  | 06/2009       06-07/2009    |
   -----------------------------
 
-$ echo "UPDATE jrnISSUE set issue_display='07/2009' WHERE id_jrnJOURNAL=1 AND issue_number='07/2009'" | /opt/invenio/bin/dbexec
-$ echo "UPDATE jrnISSUE set issue_display='06/2009' WHERE id_jrnJOURNAL=1 AND issue_number='06/2009'" | /opt/invenio/bin/dbexec
+$ echo "UPDATE `jrnISSUE` set issue_display='07/2009' WHERE id_jrnJOURNAL=1 AND issue_number='07/2009'" | /opt/invenio/bin/dbexec
+$ echo "UPDATE `jrnISSUE` set issue_display='06/2009' WHERE id_jrnJOURNAL=1 AND issue_number='06/2009'" | /opt/invenio/bin/dbexec
 
 You can leave the '07/2009' if it has no release date. You should
 remove it if it has a release date while the issue should not have

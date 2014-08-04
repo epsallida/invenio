@@ -557,8 +557,8 @@ def get_field_tags_from_fieldname(field):
     """
     Gets list of field 'field' for the record with 'sysno' system number from the database.
     """
-    query = "select tag.value from tag left join field_tag on tag.id=field_tag.id_tag " \
-            + "left join field on field_tag.id_field=field.id where field.code='%s'" % (field,)
+    query = "select tag.value from tag left join `field_tag` on tag.id=field_tag.id_tag " \
+            + "left join `field` on field_tag.id_field=field.id where field.code='%s'" % (field,)
     out = []
     res = run_sql(query)
     for row in res:

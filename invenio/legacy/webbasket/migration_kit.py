@@ -225,19 +225,19 @@ def __count_current_baskets():
 
 def __check_basket_is_owned_by_only_one_user():
     """"""
-    query = "SELECT id_basket, count(id_basket) FROM user_basket GROUP BY id_basket"
+    query = "SELECT id_basket, count(id_basket) FROM `user_basket` GROUP BY id_basket"
     res = run_sql(query)
     return filter(lambda x: x[1]>1, res)
 
 def __check_every_basket_has_one_owner():
     """"""
-    query = "SELECT bsk.id, ubsk.id_user FROM basket bsk LEFT JOIN user_basket ubsk ON bsk.id=ubsk.id_basket"
+    query = "SELECT bsk.id, ubsk.id_user FROM `basket` bsk LEFT JOIN `user_basket` ubsk ON bsk.id=ubsk.id_basket"
     res = run_sql(query)
     return filter(lambda x: x[1] is None, res)
 
 def __check_baskets_exist():
     """"""
-    query = "SELECT distinct ubsk.id_basket, bsk.id FROM user_basket ubsk LEFT JOIN basket bsk ON bsk.id=ubsk.id_basket"
+    query = "SELECT distinct ubsk.id_basket, bsk.id FROM `user_basket` ubsk LEFT JOIN `basket` bsk ON bsk.id=ubsk.id_basket"
     res = run_sql(query)
     return filter(lambda x: x[1] is None, res)
 
@@ -260,7 +260,7 @@ def __import_baskets(default_topic_name="Imported baskets",
                        bsk.public,
                        ubsk.id_user,
                        DATE_FORMAT(ubsk.date_modification, '%Y-%m-%d %H:%i:%s')
-                FROM basket bsk JOIN user_basket ubsk ON bsk.id=ubsk.id_basket"""
+                FROM `basket` bsk JOIN `user_basket` ubsk ON bsk.id=ubsk.id_basket"""
     baskets = run_sql(query1)
     if len(baskets):
         def basket_updater(basket):
@@ -282,7 +282,7 @@ def __import_baskets(default_topic_name="Imported baskets",
                                           int(id_owner),
                                           real_escape_string(date_modification))
         values = reduce(lambda x, y: x + ',' + y, map(basket_updater, baskets))
-        query2 = "INSERT INTO bskBASKET (id, name, id_owner, date_modification) VALUES %s"
+        query2 = "INSERT INTO `bskBASKET` (id, name, id_owner, date_modification) VALUES %s"
         run_sql(query2 % values)
         def user_updater(basket):
             """"""
@@ -291,7 +291,7 @@ def __import_baskets(default_topic_name="Imported baskets",
                                      int(id_owner),
                                      default_topic_name)
         values = reduce(lambda x, y: x + ',' + y, map(user_updater, baskets))
-        query3 = "INSERT INTO user_bskBASKET (id_bskBASKET, id_user, topic) VALUES %s"
+        query3 = "INSERT INTO `user_bskBASKET` (id_bskBASKET, id_user, topic) VALUES %s"
         run_sql(query3 % values)
         shared_baskets = filter(lambda x: x[2]!='n', baskets)
         def usergroup_updater(basket):
@@ -301,13 +301,13 @@ def __import_baskets(default_topic_name="Imported baskets",
                                           date_modification,
                                           default_share_level)
         values = reduce(lambda x, y: x + ',' + y, map(usergroup_updater, shared_baskets))
-        query4 = "INSERT INTO usergroup_bskBASKET (id_usergroup, id_bskBASKET, date_shared, share_level) VALUES %s"
+        query4 = "INSERT INTO `usergroup_bskBASKET` (id_usergroup, id_bskBASKET, date_shared, share_level) VALUES %s"
         if default_share_level:
             run_sql(query4 % values)
     return len(baskets)
 
 def __count_records(bskid):
-    query1 = "SELECT count(id_record) FROM basket_record WHERE id_basket=%i GROUP BY id_basket"
+    query1 = "SELECT count(id_record) FROM `basket_record` WHERE id_basket=%i GROUP BY id_basket"
     return run_sql(query1 % int(bskid))[0][0]
 
 def __import_records():
@@ -317,7 +317,7 @@ def __import_records():
                        rec.id_record,
                        rec.nb_order,
                        DATE_FORMAT(ubsk.date_modification, '%Y-%m-%d %H:%i:%s')
-                FROM basket bsk, user_basket ubsk, basket_record rec
+                FROM `basket` bsk, user_basket ubsk, basket_record rec
                 WHERE bsk.id=ubsk.id_basket AND bsk.id=rec.id_basket
                 ORDER BY bsk.id"""
     records = run_sql(query1)
@@ -326,7 +326,7 @@ def __import_records():
         return "(%i,%i,%i,%i,'%s')" % (int(id_record), int(bskid), int(id_owner),
                                        int(order), real_escape_string(date_modification))
 
-    query2 = """INSERT INTO bskREC (id_bibrec_or_bskEXTREC, id_bskBASKET,
+    query2 = """INSERT INTO `bskREC` (id_bibrec_or_bskEXTREC, id_bskBASKET,
                   id_user_who_added_item, score, date_added)
                 VALUES %s"""
     iterator = 0

@@ -34,7 +34,7 @@ def do_upgrade():
 def do_upgrade_atlantis():
     index_id = 28
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxWORD%02dF (
+            CREATE TABLE IF NOT EXISTS `idxWORD%02dF` (
               id mediumint(9) unsigned NOT NULL auto_increment,
               term varchar(50) default NULL,
               hitlist longblob,
@@ -43,7 +43,7 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """ % index_id)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxWORD%02dR (
+            CREATE TABLE IF NOT EXISTS `idxWORD%02dR` (
               id_bibrec mediumint(9) unsigned NOT NULL,
               termlist longblob,
               type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
@@ -51,7 +51,7 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """ % index_id)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxPAIR%02dF (
+            CREATE TABLE IF NOT EXISTS `idxPAIR%02dF` (
               id mediumint(9) unsigned NOT NULL auto_increment,
               term varchar(100) default NULL,
               hitlist longblob,
@@ -60,7 +60,7 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """ % index_id)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxPAIR%02dR (
+            CREATE TABLE IF NOT EXISTS `idxPAIR%02dR` (
               id_bibrec mediumint(9) unsigned NOT NULL,
               termlist longblob,
               type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
@@ -68,7 +68,7 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """ % index_id)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxPHRASE%02dF (
+            CREATE TABLE IF NOT EXISTS `idxPHRASE%02dF` (
               id mediumint(9) unsigned NOT NULL auto_increment,
               term text default NULL,
               hitlist longblob,
@@ -77,16 +77,16 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """ % index_id)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxPHRASE%02dR (
+            CREATE TABLE IF NOT EXISTS `idxPHRASE%02dR` (
               id_bibrec mediumint(9) unsigned NOT NULL,
               termlist longblob,
               type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
               PRIMARY KEY (id_bibrec,type)
             ) ENGINE=MyISAM;
             """ % index_id)
-    run_sql("""INSERT INTO idxINDEX VALUES (28,'filename','This index contains names of all files attached to the record.', '0000-00-00 00:00:00', '', 'native', '', 'No', 'No', 'No', 'BibIndexFilenameTokenizer')""")
-    run_sql("""INSERT INTO field VALUES (43,'file name', 'filename')""")
-    run_sql("""INSERT INTO idxINDEX_field (id_idxINDEX, id_field) VALUES (28,43)""")
+    run_sql("""INSERT INTO `idxINDEX` VALUES (28,'filename','This index contains names of all files attached to the record.', '0000-00-00 00:00:00', '', 'native', '', 'No', 'No', 'No', 'BibIndexFilenameTokenizer')""")
+    run_sql("""INSERT INTO `field` VALUES (43,'file name', 'filename')""")
+    run_sql("""INSERT INTO `idxINDEX_field` (id_idxINDEX, id_field) VALUES (28,43)""")
 
 def estimate():
     return 1

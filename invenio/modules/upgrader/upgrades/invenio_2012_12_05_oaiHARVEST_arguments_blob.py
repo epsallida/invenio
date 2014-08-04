@@ -30,7 +30,7 @@ def info():
 
 
 def do_upgrade():
-    create_statement = run_sql('SHOW CREATE TABLE oaiHARVEST')[0][1]
+    create_statement = run_sql('SHOW CREATE TABLE `oaiHARVEST`')[0][1]
     if '`arguments` text' in create_statement:
         run_sql("ALTER TABLE oaiHARVEST CHANGE arguments arguments blob")
     # translate old values
@@ -44,7 +44,7 @@ def do_upgrade():
                 arguments = {}
             arguments['c_cfg-file'] = row['bibconvertcfgfile']
             arguments['f_filter-file'] = row['bibfilterprogram']
-            run_sql("UPDATE oaiHARVEST set arguments=%s WHERE id=%s", (serialize_via_marshal(arguments), row['id']))
+            run_sql("UPDATE `oaiHARVEST` set arguments=%s WHERE id=%s", (serialize_via_marshal(arguments), row['id']))
         run_sql("ALTER TABLE oaiHARVEST DROP COLUMN bibconvertcfgfile")
         run_sql("ALTER TABLE oaiHARVEST DROP COLUMN bibfilterprogram")
 

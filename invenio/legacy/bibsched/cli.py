@@ -217,7 +217,7 @@ def get_last_taskid():
 
 def delete_task(task_id):
     """Delete the corresponding task."""
-    run_sql("DELETE FROM schTASK WHERE id=%s", (task_id, ))
+    run_sql("DELETE FROM `schTASK` WHERE id=%s", (task_id, ))
 
 def is_task_scheduled(task_name):
     """Check if a certain task_name is due for execution (WAITING or RUNNING)"""
@@ -237,7 +237,7 @@ def get_task_ids_by_descending_date(task_name, statuses=['SCHEDULED']):
 
 def get_task_options(task_id):
     """Returns options for task_id read from the BibSched task queue table."""
-    res = run_sql("SELECT arguments FROM schTASK WHERE id=%s", (task_id,))
+    res = run_sql("SELECT arguments FROM `schTASK` WHERE id=%s", (task_id,))
     try:
         return marshal.loads(res[0][0])
     except IndexError:
@@ -261,18 +261,18 @@ def gc_tasks(verbose=False, statuses=None, since=None, tasks=None): # pylint: di
 
     for task in tasks:
         if task in CFG_BIBSCHED_GC_TASKS_TO_REMOVE:
-            res = run_sql("""DELETE FROM schTASK WHERE proc=%%s AND %s AND
+            res = run_sql("""DELETE FROM `schTASK` WHERE proc=%%s AND %s AND
                              runtime<%%s""" % status_query, (task, date))
             write_message('Deleted %s %s tasks (created before %s) with %s'
                                             % (res, task, date, status_query))
         elif task in CFG_BIBSCHED_GC_TASKS_TO_ARCHIVE:
-            run_sql("""INSERT INTO hstTASK(id,proc,host,user,
+            run_sql("""INSERT INTO `hstTASK` (id,proc,host,user,
                        runtime,sleeptime,arguments,status,progress)
                        SELECT id,proc,host,user,
                        runtime,sleeptime,arguments,status,progress
-                       FROM schTASK WHERE proc=%%s AND %s AND
+                       FROM `schTASK` WHERE proc=%%s AND %s AND
                        runtime<%%s""" % status_query, (task, date))
-            res = run_sql("""DELETE FROM schTASK WHERE proc=%%s AND %s AND
+            res = run_sql("""DELETE FROM `schTASK` WHERE proc=%%s AND %s AND
                              runtime<%%s""" % status_query, (task, date))
             write_message('Archived %s %s tasks (created before %s) with %s'
                                             % (res, task, date, status_query))
@@ -296,19 +296,19 @@ def spawn_task(command, wait=False):
 
 def bibsched_get_host(task_id):
     """Retrieve the hostname of the task"""
-    res = run_sql("SELECT host FROM schTASK WHERE id=%s LIMIT 1", (task_id, ), 1)
+    res = run_sql("SELECT host FROM `schTASK` WHERE id=%s LIMIT 1", (task_id, ), 1)
     if res:
         return res[0][0]
 
 
 def bibsched_set_host(task_id, host=""):
     """Update the progress of task_id."""
-    return run_sql("UPDATE schTASK SET host=%s WHERE id=%s", (host, task_id))
+    return run_sql("UPDATE `schTASK` SET host=%s WHERE id=%s", (host, task_id))
 
 
 def bibsched_get_status(task_id):
     """Retrieve the task status."""
-    res = run_sql("SELECT status FROM schTASK WHERE id=%s LIMIT 1", (task_id, ), 1)
+    res = run_sql("SELECT status FROM `schTASK` WHERE id=%s LIMIT 1", (task_id, ), 1)
     if res:
         return res[0][0]
 
@@ -316,34 +316,34 @@ def bibsched_get_status(task_id):
 def bibsched_set_status(task_id, status, when_status_is=None):
     """Update the status of task_id."""
     if when_status_is is None:
-        return run_sql("UPDATE schTASK SET status=%s WHERE id=%s",
+        return run_sql("UPDATE `schTASK` SET status=%s WHERE id=%s",
                        (status, task_id))
     else:
-        return run_sql("UPDATE schTASK SET status=%s WHERE id=%s AND status=%s",
+        return run_sql("UPDATE `schTASK` SET status=%s WHERE id=%s AND status=%s",
                        (status, task_id, when_status_is))
 
 
 def bibsched_set_progress(task_id, progress):
     """Update the progress of task_id."""
-    return run_sql("UPDATE schTASK SET progress=%s WHERE id=%s", (progress, task_id))
+    return run_sql("UPDATE `schTASK` SET progress=%s WHERE id=%s", (progress, task_id))
 
 
 def bibsched_set_priority(task_id, priority):
     """Update the priority of task_id."""
-    return run_sql("UPDATE schTASK SET priority=%s WHERE id=%s", (priority, task_id))
+    return run_sql("UPDATE `schTASK` SET priority=%s WHERE id=%s", (priority, task_id))
 
 def bibsched_set_name(task_id, name):
     """Update the name of task_id."""
-    return run_sql("UPDATE schTASK SET proc=%s WHERE id=%s", (name, task_id))
+    return run_sql("UPDATE `schTASK` SET proc=%s WHERE id=%s", (name, task_id))
 
 def bibsched_set_sleeptime(task_id, sleeptime):
     """Update the sleeptime of task_id."""
-    return run_sql("UPDATE schTASK SET sleeptime=%s WHERE id=%s", (sleeptime, task_id))
+    return run_sql("UPDATE `schTASK` SET sleeptime=%s WHERE id=%s", (sleeptime, task_id))
 
 
 def bibsched_set_runtime(task_id, runtime):
     """Update the sleeptime of task_id."""
-    return run_sql("UPDATE schTASK SET runtime=%s WHERE id=%s", (runtime, task_id))
+    return run_sql("UPDATE `schTASK` SET runtime=%s WHERE id=%s", (runtime, task_id))
 
 
 def bibsched_send_signal(task_id, sig):
@@ -375,12 +375,12 @@ def sleep_task(task):
 
 
 def fetch_debug_mode():
-    r = run_sql('SELECT value FROM schSTATUS WHERE name = "debug_mode"')
+    r = run_sql('SELECT value FROM `schSTATUS` WHERE name = "debug_mode"')
     try:
         debug_mode = bool(int(r[0][0]))
     except (ValueError, IndexError):
         # We insert the missing configuration variable in the DB
-        run_sql('INSERT INTO schSTATUS (name, value) VALUES ("debug_mode", "0")')
+        run_sql('INSERT INTO `schSTATUS` (name, value) VALUES ("debug_mode", "0")')
         debug_mode = False
     return debug_mode
 
@@ -442,7 +442,7 @@ class BibSched(object):
         @return: True if the scheduling was successful, False otherwise,
             e.g. if the task was scheduled concurrently on a different host.
         """
-        r = run_sql("""UPDATE schTASK SET host=%s, status='SCHEDULED'
+        r = run_sql("""UPDATE `schTASK` SET host=%s, status='SCHEDULED'
                    WHERE id=%s AND status='WAITING'""",
                                             (self.hostname, task_id))
         return bool(r)
@@ -606,7 +606,7 @@ class BibSched(object):
                                           'SCHEDULED', 'CONTINUING')
                                           AND sequenceid=%s""",
                                        (task.sequenceid, ))[0][0]
-                if run_sql("""UPDATE schTASK SET priority=%s
+                if run_sql("""UPDATE `schTASK` SET priority=%s
                               WHERE status IN ('WAITING', 'RUNNING',
                               'SLEEPING', 'ABOUT TO STOP', 'ABOUT TO SLEEP',
                               'SCHEDULED', 'CONTINUING') AND sequenceid=%s""",
@@ -618,13 +618,13 @@ class BibSched(object):
 
                 ## Let's normalize the runtime of all tasks in a sequenceid to
                 ## the compatible runtime.
-                current_runtimes = run_sql("""SELECT id, runtime FROM schTASK WHERE sequenceid=%s AND status='WAITING' ORDER by id""", (task.sequenceid, ))
+                current_runtimes = run_sql("""SELECT id, runtime FROM `schTASK` WHERE sequenceid=%s AND status='WAITING' ORDER by id""", (task.sequenceid, ))
                 runtimes_adjusted = False
                 if current_runtimes:
                     last_runtime = current_runtimes[0][1]
                     for the_task_id, runtime in current_runtimes:
                         if runtime < last_runtime:
-                            run_sql("""UPDATE schTASK SET runtime=%s WHERE id=%s""", (last_runtime, the_task_id))
+                            run_sql("""UPDATE `schTASK` SET runtime=%s WHERE id=%s""", (last_runtime, the_task_id))
                             Log("Adjusted runtime of task_id %s to %s in order to be executed in the correct sequenceid order" % (the_task_id, last_runtime), debug)
                             runtimes_adjusted = True
                             runtime = last_runtime
@@ -763,7 +763,7 @@ class BibSched(object):
             error_msgs = []
             error_recoverable = True
             for e_id, e_proc, e_status in errors:
-                if run_sql("""UPDATE schTASK
+                if run_sql("""UPDATE `schTASK`
                                SET status='ERRORS REPORTED'
                                WHERE id = %s AND (status='CERROR'
                                OR status='ERROR'
@@ -796,7 +796,7 @@ class BibSched(object):
                 AND runtime <= NOW()""")[0]
         if max_bibupload_priority > min_bibupload_priority:
             run_sql(
-                """UPDATE schTASK SET priority = %s
+                """UPDATE `schTASK` SET priority = %s
                    WHERE status IN ('WAITING', 'RUNNING', 'SLEEPING',
                                     'ABOUT TO STOP', 'ABOUT TO SLEEP',
                                     'SCHEDULED', 'CONTINUING')
@@ -809,7 +809,7 @@ class BibSched(object):
         # which means by the order they were scheduled
         self.node_relevant_bibupload_tasks = Task.from_resultset(run_sql(
             """SELECT id, proc, runtime, status, priority, host, sequenceid
-               FROM schTASK WHERE status IN ('WAITING', 'SLEEPING')
+               FROM `schTASK` WHERE status IN ('WAITING', 'SLEEPING')
                AND proc = 'bibupload'
                AND runtime <= NOW()
                ORDER BY FIELD(status, 'SLEEPING', 'WAITING'),
@@ -817,17 +817,17 @@ class BibSched(object):
         ## The other tasks are sorted by priority
         self.waiting_tasks_all_nodes = Task.from_resultset(run_sql(
             """SELECT id, proc, runtime, status, priority, host, sequenceid
-               FROM schTASK WHERE (status = 'WAITING' AND runtime <= NOW())
+               FROM `schTASK` WHERE (status = 'WAITING' AND runtime <= NOW())
                OR status = 'SLEEPING'
                ORDER BY priority DESC, runtime ASC, id ASC"""))
 
         self.sleeping_tasks_all_nodes = Task.from_resultset(run_sql(
             """SELECT id, proc, runtime, status, priority, host, sequenceid
-               FROM schTASK WHERE status = 'SLEEPING'
+               FROM `schTASK` WHERE status = 'SLEEPING'
                ORDER BY priority DESC, runtime ASC, id ASC"""))
         self.active_tasks_all_nodes = Task.from_resultset(run_sql(
             """SELECT id, proc, runtime, status, priority, host, sequenceid
-               FROM schTASK WHERE status IN ('RUNNING', 'CONTINUING',
+               FROM `schTASK` WHERE status IN ('RUNNING', 'CONTINUING',
                                              'SCHEDULED', 'ABOUT TO STOP',
                                              'ABOUT TO SLEEP')"""))
 
@@ -846,26 +846,27 @@ class BibSched(object):
 
     def check_auto_mode(self):
         """Check if the queue is in automatic or manual mode"""
-        r = run_sql('SELECT value FROM schSTATUS WHERE name = "auto_mode"')
+        r = run_sql('SELECT value FROM `schSTATUS` WHERE name = "auto_mode"')
         try:
             status = int(r[0][0])
         except (ValueError, IndexError):
             # We insert the missing configuration variable in the DB
-            run_sql('INSERT INTO schSTATUS (name, value) VALUES ("auto_mode", "1")')
+            run_sql('INSERT INTO `schSTATUS` (name, value) VALUES ("auto_mode", "1")')
             status = 1
 
         if not status:
-            r = run_sql('SELECT value FROM schSTATUS WHERE name = "resume_after"')
+            r = run_sql('SELECT value FROM `schSTATUS` WHERE name = "resume_after"')
             try:
                 date_string = r[0][0]
             except IndexError:
                 pass
             else:
                 if date_string:
-                    resume_after = datetime.datetime(*(time.strptime(date_string, "%Y-%m-%d %H:%M:%S")[0:6]))
-                    if datetime.datetime.now() > resume_after:
-                        run_sql('UPDATE schSTATUS SET value = "" WHERE name = "resume_after"')
-                        run_sql('UPDATE schSTATUS SET value = "1" WHERE name = "auto_mode"')
+
+                    resume_after = datetime(*(time.strptime(date_string, "%Y-%m-%d %H:%M:%S")[0:6]))
+                    if datetime.now() > resume_after:
+                        run_sql('UPDATE `schSTATUS` SET value = "" WHERE name = "resume_after"')
+                        run_sql('UPDATE `schSTATUS` SET value = "1" WHERE name = "auto_mode"')
                         status = 1
 
         return status
@@ -876,7 +877,7 @@ class BibSched(object):
             pid = get_task_pid(task.id)
             if not pid:
                 Log('Task crashed %s' % task.id)
-                run_sql("""UPDATE schTASK SET status = 'CERROR'
+                run_sql("""UPDATE `schTASK` SET status = 'CERROR'
                            WHERE id = %%s AND status IN (%s)"""
                                  % ','.join("'%s'" % s for s in ACTIVE_STATUS),
                         [task.id])
@@ -931,7 +932,7 @@ class BibSched(object):
     def watch_loop(self):
         ## Cleaning up scheduled task not run because of bibsched being
         ## interrupted in the middle.
-        run_sql("""UPDATE schTASK
+        run_sql("""UPDATE `schTASK`
                    SET status = 'WAITING'
                    WHERE status = 'SCHEDULED'
                    AND host = %s""", (self.hostname, ))
@@ -1188,7 +1189,7 @@ def report_queue_status(verbose=True, status=None, since=None, tasks=None): # py
 
         res = run_sql("""SELECT id, proc, runtime, status, priority, host,
                          sequenceid
-                         FROM schTASK WHERE status=%%s %(task_query)s
+                         FROM `schTASK` WHERE status=%%s %(task_query)s
                          %(since_query)s ORDER BY id ASC""" % {
                             'task_query': task_query,
                             'since_query' : since_query},
@@ -1204,7 +1205,7 @@ def report_queue_status(verbose=True, status=None, since=None, tasks=None): # py
     write_message("BibSched daemon status: %s" % daemon_status)
 
     if run_sql("show tables like 'schSTATUS'"):
-        r = run_sql('SELECT value FROM schSTATUS WHERE name = "auto_mode"')
+        r = run_sql('SELECT value FROM `schSTATUS` WHERE name = "auto_mode"')
         try:
             mode = bool(int(r[0][0]))
         except (ValueError, IndexError):
@@ -1238,7 +1239,7 @@ def stop(verbose=True, debug=False):
     if verbose:
         print("Stopping BibSched if running")
     halt(verbose, soft=True, debug=debug)
-    run_sql("UPDATE schTASK SET status='WAITING' WHERE status='SCHEDULED'")
+    run_sql("UPDATE `schTASK` SET status='WAITING' WHERE status='SCHEDULED'")
     res = run_sql("""SELECT id, status FROM schTASK
                      WHERE status NOT LIKE 'DONE'
                      AND status NOT LIKE '%_DELETED'

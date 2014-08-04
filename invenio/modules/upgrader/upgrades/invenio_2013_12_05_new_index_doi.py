@@ -34,7 +34,7 @@ def do_upgrade():
 def do_upgrade_atlantis():
     doi_index = 27
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxWORD%02dF (
+            CREATE TABLE IF NOT EXISTS `idxWORD%02dF` (
               id mediumint(9) unsigned NOT NULL auto_increment,
               term varchar(50) default NULL,
               hitlist longblob,
@@ -43,7 +43,7 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """ % doi_index)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxWORD%02dR (
+            CREATE TABLE IF NOT EXISTS `idxWORD%02dR` (
               id_bibrec mediumint(9) unsigned NOT NULL,
               termlist longblob,
               type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
@@ -51,7 +51,7 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """ % doi_index)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxPAIR%02dF (
+            CREATE TABLE IF NOT EXISTS `idxPAIR%02dF` (
               id mediumint(9) unsigned NOT NULL auto_increment,
               term varchar(100) default NULL,
               hitlist longblob,
@@ -60,7 +60,7 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """ % doi_index)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxPAIR%02dR (
+            CREATE TABLE IF NOT EXISTS `idxPAIR%02dR` (
               id_bibrec mediumint(9) unsigned NOT NULL,
               termlist longblob,
               type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
@@ -68,7 +68,7 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """ % doi_index)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxPHRASE%02dF (
+            CREATE TABLE IF NOT EXISTS `idxPHRASE%02dF` (
               id mediumint(9) unsigned NOT NULL auto_increment,
               term text default NULL,
               hitlist longblob,
@@ -77,17 +77,17 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """ % doi_index)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxPHRASE%02dR (
+            CREATE TABLE IF NOT EXISTS `idxPHRASE%02dR` (
               id_bibrec mediumint(9) unsigned NOT NULL,
               termlist longblob,
               type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
               PRIMARY KEY (id_bibrec,type)
             ) ENGINE=MyISAM;
             """ % doi_index)
-    run_sql("""INSERT INTO idxINDEX VALUES (%02d,'doi','This index contains words/phrases from DOI fields','0000-00-00 00:00:00', '', 'native','','No','No','No', 'BibIndexDOITokenizer')""" % doi_index)
-    run_sql("""INSERT INTO idxINDEX_idxINDEX (id_virtual, id_normal) VALUES (1, %02d)""" % doi_index)
-    run_sql("""INSERT INTO field VALUES (18,'doi','doi')""")
-    run_sql("""INSERT INTO idxINDEX_field (id_idxINDEX, id_field) VALUES (%02d, 18)""" % doi_index)
+    run_sql("""INSERT INTO `idxINDEX` VALUES (%02d,'doi','This index contains words/phrases from DOI fields','0000-00-00 00:00:00', '', 'native','','No','No','No', 'BibIndexDOITokenizer')""" % doi_index)
+    run_sql("""INSERT INTO `idxINDEX_idxINDEX` (id_virtual, id_normal) VALUES (1, %02d)""" % doi_index)
+    run_sql("""INSERT INTO `field` VALUES (18,'doi','doi')""")
+    run_sql("""INSERT INTO `idxINDEX_field` (id_idxINDEX, id_field) VALUES (%02d, 18)""" % doi_index)
 
 def estimate():
     return 1

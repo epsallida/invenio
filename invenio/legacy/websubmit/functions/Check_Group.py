@@ -36,7 +36,7 @@ def Check_Group(parameters, curdir, form, user_info=None):
         group = fp.read()
         group = group.replace("/","_")
         group = re.sub("[\n\r]+","",group)
-        res = run_sql ("""SELECT id FROM usergroup WHERE name = %s""", (group,))
+        res = run_sql ("""SELECT id FROM `usergroup` WHERE name = %s""", (group,))
         if len(res) == 0:
             raise InvenioWebSubmitFunctionStop("""
 <SCRIPT>

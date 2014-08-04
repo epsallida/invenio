@@ -407,7 +407,7 @@ CFG_SOLR_URL = http://localhost:8983/solr
 <p>Third, <code>idxINDEX</code> is amended:</p>
 <blockquote>
 <pre>
-UPDATE idxINDEX SET indexer='SOLR' WHERE name='fulltext'
+UPDATE `idxINDEX` SET indexer='SOLR' WHERE name='fulltext'
 </pre>
 </blockquote>
 

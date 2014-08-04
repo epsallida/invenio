@@ -76,7 +76,7 @@ def Send_Request_For_Refereeing_Process(parameters, curdir, form, user_info=None
     else:
         author = ""
     # we get the referee password
-    #sth = run_sql("SELECT access FROM sbmAPPROVAL WHERE rn=%s", (rn,))
+    #sth = run_sql("SELECT access FROM `sbmAPPROVAL` WHERE rn=%s", (rn,))
     #if len(sth) >0:
         #access = sth[0][0]
     # Build referee's email address

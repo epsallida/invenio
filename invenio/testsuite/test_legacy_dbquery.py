@@ -69,7 +69,7 @@ class TableUpdateTimesTest(InvenioTestCase):
         # get_table_update_time()
         # create empty test table
         test_table = "tmpTESTTABLE123"
-        dbquery.run_sql("CREATE TABLE IF NOT EXISTS %s (a INT)" % test_table)
+        dbquery.run_sql("CREATE TABLE IF NOT EXISTS `%s` (a INT)" % test_table)
         # run the test:
         self._check_table_update_time(test_table)
         # drop empty test table
@@ -81,8 +81,8 @@ class TableUpdateTimesTest(InvenioTestCase):
         # table called "test__invenio__utf8".
         beta_in_utf8 = "β" # Greek beta in UTF-8 is 0xCEB2
         dbquery.run_sql("CREATE TEMPORARY TABLE test__invenio__utf8 (x char(1), y varbinary(2)) DEFAULT CHARACTER SET utf8")
-        dbquery.run_sql("INSERT INTO test__invenio__utf8 (x, y) VALUES (%s, %s)", (beta_in_utf8, beta_in_utf8))
-        res = dbquery.run_sql("SELECT x,y,HEX(x),HEX(y),LENGTH(x),LENGTH(y),CHAR_LENGTH(x),CHAR_LENGTH(y) FROM test__invenio__utf8")
+        dbquery.run_sql("INSERT INTO `test__invenio__utf8` (x, y) VALUES (%s, %s)", (beta_in_utf8, beta_in_utf8))
+        res = dbquery.run_sql("SELECT x,y,HEX(x),HEX(y),LENGTH(x),LENGTH(y),CHAR_LENGTH(x),CHAR_LENGTH(y) FROM `test__invenio__utf8`")
         self.assertEqual(res[0],
                          ('\xce\xb2', '\xce\xb2', 'CEB2', 'CEB2', 2L, 2L, 1L, 2L))
         dbquery.run_sql("DROP TEMPORARY TABLE test__invenio__utf8")

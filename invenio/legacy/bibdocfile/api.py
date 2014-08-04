@@ -828,12 +828,12 @@ class BibRecDocs(object):
         """
         self._bibdocs = {}
         if self.deleted_too:
-            res = run_sql("""SELECT brbd.id_bibdoc, brbd.docname, brbd.type FROM bibrec_bibdoc as brbd JOIN
+            res = run_sql("""SELECT brbd.id_bibdoc, brbd.docname, brbd.type FROM `bibrec_bibdoc` as brbd JOIN
                          bibdoc as bd ON bd.id=brbd.id_bibdoc WHERE brbd.id_bibrec=%s
                          ORDER BY brbd.docname ASC""", (self.id,))
 
         else:
-            res = run_sql("""SELECT brbd.id_bibdoc, brbd.docname, brbd.type FROM bibrec_bibdoc as brbd JOIN
+            res = run_sql("""SELECT brbd.id_bibdoc, brbd.docname, brbd.type FROM `bibrec_bibdoc` as brbd JOIN
                          bibdoc as bd ON bd.id=brbd.id_bibdoc WHERE brbd.id_bibrec=%s AND
                          bd.status<>'DELETED' ORDER BY brbd.docname ASC""", (self.id,))
         for row in res:
@@ -1040,7 +1040,7 @@ class BibRecDocs(object):
 
         newname = normalize_docname(newname)
 
-        res = run_sql("SELECT id_bibdoc FROM bibrec_bibdoc WHERE id_bibrec=%s AND docname=%s", (self.id, newname))
+        res = run_sql("SELECT id_bibdoc FROM `bibrec_bibdoc` WHERE id_bibrec=%s AND docname=%s", (self.id, newname))
         if res:
             raise InvenioBibDocFileError, "A bibdoc called %s already exists for recid %s" % (newname, self.id)
 
@@ -1403,7 +1403,7 @@ class BibRecDocs(object):
         bibdoc._build_file_list()
 
         for (bibdoc, dummyatttype) in self.bibdocs.values():
-            if not run_sql('SELECT data_value FROM bibdocmoreinfo WHERE id_bibdoc=%s', (bibdoc.id,)):
+            if not run_sql('SELECT data_value FROM `bibdocmoreinfo` WHERE id_bibdoc=%s', (bibdoc.id,)):
                 ## Import from MARC only if the bibdoc has never had
                 ## its more_info initialized.
                 try:
@@ -1504,7 +1504,7 @@ class BibRecDocs(object):
             need_merge = self.has_docname_p(correct_docname)
             if need_merge:
                 proposed_docname = self.propose_unique_docname(correct_docname)
-                run_sql('UPDATE bibdoc SET docname=%s WHERE id=%s', (proposed_docname, bibdoc.id))
+                run_sql('UPDATE `bibdoc` SET docname=%s WHERE id=%s', (proposed_docname, bibdoc.id))
                 self.dirty = True
                 self.uniformize_bibdoc(proposed_docname)
                 try:
@@ -1512,7 +1512,7 @@ class BibRecDocs(object):
                 except InvenioBibDocFileError:
                     return False
             else:
-                run_sql('UPDATE bibdoc SET docname=%s WHERE id=%s', (correct_docname, bibdoc.id))
+                run_sql('UPDATE `bibdoc` SET docname=%s WHERE id=%s', (correct_docname, bibdoc.id))
                 self.dirty = True
                 self.uniformize_bibdoc(correct_docname)
         else:
@@ -1591,7 +1591,7 @@ class BibDoc(object):
         if rec_links is None:
             rec_links = []
         status = ''
-        doc_id = run_sql("INSERT INTO bibdoc (status, creation_date, modification_date, doctype) "
+        doc_id = run_sql("INSERT INTO `bibdoc` (status, creation_date, modification_date, doctype) "
                           "values(%s,NOW(),NOW(), %s)", (status, doc_type))
 
         if not doc_id:
@@ -1601,7 +1601,7 @@ class BibDoc(object):
         try:
             BibDoc.prepare_basedir(doc_id)
         except Exception as e:
-            run_sql('DELETE FROM bibdoc WHERE id=%s', (doc_id, ))
+            run_sql('DELETE FROM `bibdoc` WHERE id=%s', (doc_id, ))
             register_exception(alert_admin=True)
             raise InvenioBibDocFileError, e
 
@@ -1623,7 +1623,7 @@ class BibDoc(object):
         attaching newly created document to a record
         """
         # docid is known, the document already exists
-        res2 = run_sql("SELECT id_bibrec, type, docname FROM bibrec_bibdoc WHERE id_bibdoc=%s", (docid,))
+        res2 = run_sql("SELECT id_bibrec, type, docname FROM `bibrec_bibdoc` WHERE id_bibdoc=%s", (docid,))
         self.bibrec_types = [(r[0], r[1], r[2]) for r in res2 ] # just in case the result was behaving like tuples but was something else
         if not res2:
             # fake attachment
@@ -1719,13 +1719,13 @@ class BibDoc(object):
 
         # retrieving links betwen records and documents
 
-        res = run_sql("SELECT id_bibrec, type, docname FROM bibrec_bibdoc WHERE id_bibdoc=%s", (str(docid),), 1)
+        res = run_sql("SELECT id_bibrec, type, docname FROM `bibrec_bibdoc` WHERE id_bibdoc=%s", (str(docid),), 1)
         if res:
             for r in res:
                 container["bibrec_links"].append({"recid": r[0], "doctype": r[1], "docname": r[2]})
 
         # gather the other information
-        res = run_sql("SELECT status, creation_date, modification_date, text_extraction_date, doctype, docname FROM bibdoc WHERE id=%s LIMIT 1", (docid,), 1)
+        res = run_sql("SELECT status, creation_date, modification_date, text_extraction_date, doctype, docname FROM `bibdoc` WHERE id=%s LIMIT 1", (docid,), 1)
 
         if res:
             container["status"] = res[0][0]
@@ -1743,7 +1743,7 @@ class BibDoc(object):
         try:
             if CFG_BIBDOCFILE_ENABLE_BIBDOCFSINFO_CACHE:
                 ## We take all extensions from the existing formats in the DB.
-                container["extensions"] = set([ext[0] for ext in run_sql("SELECT format FROM bibdocfsinfo WHERE id_bibdoc=%s", (docid, ))])
+                container["extensions"] = set([ext[0] for ext in run_sql("SELECT format FROM `bibdocfsinfo` WHERE id_bibdoc=%s", (docid, ))])
             else:
                 ## We take all the extensions by listing the directory content, stripping name
                 ## and version.
@@ -1812,7 +1812,7 @@ class BibDoc(object):
             @param docname Name of a document inside of a record
             @type docname String
         """
-        run_sql("INSERT INTO bibrec_bibdoc (id_bibrec, id_bibdoc, type, docname) VALUES (%s,%s,%s,%s)",
+        run_sql("INSERT INTO `bibrec_bibdoc` (id_bibrec, id_bibdoc, type, docname) VALUES (%s,%s,%s,%s)",
                 (str(recid), str(self.id), a_type, docname))
         self._update_additional_info_files()
 
@@ -1926,7 +1926,7 @@ class BibDoc(object):
         Update the modification time of the bibdoc (as in the UNIX command
         C{touch}).
         """
-        run_sql('UPDATE bibdoc SET modification_date=NOW() WHERE id=%s', (self.id, ))
+        run_sql('UPDATE `bibdoc` SET modification_date=NOW() WHERE id=%s', (self.id, ))
         self.dirty = True
         self.last_action = action
 
@@ -1934,8 +1934,8 @@ class BibDoc(object):
         """
         Modify the doctype of a BibDoc
         """
-        run_sql('UPDATE bibdoc SET doctype=%s WHERE id=%s', (new_doctype, self.id))
-        run_sql('UPDATE bibrec_bibdoc SET type=%s WHERE id_bibdoc=%s', (new_doctype, self.id))
+        run_sql('UPDATE `bibdoc` SET doctype=%s WHERE id=%s', (new_doctype, self.id))
+        run_sql('UPDATE `bibrec_bibdoc` SET type=%s WHERE id_bibdoc=%s', (new_doctype, self.id))
         self.dirty = True
 
     def set_status(self, new_status):
@@ -1954,7 +1954,7 @@ class BibDoc(object):
         if new_status != KEEP_OLD_VALUE:
             if new_status == 'DELETED':
                 raise InvenioBibDocFileError('DELETED is a reserved word and can not be used for setting the status')
-            run_sql('UPDATE bibdoc SET status=%s WHERE id=%s', (new_status, self.id))
+            run_sql('UPDATE `bibdoc` SET status=%s WHERE id=%s', (new_status, self.id))
             self.status = new_status
             self.touch('status')
 
@@ -1992,7 +1992,7 @@ class BibDoc(object):
                 docformat = normalize_format(docformat)
 
             destination = self.get_filepath(docformat, myversion)
-            if run_sql("SELECT id_bibdoc FROM bibdocfsinfo WHERE id_bibdoc=%s AND version=%s AND format=%s", (self.id, myversion, docformat)):
+            if run_sql("SELECT id_bibdoc FROM `bibdocfsinfo` WHERE id_bibdoc=%s AND version=%s AND format=%s", (self.id, myversion, docformat)):
                 raise InvenioBibDocFileError("According to the database a file of format %s is already attached to the docid %s" % (docformat, self.id))
             try:
                 shutil.copyfile(filename, destination)
@@ -2022,8 +2022,8 @@ class BibDoc(object):
         self.touch('newversion')
         Md5Folder(self.basedir).update()
         just_added_file = self.get_file(docformat, myversion)
-        run_sql("INSERT INTO bibdocfsinfo(id_bibdoc, version, format, last_version, cd, md, checksum, filesize, mime) VALUES(%s, %s, %s, true, %s, %s, %s, %s, %s)", (self.id, myversion, docformat, just_added_file.cd, just_added_file.md, just_added_file.get_checksum(), just_added_file.get_size(), just_added_file.mime))
-        run_sql("UPDATE bibdocfsinfo SET last_version=false WHERE id_bibdoc=%s AND version<%s", (self.id, myversion))
+        run_sql("INSERT INTO `bibdocfsinfo` (id_bibdoc, version, format, last_version, cd, md, checksum, filesize, mime) VALUES(%s, %s, %s, true, %s, %s, %s, %s, %s)", (self.id, myversion, docformat, just_added_file.cd, just_added_file.md, just_added_file.get_checksum(), just_added_file.get_size(), just_added_file.mime))
+        run_sql("UPDATE `bibdocfsinfo` SET last_version=false WHERE id_bibdoc=%s AND version<%s", (self.id, myversion))
 
     def add_file_new_format(self, filename, version=None, description=None, comment=None, docformat=None, flags=None, modification_date=None):
         """
@@ -2058,7 +2058,7 @@ class BibDoc(object):
             else:
                 docformat = normalize_format(docformat)
 
-            if run_sql("SELECT id_bibdoc FROM bibdocfsinfo WHERE id_bibdoc=%s AND version=%s AND format=%s", (self.id, version, docformat)):
+            if run_sql("SELECT id_bibdoc FROM `bibdocfsinfo` WHERE id_bibdoc=%s AND version=%s AND format=%s", (self.id, version, docformat)):
                 raise InvenioBibDocFileError("According to the database a file of format %s is already attached to the docid %s" % (docformat, self.id))
             destination = self.get_filepath(docformat, version)
             if os.path.exists(destination):
@@ -2085,7 +2085,7 @@ class BibDoc(object):
         Md5Folder(self.basedir).update()
         self.touch('newformat')
         just_added_file = self.get_file(docformat, version)
-        run_sql("INSERT INTO bibdocfsinfo(id_bibdoc, version, format, last_version, cd, md, checksum, filesize, mime) VALUES(%s, %s, %s, true, %s, %s, %s, %s, %s)", (self.id, version, docformat, just_added_file.cd, just_added_file.md, just_added_file.get_checksum(), just_added_file.get_size(), just_added_file.mime))
+        run_sql("INSERT INTO `bibdocfsinfo` (id_bibdoc, version, format, last_version, cd, md, checksum, filesize, mime) VALUES(%s, %s, %s, true, %s, %s, %s, %s, %s)", (self.id, version, docformat, just_added_file.cd, just_added_file.md, just_added_file.get_checksum(), just_added_file.get_size(), just_added_file.mime))
 
     def change_docformat(self, oldformat, newformat):
         """
@@ -2131,7 +2131,7 @@ class BibDoc(object):
                         register_exception()
             Md5Folder(self.basedir).update()
             self.touch('purge')
-            run_sql("DELETE FROM bibdocfsinfo WHERE id_bibdoc=%s AND version<%s", (self.id, version))
+            run_sql("DELETE FROM `bibdocfsinfo` WHERE id_bibdoc=%s AND version<%s", (self.id, version))
 
     def expunge(self):
         """
@@ -2142,12 +2142,12 @@ class BibDoc(object):
         self.more_info.delete()
         del self.more_info
         os.system('rm -rf %s' % escape_shell_arg(self.basedir))
-        run_sql('DELETE FROM bibrec_bibdoc WHERE id_bibdoc=%s', (self.id, ))
-        run_sql('DELETE FROM bibdoc_bibdoc WHERE id_bibdoc1=%s OR id_bibdoc2=%s', (self.id, self.id))
-        run_sql('DELETE FROM bibdoc WHERE id=%s', (self.id, ))
-        run_sql('INSERT INTO hstDOCUMENT(action, docname, docformat, docversion, docsize, docchecksum, id_bibdoc, doctimestamp) VALUES("EXPUNGE", %s, %s, %s, %s, %s, %s, NOW())',
+        run_sql('DELETE FROM `bibrec_bibdoc` WHERE id_bibdoc=%s', (self.id, ))
+        run_sql('DELETE FROM `bibdoc_bibdoc` WHERE id_bibdoc1=%s OR id_bibdoc2=%s', (self.id, self.id))
+        run_sql('DELETE FROM `bibdoc` WHERE id=%s', (self.id, ))
+        run_sql('INSERT INTO `hstDOCUMENT` (action, docname, docformat, docversion, docsize, docchecksum, id_bibdoc, doctimestamp) VALUES("EXPUNGE", %s, %s, %s, %s, %s, %s, NOW())',
                 ('', self.doctype, self.get_latest_version(), self.get_total_size_latest_version(), '', self.id, ))
-        run_sql('DELETE FROM bibdocfsinfo WHERE id_bibdoc=%s', (self.id, ))
+        run_sql('DELETE FROM `bibdocfsinfo` WHERE id_bibdoc=%s', (self.id, ))
         del self._docfiles
         del self.id
         del self.cd
@@ -2314,13 +2314,13 @@ class BibDoc(object):
         """
         newname = normalize_docname(newname)
 
-        res = run_sql("SELECT id_bibdoc FROM bibrec_bibdoc WHERE id_bibrec=%s AND docname=%s", (recid, newname))
+        res = run_sql("SELECT id_bibdoc FROM `bibrec_bibdoc` WHERE id_bibrec=%s AND docname=%s", (recid, newname))
         if res:
             raise InvenioBibDocFileError, "A bibdoc called %s already exists for recid %s" % (newname, recid)
 
         run_sql("update bibrec_bibdoc set docname=%s where id_bibdoc=%s and id_bibrec=%s", (newname, self.id, recid))
         # docid is known, the document already exists
-        res2 = run_sql("SELECT id_bibrec, type, docname FROM bibrec_bibdoc WHERE id_bibdoc=%s", (self.id,))
+        res2 = run_sql("SELECT id_bibrec, type, docname FROM `bibrec_bibdoc` WHERE id_bibdoc=%s", (self.id,))
         ## Refreshing names and types.
         self.bibrec_types = [(r[0], r[1], r[2]) for r in res2 ] # just in case the result was behaving like tuples but was something else
         if not res2:
@@ -2571,7 +2571,7 @@ class BibDoc(object):
                 # if the document is attached to some records
                 brd.change_name(docid=self.id, newname = 'DELETED-%s%s-%s' % (today.strftime('%Y%m%d%H%M%S'), today.microsecond, docname))
 
-            run_sql("UPDATE bibdoc SET status='DELETED' WHERE id=%s", (self.id,))
+            run_sql("UPDATE `bibdoc` SET status='DELETED' WHERE id=%s", (self.id,))
             self.status = 'DELETED'
         except Exception as e:
             register_exception(alert_admin=True)
@@ -2603,7 +2603,7 @@ class BibDoc(object):
         """
 
         try:
-            run_sql("UPDATE bibdoc SET status=%s WHERE id=%s AND status='DELETED'", (previous_status, self.id))
+            run_sql("UPDATE `bibdoc` SET status=%s WHERE id=%s AND status='DELETED'", (previous_status, self.id))
         except Exception as e:
             raise InvenioBibDocFileError, "It's impossible to undelete bibdoc %s: %s" % (self.id, e)
 
@@ -2635,12 +2635,12 @@ class BibDoc(object):
             return
         try:
             os.remove(afile.get_full_path())
-            run_sql("DELETE FROM bibdocfsinfo WHERE id_bibdoc=%s AND version=%s AND format=%s", (self.id, afile.get_version(), afile.get_format()))
-            last_version = run_sql("SELECT max(version) FROM bibdocfsinfo WHERE id_bibdoc=%s", (self.id, ))[0][0]
+            run_sql("DELETE FROM `bibdocfsinfo` WHERE id_bibdoc=%s AND version=%s AND format=%s", (self.id, afile.get_version(), afile.get_format()))
+            last_version = run_sql("SELECT max(version) FROM `bibdocfsinfo` WHERE id_bibdoc=%s", (self.id, ))[0][0]
             if last_version:
                 ## Updating information about last version
-                run_sql("UPDATE bibdocfsinfo SET last_version=true WHERE id_bibdoc=%s AND version=%s", (self.id, last_version))
-                run_sql("UPDATE bibdocfsinfo SET last_version=false WHERE id_bibdoc=%s AND version<>%s", (self.id, last_version))
+                run_sql("UPDATE `bibdocfsinfo` SET last_version=true WHERE id_bibdoc=%s AND version=%s", (self.id, last_version))
+                run_sql("UPDATE `bibdocfsinfo` SET last_version=false WHERE id_bibdoc=%s AND version<>%s", (self.id, last_version))
         except OSError:
             pass
         self.touch('delete')
@@ -2678,9 +2678,9 @@ class BibDoc(object):
             """Log an action into the bibdoclog table."""
             try:
                 if timestamp:
-                    run_sql('INSERT INTO hstDOCUMENT(action, id_bibdoc, docname, docformat, docversion, docsize, docchecksum, doctimestamp) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)', (action, docid, docname, docformat, version, size, checksum, timestamp))
+                    run_sql('INSERT INTO `hstDOCUMENT` (action, id_bibdoc, docname, docformat, docversion, docsize, docchecksum, doctimestamp) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)', (action, docid, docname, docformat, version, size, checksum, timestamp))
                 else:
-                    run_sql('INSERT INTO hstDOCUMENT(action, id_bibdoc, docname, docformat, docversion, docsize, docchecksum, doctimestamp) VALUES(%s, %s, %s, %s, %s, %s, %s, NOW())', (action, docid, docname, docformat, version, size, checksum))
+                    run_sql('INSERT INTO `hstDOCUMENT` (action, id_bibdoc, docname, docformat, docversion, docsize, docchecksum, doctimestamp) VALUES(%s, %s, %s, %s, %s, %s, %s, NOW())', (action, docid, docname, docformat, version, size, checksum))
             except DatabaseError:
                 register_exception()
 
@@ -2712,7 +2712,7 @@ class BibDoc(object):
         if context != ('init', 'init_from_disk'):
             previous_file_list = list(self._docfiles)
         res = run_sql("SELECT status, creation_date,"
-            "modification_date FROM bibdoc WHERE id=%s", (self.id,))
+            "modification_date FROM `bibdoc` WHERE id=%s", (self.id,))
 
         self.cd = res[0][1]
         self.md = res[0][2]
@@ -2724,7 +2724,7 @@ class BibDoc(object):
 
         if CFG_BIBDOCFILE_ENABLE_BIBDOCFSINFO_CACHE and context == 'init':
             ## In normal init context we read from DB
-            res = run_sql("SELECT version, format, cd, md, checksum, filesize FROM bibdocfsinfo WHERE id_bibdoc=%s", (self.id, ))
+            res = run_sql("SELECT version, format, cd, md, checksum, filesize FROM `bibdocfsinfo` WHERE id_bibdoc=%s", (self.id, ))
             for version, docformat, cd, md, checksum, size in res:
                 filepath = self.get_filepath(docformat, version)
                 self._docfiles.append(BibDocFile(
@@ -2771,10 +2771,10 @@ class BibDoc(object):
         Update the content of the bibdocfile table by taking what is available on the filesystem.
         """
         self._build_file_list('init_from_disk')
-        run_sql("DELETE FROM bibdocfsinfo WHERE id_bibdoc=%s", (self.id,))
+        run_sql("DELETE FROM `bibdocfsinfo` WHERE id_bibdoc=%s", (self.id,))
         for afile in self.docfiles:
-            run_sql("INSERT INTO bibdocfsinfo(id_bibdoc, version, format, last_version, cd, md, checksum, filesize, mime) VALUES(%s, %s, %s, false, %s, %s, %s, %s, %s)", (self.id, afile.get_version(), afile.get_format(), afile.cd, afile.md, afile.get_checksum(), afile.get_size(), afile.mime))
-            run_sql("UPDATE bibdocfsinfo SET last_version=true WHERE id_bibdoc=%s AND version=%s", (self.id, self.get_latest_version()))
+            run_sql("INSERT INTO `bibdocfsinfo`(id_bibdoc, version, format, last_version, cd, md, checksum, filesize, mime) VALUES(%s, %s, %s, false, %s, %s, %s, %s, %s)", (self.id, afile.get_version(), afile.get_format(), afile.cd, afile.md, afile.get_checksum(), afile.get_size(), afile.mime))
+            run_sql("UPDATE `bibdocfsinfo` SET last_version=true WHERE id_bibdoc=%s AND version=%s", (self.id, self.get_latest_version()))
 
     def _build_related_file_list(self):
         """Lists all files attached to the bibdoc. This function should be
@@ -2849,7 +2849,7 @@ class BibDoc(object):
         docformat = docformat.upper()
         if not version:
             version = self.get_latest_version()
-        return run_sql("INSERT INTO rnkDOWNLOADS "
+        return run_sql("INSERT INTO `rnkDOWNLOADS` "
             "(id_bibrec,id_bibdoc,file_version,file_format,"
             "id_user,client_host,download_time) VALUES "
             "(%s,%s,%s,%s,%s,INET_ATON(%s),NOW())",
@@ -4046,7 +4046,7 @@ class MoreInfo(object):
     def populate_from_database(self):
         """Retrieves all values of MoreInfo and places them in the cache"""
         where_str, where_args = self._generate_where_query_args()
-        query_str = "SELECT namespace, data_key, data_value FROM bibdocmoreinfo WHERE %s" % (where_str, )
+        query_str = "SELECT namespace, data_key, data_value FROM `bibdocmoreinfo` WHERE %s" % (where_str, )
         res = run_sql(query_str, where_args)
         if res:
             for row in res:
@@ -4067,7 +4067,7 @@ class MoreInfo(object):
         moreinfo database table"""
         where_str, where_args = self._generate_where_query_args(
             namespace = namespace)
-        query_str = "SELECT DISTINCT %s FROM bibdocmoreinfo WHERE %s" % \
+        query_str = "SELECT DISTINCT %s FROM `bibdocmoreinfo` WHERE %s" % \
             ( column, where_str, )
 
         if DBG_LOG_QUERIES:
@@ -4111,7 +4111,7 @@ class MoreInfo(object):
             columns_str = ", ".join(map(lambda x: x[1], to_process))
             values_str = ", ".join(query_parts)
 
-            query_str = "INSERT INTO bibdocmoreinfo (%s) VALUES(%s)" % \
+            query_str = "INSERT INTO `bibdocmoreinfo` (%s) VALUES(%s)" % \
                           (columns_str, values_str)
 
             if DBG_LOG_QUERIES:
@@ -4123,7 +4123,7 @@ class MoreInfo(object):
         else:
             #Update existing value
             where_str, where_args = self._generate_where_query_args(namespace, key)
-            query_str = "UPDATE bibdocmoreinfo SET data_value=%s WHERE " + where_str
+            query_str = "UPDATE `bibdocmoreinfo` SET data_value=%s WHERE " + where_str
             query_args =  [str(serialised_val)] + where_args
 
             if DBG_LOG_QUERIES:
@@ -4139,7 +4139,7 @@ class MoreInfo(object):
         @param key - key of the data to be read
         """
         where_str, where_args = self._generate_where_query_args(namespace = namespace, data_key = key)
-        query_str = "SELECT data_value FROM bibdocmoreinfo WHERE " + where_str
+        query_str = "SELECT data_value FROM `bibdocmoreinfo` WHERE " + where_str
 
         res = run_sql(query_str, where_args)
 
@@ -4161,7 +4161,7 @@ class MoreInfo(object):
     def _database_remove_value(self, namespace, key):
         """Removes an entry directly in the database"""
         where_str, where_args = self._generate_where_query_args(namespace = namespace, data_key = key)
-        query_str = "DELETE FROM bibdocmoreinfo WHERE " + where_str
+        query_str = "DELETE FROM `bibdocmoreinfo` WHERE " + where_str
         if DBG_LOG_QUERIES:
             from invenio.legacy.bibsched.bibtask import write_message
             write_message("Executing query: " + query_str + "   ARGS: " + repr(where_args))
@@ -4256,7 +4256,7 @@ class MoreInfo(object):
         self.cache = {}
         if not self.cache_only:
             where_str, query_args = self._generate_where_query_args()
-            query_str = "DELETE FROM bibdocmoreinfo WHERE %s" % (where_str, )
+            query_str = "DELETE FROM `bibdocmoreinfo` WHERE %s" % (where_str, )
 
             if DBG_LOG_QUERIES:
                 from invenio.legacy.bibsched.bibtask import write_message
@@ -4642,7 +4642,7 @@ class BibRelation(object):
     def _fill_data_from_id(self):
         """Fill all the relation data from the relation identifier
         """
-        query = "SELECT id_bibdoc1, version1, format1, id_bibdoc2, version2, format2, rel_type FROM bibdoc_bibdoc WHERE id=%s"
+        query = "SELECT id_bibdoc1, version1, format1, id_bibdoc2, version2, format2, rel_type FROM `bibdoc_bibdoc` WHERE id=%s"
         res = run_sql(query, (str(self.id), ))
         if res != None and res[0] != None:
             self.bibdoc1_id = res[0][0]
@@ -4656,7 +4656,7 @@ class BibRelation(object):
     def _fill_id_from_data(self):
         """Fill the relation identifier based on the data provided"""
         where_str, where_args = self._get_where_clauses()
-        query = "SELECT id FROM bibdoc_bibdoc WHERE %s" % (where_str, )
+        query = "SELECT id FROM `bibdoc_bibdoc` WHERE %s" % (where_str, )
 
         res = run_sql(query, where_args)
         if res and res[0][0]:
@@ -4721,7 +4721,7 @@ class BibRelation(object):
                 values_list.append("%s")
                 args_list.append(entry[0])
 
-        query = "INSERT INTO bibdoc_bibdoc (%s) VALUES (%s)" % (", ".join(columns_list), ", ".join(values_list))
+        query = "INSERT INTO `bibdoc_bibdoc` (%s) VALUES (%s)" % (", ".join(columns_list), ", ".join(values_list))
 #        print "Query: %s Args: %s" % (query, str(args_list))
         rel_id = run_sql(query, args_list)
         return BibRelation(rel_id = rel_id)
@@ -4732,7 +4732,7 @@ class BibRelation(object):
             the relation
         """
         where_str, where_args = self._get_where_clauses()
-        run_sql("DELETE FROM bibdoc_bibdoc WHERE %s" % (where_str,), where_args) # kwalitee: disable=sql
+        run_sql("DELETE FROM `bibdoc_bibdoc` WHERE %s" % (where_str,), where_args) # kwalitee: disable=sql
         # removing associated MoreInfo
         self.more_info.delete()
 
@@ -4763,7 +4763,7 @@ class BibRelation(object):
         if where_str:
             where_str = "WHERE " + where_str # in case of nonempty where, we need a where clause
 
-        query_str = "SELECT id FROM bibdoc_bibdoc %s" % (where_str, )
+        query_str = "SELECT id FROM `bibdoc_bibdoc` %s" % (where_str, )
         #     print "running query : %s with arguments %s on the object %s" % (query_str, str(where_args), repr(self))
         try:
             res = run_sql(query_str, where_args)

@@ -47,7 +47,7 @@ class CnumSeq(SequenceGenerator):
         @return: values starting by the base cnum
         @rtype: tuple
         """
-        return run_sql("""SELECT seq_value FROM seqSTORE WHERE seq_value
+        return run_sql("""SELECT seq_value FROM `seqSTORE` WHERE seq_value
                           LIKE %s AND seq_name=%s""",
                           (value + "%", self.seq_name))
 
@@ -115,7 +115,7 @@ def _insert_cnum(cnum):
     """
     Inserts a new cnum in table seqSTORE
     """
-    return run_sql("INSERT INTO seqSTORE (seq_name, seq_value) VALUES (%s, %s)", ("cnum", cnum))
+    return run_sql("INSERT INTO `seqSTORE` (seq_name, seq_value) VALUES (%s, %s)", ("cnum", cnum))
 
 
 def populate_cnums():

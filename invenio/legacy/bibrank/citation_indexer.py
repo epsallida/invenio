@@ -54,7 +54,7 @@ re_CFG_JOURNAL_PUBINFO_STANDARD_FORM_REGEXP_CHECK \
 
 
 def compute_weights():
-    sql = "SELECT citee, COUNT(citer) FROM rnkCITATIONDICT GROUP BY citee"
+    sql = "SELECT citee, COUNT(citer) FROM `rnkCITATIONDICT` GROUP BY citee"
     weights = {}
     for citee, c in run_sql(sql):
         weights[citee] = c
@@ -227,7 +227,7 @@ def get_bibrankmethod_lastupdate(rank_method_code):
     """Return the last excution date of bibrank method
     """
     query = """SELECT DATE_FORMAT(last_updated, '%%Y-%%m-%%d %%H:%%i:%%s')
-               FROM rnkMETHOD WHERE name =%s"""
+               FROM `rnkMETHOD` WHERE name =%s"""
     last_update_time = run_sql(query, [rank_method_code])
     try:
         r = last_update_time[0][0]
@@ -244,7 +244,7 @@ def get_bibindex_update_time():
         # check indexing times of `journal' and `reportnumber`
         # indexes, and only fetch records which have been indexed
         sql = "SELECT DATE_FORMAT(MIN(last_updated), " \
-              "'%%Y-%%m-%%d %%H:%%i:%%s') FROM idxINDEX WHERE name IN (%s,%s)"
+              "'%%Y-%%m-%%d %%H:%%i:%%s') FROM `idxINDEX` WHERE name IN (%s,%s)"
         index_update_time = run_sql(sql, ('journal', 'reportnumber'), 1)[0][0]
     except IndexError:
         write_message("Not running citation indexer since journal/reportnumber"
@@ -1168,9 +1168,9 @@ def replace_refs(recid, new_refs):
     for ref in refs_to_add:
         write_message('adding ref %s %s' % (recid, ref), verbose=1)
         now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        run_sql("""INSERT INTO rnkCITATIONDICT (citer, citee, last_updated)
+        run_sql("""INSERT INTO `rnkCITATIONDICT` (citer, citee, last_updated)
                    VALUES (%s, %s, %s)""", (recid, ref, now))
-        run_sql("""INSERT INTO rnkCITATIONLOG (citer, citee, type, action_date)
+        run_sql("""INSERT INTO `rnkCITATIONLOG` (citer, citee, type, action_date)
                    VALUES (%s, %s, %s, %s)""", (recid, ref, 'added', now))
 
     for ref in refs_to_delete:
@@ -1178,7 +1178,7 @@ def replace_refs(recid, new_refs):
         now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         run_sql("""DELETE FROM rnkCITATIONDICT
                    WHERE citer = %s and citee = %s""", (recid, ref))
-        run_sql("""INSERT INTO rnkCITATIONLOG (citer, citee, type, action_date)
+        run_sql("""INSERT INTO `rnkCITATIONLOG` (citer, citee, type, action_date)
                    VALUES (%s, %s, %s, %s)""", (recid, ref, 'removed', now))
 
 
@@ -1200,9 +1200,9 @@ def replace_cites(recid, new_cites):
     for cite in cites_to_add:
         write_message('adding cite %s %s' % (recid, cite), verbose=1)
         now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        run_sql("""INSERT INTO rnkCITATIONDICT (citee, citer, last_updated)
+        run_sql("""INSERT INTO `rnkCITATIONDICT` (citee, citer, last_updated)
                    VALUES (%s, %s, %s)""", (recid, cite, now))
-        run_sql("""INSERT INTO rnkCITATIONLOG (citee, citer, type, action_date)
+        run_sql("""INSERT INTO `rnkCITATIONLOG` (citee, citer, type, action_date)
                    VALUES (%s, %s, %s, %s)""", (recid, cite, 'added', now))
 
     for cite in cites_to_delete:
@@ -1210,7 +1210,7 @@ def replace_cites(recid, new_cites):
         now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         run_sql("""DELETE FROM rnkCITATIONDICT
                    WHERE citee = %s and citer = %s""", (recid, cite))
-        run_sql("""INSERT INTO rnkCITATIONLOG (citee, citer, type, action_date)
+        run_sql("""INSERT INTO `rnkCITATIONLOG` (citee, citer, type, action_date)
                    VALUES (%s, %s, %s, %s)""", (recid, cite, 'removed', now))
 
 
@@ -1233,7 +1233,7 @@ def insert_into_missing(recid, report):
                             AND extcitepubinfo = %s""",
                           (recid, report))
     if not wasalready:
-        run_sql("""INSERT INTO rnkCITATIONDATAEXT(id_bibrec, extcitepubinfo)
+        run_sql("""INSERT INTO `rnkCITATIONDATAEXT` (id_bibrec, extcitepubinfo)
                    VALUES (%s,%s)""", (recid, report))
 
 
@@ -1288,5 +1288,5 @@ def store_citation_warning(warning_type, cit_info):
                    WHERE type = %s
                    AND citinfo = %s""", (warning_type, cit_info))
     if not r:
-        run_sql("""INSERT INTO rnkCITATIONDATAERR (type, citinfo)
+        run_sql("""INSERT INTO `rnkCITATIONDATAERR` (type, citinfo)
                    VALUES (%s, %s)""", (warning_type, cit_info))

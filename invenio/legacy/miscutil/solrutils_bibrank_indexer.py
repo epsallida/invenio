@@ -145,7 +145,7 @@ def get_recIDs_by_date(dates=""):
     """
     if not dates:
         write_message("Using the last update time for the rank method")
-        res = run_sql('SELECT last_updated FROM rnkMETHOD WHERE name="wrd"')
+        res = run_sql('SELECT last_updated FROM `rnkMETHOD` WHERE name="wrd"')
 
         if not res:
             return
@@ -155,9 +155,9 @@ def get_recIDs_by_date(dates=""):
             dates = (res[0][0],'')
 
     if dates[1]:
-        res = run_sql('SELECT id FROM bibrec WHERE modification_date >= %s AND modification_date <= %s ORDER BY id ASC', (dates[0], dates[1]))
+        res = run_sql('SELECT id FROM `bibrec` WHERE modification_date >= %s AND modification_date <= %s ORDER BY id ASC', (dates[0], dates[1]))
     else:
-        res = run_sql('SELECT id FROM bibrec WHERE modification_date >= %s ORDER BY id ASC', (dates[0],))
+        res = run_sql('SELECT id FROM `bibrec` WHERE modification_date >= %s ORDER BY id ASC', (dates[0],))
 
     return create_range_list([row[0] for row in res])
 
@@ -177,7 +177,7 @@ def word_index(run): # pylint: disable=W0613
         id_ranges = get_recIDs_by_date()
         if id_ranges:
             solr_add_ranges([(id_range[0], id_range[1]) for id_range in id_ranges])
-            run_sql('UPDATE rnkMETHOD SET last_updated=%s WHERE name="wrd"', (starting_time, ))
+            run_sql('UPDATE `rnkMETHOD` SET last_updated=%s WHERE name="wrd"', (starting_time, ))
         else:
             write_message("No new records. Solr index is up to date")
 

@@ -30,23 +30,23 @@ def info():
 
 def do_upgrade():
     #first step: change tables
-    stmt = run_sql('SHOW CREATE TABLE idxINDEX')[0][1]
+    stmt = run_sql('SHOW CREATE TABLE `idxINDEX`')[0][1]
     if '`remove_html_markup` varchar(10)' not in stmt:
         run_sql("ALTER TABLE idxINDEX ADD COLUMN remove_html_markup varchar(10) NOT NULL default '' AFTER remove_stopwords")
     if '`remove_latex_markup` varchar(10)' not in stmt:
         run_sql("ALTER TABLE idxINDEX ADD COLUMN remove_latex_markup varchar(10) NOT NULL default '' AFTER remove_html_markup")
     #second step: fill tables
-    run_sql("UPDATE idxINDEX SET remove_html_markup='No'")
-    run_sql("UPDATE idxINDEX SET remove_latex_markup='No'")
+    run_sql("UPDATE `idxINDEX` SET remove_html_markup='No'")
+    run_sql("UPDATE `idxINDEX` SET remove_latex_markup='No'")
     #third step: check invenio.conf and update db if necessary
     try:
         from invenio.config import CFG_BIBINDEX_REMOVE_HTML_MARKUP, CFG_BIBINDEX_REMOVE_LATEX_MARKUP
         if CFG_BIBINDEX_REMOVE_HTML_MARKUP:
             if CFG_BIBINDEX_REMOVE_HTML_MARKUP == 1:
-                run_sql("UPDATE idxINDEX SET remove_html_markup='Yes'")
+                run_sql("UPDATE `idxINDEX` SET remove_html_markup='Yes'")
         if CFG_BIBINDEX_REMOVE_LATEX_MARKUP:
             if CFG_BIBINDEX_REMOVE_LATEX_MARKUP == 1:
-                run_sql("UPDATE idxINDEX SET remove_latex_markup='Yes'")
+                run_sql("UPDATE `idxINDEX` SET remove_latex_markup='Yes'")
     except:
         pass
 

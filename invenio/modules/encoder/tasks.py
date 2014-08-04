@@ -495,7 +495,7 @@ def task_submit_check_options():
             print('\n')
         elif _topt('search'):
             template = json_decode_file(_topt('input'))
-            message = "# YOU ARE ABOUT TO UPDATE RECORDS MATCHING '%s'  #" % _topt('search')
+            message = "# YOU ARE ABOUT TO UPDATE `RECORDS` MATCHING '%s'  #" % _topt('search')
             print('\n')
             print(("#" + "-"*(len(message)-2) + "#"))
             print(message)

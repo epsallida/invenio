@@ -79,7 +79,7 @@ def bibclassify_daemon():
 
 def _ontology_exists(ontology_name):
     """Check if the ontology name is registered in the database."""
-    if run_sql("SELECT name FROM clsMETHOD WHERE name=%s",
+    if run_sql("SELECT name FROM `clsMETHOD` WHERE name=%s",
                (ontology_name,)):
         return True
     return False
@@ -87,7 +87,7 @@ def _ontology_exists(ontology_name):
 
 def _collection_exists(collection_name):
     """Check if the collection name is registered in the database."""
-    if run_sql("SELECT name FROM collection WHERE name=%s",
+    if run_sql("SELECT name FROM `collection` WHERE name=%s",
                (collection_name,)):
         return True
     return False
@@ -95,7 +95,7 @@ def _collection_exists(collection_name):
 
 def _recid_exists(recid):
     """Check if the recid number is registered in the database."""
-    if run_sql("SELECT id FROM bibrec WHERE id=%s",
+    if run_sql("SELECT id FROM `bibrec` WHERE id=%s",
                (recid,)):
         return True
     return False
@@ -130,8 +130,8 @@ def _get_recids_foreach_ontology(recids=None, collections=None, taxonomy=None):
 
     # Use rules found in collection_clsMETHOD.
     result = run_sql("SELECT clsMETHOD.name, clsMETHOD.last_updated, "
-                     "collection.name FROM clsMETHOD JOIN collection_clsMETHOD ON "
-                     "clsMETHOD.id=id_clsMETHOD JOIN collection ON "
+                     "collection.name FROM `clsMETHOD` JOIN `collection_clsMETHOD` ON "
+                     "clsMETHOD.id=id_clsMETHOD JOIN `collection` ON "
                      "id_collection=collection.id")
 
     for ontology, date_last_run, collection in result:
@@ -174,7 +174,7 @@ def _get_recids_foreach_ontology(recids=None, collections=None, taxonomy=None):
 
 def _update_date_of_last_run(runtime):
     """Update bibclassify daemon table information about last run time."""
-    run_sql("UPDATE clsMETHOD SET last_updated=%s", (runtime,))
+    run_sql("UPDATE `clsMETHOD` SET last_updated=%s", (runtime,))
 
 
 def _task_submit_elaborate_specific_parameter(key, value, opts, args):

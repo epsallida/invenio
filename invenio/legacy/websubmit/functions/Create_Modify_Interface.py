@@ -207,7 +207,7 @@ def Create_Modify_Interface(parameters, curdir, form, user_info=None):
         fieldstext = re.sub("\+","\n", fieldstext)
         fields = fieldstext.split("\n")
     else:
-        res = run_sql("SELECT fidesc FROM sbmFIELDDESC WHERE  name=%s", (fieldname,))
+        res = run_sql("SELECT fidesc FROM `sbmFIELDDESC` WHERE  name=%s", (fieldname,))
         if len(res) == 1:
             fields = res[0][0].replace(" ", "")
             fields = re.findall("<optionvalue=.*>", fields)
@@ -230,11 +230,11 @@ def Create_Modify_Interface(parameters, curdir, form, user_info=None):
         text = ""
         # retrieve and display the modification text
         t = t + "<FONT color=\"darkblue\">\n"
-        res = run_sql("SELECT modifytext FROM sbmFIELDDESC WHERE  name=%s", (field,))
+        res = run_sql("SELECT modifytext FROM `sbmFIELDDESC` WHERE  name=%s", (field,))
         if len(res)>0:
             t = t + "<small>%s</small> </FONT>\n" % res[0][0]
         # retrieve the marc code associated with the field
-        res = run_sql("SELECT marccode FROM sbmFIELDDESC WHERE name=%s", (field,))
+        res = run_sql("SELECT marccode FROM `sbmFIELDDESC` WHERE name=%s", (field,))
         if len(res) > 0:
             marccode = res[0][0]
         # then retrieve the previous value of the field
@@ -247,7 +247,7 @@ def Create_Modify_Interface(parameters, curdir, form, user_info=None):
         if date_conversion_setting != 'none':
             # If field is a date value, transform date into format DD/MM/YYYY:
             value = Create_Modify_Interface_transform_date(value)
-        res = run_sql("SELECT * FROM sbmFIELDDESC WHERE name=%s", (field,))
+        res = run_sql("SELECT * FROM `sbmFIELDDESC` WHERE name=%s", (field,))
         if len(res) > 0:
             element_type = res[0][3]
             numcols = res[0][6]

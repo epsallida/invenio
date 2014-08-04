@@ -448,7 +448,7 @@ class Test_swrCLIENTDATA_table(InvenioTestCase):
 
         results = select_submitted_record_infos(4)
 
-        self.assertEqual(len(results), run_sql('''SELECT COUNT(*) FROM swrCLIENTDATA WHERE id_swrREMOTESERVER=4''')[0][0])
+        self.assertEqual(len(results), run_sql('''SELECT COUNT(*) FROM `swrCLIENTDATA` WHERE id_swrREMOTESERVER=4''')[0][0])
 
         for result in results:
             self.assertEqual(result['id'] in self.id_tests, True)

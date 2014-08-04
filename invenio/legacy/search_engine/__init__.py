@@ -150,7 +150,7 @@ from invenio.legacy.bibrank.selfcites_searcher import get_self_cited_by_list, \
                                                       get_self_cited_by, \
                                                       get_self_refers_to_list
 
-from invenio.legacy.dbquery import run_sql, run_sql_with_limit, \
+from invenio.legacy.dbquery import run_sql, \
     wash_table_column_name, get_table_update_time
 from invenio.legacy.webuser import getUid, collect_user_info, session_param_set
 from invenio.legacy.webpage import pageheaderonly, pagefooteronly, create_error_box, write_warning
@@ -220,7 +220,7 @@ class RestrictedCollectionDataCacher(DataCacher):
         def cache_filler():
             ret = []
             res = run_sql("""SELECT DISTINCT ar.value
-                FROM accROLE_accACTION_accARGUMENT raa JOIN accARGUMENT ar ON raa.id_accARGUMENT = ar.id
+                FROM `accROLE_accACTION_accARGUMENT` AS raa JOIN `accARGUMENT` AS ar ON raa.id_accARGUMENT = ar.id
                 WHERE ar.keyword = 'collection' AND raa.id_accACTION = %s""", (VIEWRESTRCOLL_ID,), run_on_slave=True)
             for coll in res:
                 ret.append(coll[0])
@@ -461,7 +461,7 @@ class FieldTokenizerDataCacher(DataCacher):
     def __init__(self):
         def cache_filler():
             try:
-                res = run_sql("""SELECT fld.code, ind.tokenizer FROM idxINDEX AS ind, field AS fld, idxINDEX_field AS indfld WHERE ind.id = indfld.id_idxINDEX AND indfld.id_field = fld.id""")
+                res = run_sql("""SELECT fld.code, ind.tokenizer FROM `idxINDEX` AS ind, field AS fld, idxINDEX_field AS indfld WHERE ind.id = indfld.id_idxINDEX AND indfld.id_field = fld.id""")
             except DatabaseError:
                 # database problems, return empty cache
                 return {}
@@ -523,7 +523,7 @@ def get_collection_reclist(coll, recreate_cache_if_needed=True):
         # collection's reclist not in the cache yet, so calculate it
         # and fill the cache:
         reclist = intbitset()
-        query = "SELECT nbrecs,reclist FROM collection WHERE name=%s"
+        query = "SELECT nbrecs,reclist FROM `collection` WHERE name=%s"
         res = run_sql(query, (coll, ), 1)
         if res and res[0][1]:
             reclist = intbitset(res[0][1])
@@ -569,7 +569,7 @@ class CollectionI18nNameDataCacher(DataCacher):
         def cache_filler():
             ret = {}
             try:
-                res = run_sql("SELECT c.name,cn.ln,cn.value FROM collectionname AS cn, collection AS c WHERE cn.id_collection=c.id AND cn.type='ln'") # ln=long name
+                res = run_sql("SELECT c.name,cn.ln,cn.value FROM `collectionname` AS cn, collection AS c WHERE cn.id_collection=c.id AND cn.type='ln'") # ln=long name
             except Exception:
                 # database problems
                 return {}
@@ -626,7 +626,7 @@ class FieldI18nNameDataCacher(DataCacher):
         def cache_filler():
             ret = {}
             try:
-                res = run_sql("SELECT f.name,fn.ln,fn.value FROM fieldname AS fn, field AS f WHERE fn.id_field=f.id AND fn.type='ln'") # ln=long name
+                res = run_sql("SELECT f.name,fn.ln,fn.value FROM `fieldname` AS fn, field AS f WHERE fn.id_field=f.id AND fn.type='ln'") # ln=long name
             except Exception:
                 # database problems, return empty cache
                 return {}
@@ -673,7 +673,7 @@ def get_alphabetically_ordered_collection_list(level=0, ln=CFG_SITE_LANG):
        (collection name, printable collection name).
        Suitable for create_search_box()."""
     out = []
-    res = run_sql("SELECT name FROM collection ORDER BY name ASC")
+    res = run_sql("SELECT name FROM `collection` ORDER BY name ASC")
     for c_name in res:
         c_name = c_name[0]
         # make a nice printable name (e.g. truncate c_printable for
@@ -692,7 +692,7 @@ def get_nicely_ordered_collection_list(collid=1, level=0, ln=CFG_SITE_LANG):
        (collection name, printable collection name).
        Suitable for create_search_box()."""
     colls_nicely_ordered = []
-    res = run_sql("""SELECT c.name,cc.id_son FROM collection_collection AS cc, collection AS c
+    res = run_sql("""SELECT c.name,cc.id_son FROM `collection_collection` AS cc, collection AS c
                      WHERE c.id=cc.id_son AND cc.id_dad=%s ORDER BY score DESC""", (collid, ))
     for c, cid in res:
         # make a nice printable name (e.g. truncate c_printable for
@@ -721,13 +721,13 @@ def get_index_id_from_field(field):
         field = 'global' # empty string field means 'global' index (field 'anyfield')
 
     # first look in the index table:
-    res = run_sql("""SELECT id FROM idxINDEX WHERE name=%s""", (field,))
+    res = run_sql("""SELECT id FROM `idxINDEX` WHERE name=%s""", (field,))
     if res:
         out = res[0][0]
         return out
 
     # not found in the index table, now look in the field table:
-    res = run_sql("""SELECT w.id FROM idxINDEX AS w, idxINDEX_field AS wf, field AS f
+    res = run_sql("""SELECT w.id FROM `idxINDEX` AS w, idxINDEX_field AS wf, field AS f
                       WHERE f.code=%s AND wf.id_field=f.id AND w.id=wf.id_idxINDEX
                       LIMIT 1""", (field,))
     if res:
@@ -1273,11 +1273,11 @@ def get_searchwithin_fields(ln='en', colID=None):
     """Retrieves the fields name used in the 'search within' selection box for the collection ID colID."""
     res = None
     if colID:
-        res = run_sql("""SELECT f.code,f.name FROM field AS f, collection_field_fieldvalue AS cff
+        res = run_sql("""SELECT f.code,f.name FROM `field` AS f, collection_field_fieldvalue AS cff
                                  WHERE cff.type='sew' AND cff.id_collection=%s AND cff.id_field=f.id
                               ORDER BY cff.score DESC, f.name ASC""", (colID,))
     if not res:
-        res = run_sql("SELECT code,name FROM field ORDER BY name ASC")
+        res = run_sql("SELECT code,name FROM `field` ORDER BY name ASC")
     fields = [{
                 'value' : '',
                 'text' : get_field_i18nname("any field", ln, False)
@@ -1294,17 +1294,17 @@ def get_sortby_fields(ln='en', colID=None):
     _ = gettext_set_language(ln)
     res = None
     if colID:
-        res = run_sql("""SELECT DISTINCT(f.code),f.name FROM field AS f, collection_field_fieldvalue AS cff
+        res = run_sql("""SELECT DISTINCT(f.code),f.name FROM `field` AS f, collection_field_fieldvalue AS cff
                                  WHERE cff.type='soo' AND cff.id_collection=%s AND cff.id_field=f.id
                               ORDER BY cff.score DESC, f.name ASC""", (colID,))
     if not res:
         # no sort fields defined for this colID, try to take Home collection:
-        res = run_sql("""SELECT DISTINCT(f.code),f.name FROM field AS f, collection_field_fieldvalue AS cff
+        res = run_sql("""SELECT DISTINCT(f.code),f.name FROM `field` AS f, collection_field_fieldvalue AS cff
                                  WHERE cff.type='soo' AND cff.id_collection=%s AND cff.id_field=f.id
                                  ORDER BY cff.score DESC, f.name ASC""", (1,))
     if not res:
         # no sort fields defined for the Home collection, take all sort fields defined wherever they are:
-        res = run_sql("""SELECT DISTINCT(f.code),f.name FROM field AS f, collection_field_fieldvalue AS cff
+        res = run_sql("""SELECT DISTINCT(f.code),f.name FROM `field` AS f, collection_field_fieldvalue AS cff
                                  WHERE cff.type='soo' AND cff.id_field=f.id
                                  ORDER BY cff.score DESC, f.name ASC""",)
     fields = [{
@@ -1458,7 +1458,7 @@ def wash_colls(cc, c, split_colls=0, verbose=0):
         debug += "<br />"
 
     # then let us check the list of non-restricted "real" sons of 'cc' and compare it to 'coll':
-    res = run_sql("""SELECT c.name FROM collection AS c,
+    res = run_sql("""SELECT c.name FROM `collection` AS c,
                                         collection_collection AS cc,
                                         collection AS ccc
                      WHERE c.id=cc.id_son AND cc.id_dad=ccc.id
@@ -1466,7 +1466,7 @@ def wash_colls(cc, c, split_colls=0, verbose=0):
 
     # list that holds all the non restricted sons of cc that are also not hosted collections
     l_cc_nonrestricted_sons_and_nonhosted_colls = []
-    res_hosted = run_sql("""SELECT c.name FROM collection AS c,
+    res_hosted = run_sql("""SELECT c.name FROM `collection` AS c,
                          collection_collection AS cc,
                          collection AS ccc
                          WHERE c.id=cc.id_son AND cc.id_dad=ccc.id
@@ -1770,7 +1770,7 @@ def is_hosted_collection(coll):
 def get_colID(c):
     "Return collection ID for collection name C.  Return None if no match found."
     colID = None
-    res = run_sql("SELECT id FROM collection WHERE name=%s", (c,), 1)
+    res = run_sql("SELECT id FROM `collection` WHERE name=%s", (c,), 1)
     if res:
         colID = res[0][0]
     return colID
@@ -1779,7 +1779,7 @@ def get_coll_normalised_name(c):
     """Returns normalised collection name (case sensitive) for collection name
        C (case insensitive).
        Returns None if no match found."""
-    res = run_sql("SELECT name FROM collection WHERE name=%s", (c,))
+    res = run_sql("SELECT name FROM `collection` WHERE name=%s", (c,))
     if res:
         return res[0][0]
     else:
@@ -1790,9 +1790,9 @@ def get_coll_ancestors(coll):
     coll_ancestors = []
     coll_ancestor = coll
     while 1:
-        res = run_sql("""SELECT c.name FROM collection AS c
-                          LEFT JOIN collection_collection AS cc ON c.id=cc.id_dad
-                          LEFT JOIN collection AS ccc ON ccc.id=cc.id_son
+        res = run_sql("""SELECT c.name FROM `collection` AS c
+                          LEFT JOIN `collection_collection` AS cc ON c.id=cc.id_dad
+                          LEFT JOIN `collection` AS ccc ON ccc.id=cc.id_son
                           WHERE ccc.name=%s ORDER BY cc.id_dad ASC LIMIT 1""",
                       (coll_ancestor,))
         if res:
@@ -1818,9 +1818,9 @@ def get_coll_sons(coll, coll_type='r', public_only=1):
         coll_type_query = "=%s"
         query_params = (coll_type, coll)
 
-    query = "SELECT c.name FROM collection AS c "\
-            "LEFT JOIN collection_collection AS cc ON c.id=cc.id_son "\
-            "LEFT JOIN collection AS ccc ON ccc.id=cc.id_dad "\
+    query = "SELECT c.name FROM `collection` AS c "\
+            "LEFT JOIN `collection_collection` AS cc ON c.id=cc.id_son "\
+            "LEFT JOIN `collection` AS ccc ON ccc.id=cc.id_dad "\
             "WHERE cc.type%s AND ccc.name=%%s" % coll_type_query
     query += " ORDER BY cc.score DESC"
     res = run_sql(query, query_params)
@@ -1890,9 +1890,9 @@ def get_coll_real_descendants(coll, coll_type='_', get_hosted_colls=True):
        that "A & B" has no associated database query defined.
     """
     coll_sons = []
-    res = run_sql("""SELECT c.name,c.dbquery FROM collection AS c
-                     LEFT JOIN collection_collection AS cc ON c.id=cc.id_son
-                     LEFT JOIN collection AS ccc ON ccc.id=cc.id_dad
+    res = run_sql("""SELECT c.name,c.dbquery FROM `collection` AS c
+                     LEFT JOIN `collection_collection` AS cc ON c.id=cc.id_son
+                     LEFT JOIN `collection` AS ccc ON ccc.id=cc.id_dad
                      WHERE ccc.name=%s AND cc.type LIKE %s ORDER BY cc.score DESC""",
                   (coll, coll_type,))
     for name, dbquery in res:
@@ -2485,7 +2485,7 @@ def search_unit_in_bibwords(word, f, decompress=zlib.decompress, wl=0):
             except ValueError:
                 pass
         try:
-            res = run_sql_with_limit("SELECT term,hitlist FROM %s WHERE term BETWEEN %%s AND %%s" % bibwordsX,
+            res = run_sql("SELECT term,hitlist FROM %s WHERE term BETWEEN %%s AND %%s" % bibwordsX,
                           (word0_washed, word1_washed), wildcard_limit=wl)
         except InvenioDbQueryWildcardLimitError as excp:
             res = excp.res
@@ -2505,7 +2505,7 @@ def search_unit_in_bibwords(word, f, decompress=zlib.decompress, wl=0):
                 res = ()
             else:
                 try:
-                    res = run_sql_with_limit("SELECT term,hitlist FROM %s WHERE term LIKE %%s" % bibwordsX,
+                    res = run_sql("SELECT term,hitlist FROM %s WHERE term LIKE %%s" % bibwordsX,
                                   (wash_index_term(word),), wildcard_limit = wl)
                 except InvenioDbQueryWildcardLimitError as excp:
                     res = excp.res
@@ -2609,7 +2609,7 @@ def search_unit_in_idxpairs(p, f, search_type, wl=0):
         use_query_limit = query_var[2]
         if use_query_limit:
             try:
-                res = run_sql_with_limit("SELECT term, hitlist FROM %s WHERE term %s"
+                res = run_sql("SELECT term, hitlist FROM %s WHERE term %s"
                                      % (idxpair_table_washed, query_addons), query_params, wildcard_limit=wl) #kwalitee:disable=sql
             except InvenioDbQueryWildcardLimitError as excp:
                 res = excp.res
@@ -2697,7 +2697,7 @@ def search_unit_in_idxphrases(p, f, search_type, wl=0):
     # perform search:
     if use_query_limit:
         try:
-            res = run_sql_with_limit("SELECT term,hitlist FROM %s WHERE term %s" % (idxphraseX, query_addons),
+            res = run_sql("SELECT term,hitlist FROM %s WHERE term %s" % (idxphraseX, query_addons),
                       query_params, wildcard_limit=wl)
         except InvenioDbQueryWildcardLimitError as excp:
             res = excp.res
@@ -2780,13 +2780,13 @@ def search_unit_in_bibxxx(p, f, type, wl=0):
                     return intbitset()
             if use_query_limit:
                 try:
-                    res = run_sql_with_limit("SELECT id FROM bibrec WHERE id %s" % query_addons,
+                    res = run_sql("SELECT id FROM `bibrec` WHERE id %s" % query_addons,
                               query_params, wildcard_limit=wl)
                 except InvenioDbQueryWildcardLimitError as excp:
                     res = excp.res
                     limit_reached = 1 # set the limit reached flag to true
             else:
-                res = run_sql("SELECT id FROM bibrec WHERE id %s" % query_addons,
+                res = run_sql("SELECT id FROM `bibrec` WHERE id %s" % query_addons,
                               query_params)
         else:
             query = "SELECT bibx.id_bibrec FROM %s AS bx LEFT JOIN %s AS bibx ON bx.id=bibx.id_bibxxx WHERE bx.value %s" % \
@@ -2802,7 +2802,7 @@ def search_unit_in_bibxxx(p, f, type, wl=0):
                 query_params_and_tag = query_params + (t,)
             if use_query_limit:
                 try:
-                    res = run_sql_with_limit(query, query_params_and_tag, wildcard_limit=wl)
+                    res = run_sql(query, query_params_and_tag, wildcard_limit=wl)
                 except InvenioDbQueryWildcardLimitError as excp:
                     res = excp.res
                     limit_reached = 1 # set the limit reached flag to true
@@ -2865,10 +2865,10 @@ def search_unit_in_bibrec(datetext1, datetext2, search_type='c'):
         datetext2 = parts[1]
 
     if datetext1 == datetext2:
-        res = run_sql("SELECT id FROM bibrec WHERE %s LIKE %%s" % (search_type,),
+        res = run_sql("SELECT id FROM `bibrec` WHERE %s LIKE %%s" % (search_type,),
                       (datetext1 + '%',))
     else:
-        res = run_sql("SELECT id FROM bibrec WHERE %s>=%%s AND %s<=%%s" % (search_type, search_type),
+        res = run_sql("SELECT id FROM `bibrec` WHERE %s>=%%s AND %s<=%%s" % (search_type, search_type),
                       (datetext1, datetext2))
     for row in res:
         hitset += row[0]
@@ -2938,16 +2938,16 @@ def search_unit_in_record_history(query):
             if len(parts) > 1:
                 start_date, end_date = parts
 
-                res = run_sql("SELECT id_bibrec FROM hstRECORD WHERE job_person=%s AND job_date>=%s AND job_date<=%s",
+                res = run_sql("SELECT id_bibrec FROM `hstRECORD` WHERE job_person=%s AND job_date>=%s AND job_date<=%s",
                       (cataloguer_name, start_date, end_date))
 
             else:
-                res = run_sql("SELECT id_bibrec FROM hstRECORD WHERE job_person=%s AND job_date LIKE %s",
+                res = run_sql("SELECT id_bibrec FROM `hstRECORD` WHERE job_person=%s AND job_date LIKE %s",
                       (cataloguer_name, modification_date + '%',))
 
             return intbitset(res)
         else:
-            sql = "SELECT id_bibrec FROM hstRECORD WHERE job_person=%s"
+            sql = "SELECT id_bibrec FROM `hstRECORD` WHERE job_person=%s"
             res = intbitset(run_sql(sql, (cataloguer_name,)))
             return res
     else:
@@ -3498,11 +3498,11 @@ def get_nearest_terms_in_bibrec(p, f, n_below, n_above):
     if f == 'datemodified':
         col = 'modification_date'
     res_above = run_sql("""SELECT DATE_FORMAT(%s,'%%%%Y-%%%%m-%%%%d %%%%H:%%%%i:%%%%s')
-                             FROM bibrec WHERE %s < %%s
+                             FROM `bibrec` WHERE %s < %%s
                             ORDER BY %s DESC LIMIT %%s""" % (col, col, col),
                         (p, n_above))
     res_below = run_sql("""SELECT DATE_FORMAT(%s,'%%%%Y-%%%%m-%%%%d %%%%H:%%%%i:%%%%s')
-                             FROM bibrec WHERE %s > %%s
+                             FROM `bibrec` WHERE %s > %%s
                             ORDER BY %s ASC LIMIT %%s""" % (col, col, col),
                         (p, n_below))
     out = set([])
@@ -3520,7 +3520,7 @@ def get_nbhits_in_bibrec(term, f):
     col = 'creation_date'
     if f == 'datemodified':
         col = 'modification_date'
-    res = run_sql("SELECT COUNT(*) FROM bibrec WHERE %s LIKE %%s" % (col,),
+    res = run_sql("SELECT COUNT(*) FROM `bibrec` WHERE %s LIKE %%s" % (col,),
                   (term + '%',))
     return res[0][0]
 
@@ -3607,7 +3607,7 @@ def get_mysql_recid_from_aleph_sysno(sysno):
     """Returns DB's recID for ALEPH sysno passed in the argument (e.g. "002379334CER").
        Returns None in case of failure."""
     out = None
-    res = run_sql("""SELECT bb.id_bibrec FROM bibrec_bib97x AS bb, bib97x AS b
+    res = run_sql("""SELECT bb.id_bibrec FROM `bibrec_bib97x` AS bb, bib97x AS b
                       WHERE b.value=%s AND b.tag='970__a' AND bb.id_bibxxx=b.id""",
                   (sysno,))
     if res:
@@ -3629,7 +3629,7 @@ def guess_primary_collection_of_a_record(recID):
                     '980__a:"' + dbcollid + '"',
                     '980:' + dbcollid ,
                     '980:"' + dbcollid + '"')
-        res = run_sql("SELECT name FROM collection WHERE dbquery IN (%s,%s,%s,%s,%s,%s)", variants)
+        res = run_sql("SELECT name FROM `collection` WHERE dbquery IN (%s,%s,%s,%s,%s,%s)", variants)
         if res:
             out = res[0][0]
             break
@@ -3711,7 +3711,7 @@ def get_tag_name(tag_value, prolog="", epilog=""):
        Return empty string in case of failure.
        Example: input='100__%', output=first author'."""
     out = ""
-    res = run_sql("SELECT name FROM tag WHERE value=%s", (tag_value,))
+    res = run_sql("SELECT name FROM `tag` WHERE value=%s", (tag_value,))
     if res:
         out = prolog + res[0][0] + epilog
     return out
@@ -3728,7 +3728,7 @@ def get_fieldcodes():
 def get_field_name(code):
     """Return the corresponding field_name given the field code.
     e.g. reportnumber -> report number."""
-    res = run_sql("SELECT name FROM field WHERE code=%s", (code, ))
+    res = run_sql("SELECT name FROM `field` WHERE code=%s", (code, ))
     if res:
         return res[0][0]
     else:
@@ -3864,7 +3864,7 @@ def record_public_p(recID, recreate_cache_if_needed=True):
 def get_creation_date(recID, fmt="%Y-%m-%d"):
     "Returns the creation date of the record 'recID'."
     out = ""
-    res = run_sql("SELECT DATE_FORMAT(creation_date,%s) FROM bibrec WHERE id=%s", (fmt, recID), 1)
+    res = run_sql("SELECT DATE_FORMAT(creation_date,%s) FROM `bibrec` WHERE id=%s", (fmt, recID), 1)
     if res:
         out = res[0][0]
     return out
@@ -3872,7 +3872,7 @@ def get_creation_date(recID, fmt="%Y-%m-%d"):
 def get_modification_date(recID, fmt="%Y-%m-%d"):
     "Returns the date of last modification for the record 'recID'."
     out = ""
-    res = run_sql("SELECT DATE_FORMAT(modification_date,%s) FROM bibrec WHERE id=%s", (fmt, recID), 1)
+    res = run_sql("SELECT DATE_FORMAT(modification_date,%s) FROM `bibrec` WHERE id=%s", (fmt, recID), 1)
     if res:
         out = res[0][0]
     return out
@@ -4103,7 +4103,7 @@ class BibSortDataCacher(DataCacher):
 
 def get_sorting_methods():
     res = run_sql("""SELECT m.name, m.definition
-                     FROM bsrMETHOD m, bsrMETHODDATA md
+                     FROM `bsrMETHOD` m, bsrMETHODDATA md
                      WHERE m.id = md.id_bsrMETHOD""")
     return dict(res)
 
@@ -4924,7 +4924,7 @@ def print_records_epilogue(req, format):
 def get_record(recid):
     """Directly the record object corresponding to the recid."""
     if CFG_BIBUPLOAD_SERIALIZE_RECORD_STRUCTURE:
-        value = run_sql("SELECT value FROM bibfmt WHERE id_bibrec=%s AND FORMAT='recstruct'",  (recid, ))
+        value = run_sql("SELECT value FROM `bibfmt` WHERE id_bibrec=%s AND FORMAT='recstruct'",  (recid, ))
         if value:
             try:
                 val = value[0][0]
@@ -5037,7 +5037,7 @@ def print_record(recID, format='hb', ot='', ln=CFG_SITE_LANG, decompress=zlib.de
 
     if format.startswith("xm") or format == "marcxml":
         # look for detailed format existence:
-        query = "SELECT value FROM bibfmt WHERE id_bibrec=%s AND format=%s"
+        query = "SELECT value FROM `bibfmt` WHERE id_bibrec=%s AND format=%s"
         res = run_sql(query, (recID, format), 1)
         if res and record_exist_p == 1 and not ot:
             # record 'recID' is formatted in 'format', and we are not
@@ -5067,7 +5067,7 @@ def print_record(recID, format='hb', ot='', ln=CFG_SITE_LANG, decompress=zlib.de
                 out += "<datafield tag=\"980\" ind1=\"\" ind2=\"\"><subfield code=\"c\">DELETED</subfield></datafield>\n"
             else:
                 # controlfields
-                query = "SELECT b.tag,b.value,bb.field_number FROM bib00x AS b, bibrec_bib00x AS bb "\
+                query = "SELECT b.tag,b.value,bb.field_number FROM `bib00x` AS b, bibrec_bib00x AS bb "\
                         "WHERE bb.id_bibrec=%s AND b.id=bb.id_bibxxx AND b.tag LIKE '00%%' "\
                         "ORDER BY bb.field_number, b.tag ASC"
                 res = run_sql(query, (recID, ))
@@ -5197,7 +5197,7 @@ def print_record(recID, format='hb', ot='', ln=CFG_SITE_LANG, decompress=zlib.de
             out += _("The record has been deleted.")
         else:
             # look for detailed format existence:
-            query = "SELECT value FROM bibfmt WHERE id_bibrec=%s AND format=%s"
+            query = "SELECT value FROM `bibfmt` WHERE id_bibrec=%s AND format=%s"
             res = run_sql(query, (recID, format), 1)
             if res:
                 # record 'recID' is formatted in 'format', so print it
@@ -5281,7 +5281,7 @@ def print_record(recID, format='hb', ot='', ln=CFG_SITE_LANG, decompress=zlib.de
         if record_exist_p == -1:
             out += _("The record has been deleted.")
         else:
-            query = "SELECT value FROM bibfmt WHERE id_bibrec=%s AND format=%s"
+            query = "SELECT value FROM `bibfmt` WHERE id_bibrec=%s AND format=%s"
             res = run_sql(query, (recID, format))
             if res:
                 # record 'recID' is formatted in 'format', so print it
@@ -5374,13 +5374,13 @@ def log_query(hostname, query_args, uid=-1):
     id_query = None
     if uid >= 0:
         # log the query only if uid is reasonable
-        res = run_sql("SELECT id FROM query WHERE urlargs=%s", (query_args,), 1)
+        res = run_sql("SELECT id FROM `query` WHERE urlargs=%s", (query_args,), 1)
         try:
             id_query = res[0][0]
         except IndexError:
-            id_query = run_sql("INSERT INTO query (type, urlargs) VALUES ('r', %s)", (query_args,))
+            id_query = run_sql("INSERT INTO `query` (type, urlargs) VALUES ('r', %s)", (query_args,))
         if id_query:
-            run_sql("INSERT INTO user_query (id_user, id_query, hostname, date) VALUES (%s, %s, %s, %s)",
+            run_sql("INSERT INTO `user_query` (id_user, id_query, hostname, date) VALUES (%s, %s, %s, %s)",
                     (uid, id_query, hostname,
                      time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))
     return id_query

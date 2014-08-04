@@ -286,7 +286,7 @@ class WordTable:
                 #new word, add to list
                 options["modified_words"][word] = 1
                 try:
-                    run_sql("INSERT INTO %s (term, hitlist) VALUES (%%s, %%s)" % self.tablename,
+                    run_sql("INSERT INTO `%s` (term, hitlist) VALUES (%%s, %%s)" % self.tablename,
                             (word, serialize_via_marshal(set)))
                 except Exception as e:
                     ## FIXME: This is for debugging encoding errors
@@ -338,7 +338,7 @@ class WordTable:
         if starting_time is None:
             return None
         write_message("updating last_updated to %s..." % starting_time, verbose=9)
-        return run_sql("UPDATE rnkMETHOD SET last_updated=%s WHERE name=%s",
+        return run_sql("UPDATE `rnkMETHOD` SET last_updated=%s WHERE name=%s",
                        (starting_time, rank_method_code,))
 
     def add_recIDs(self, recIDs):
@@ -403,7 +403,7 @@ class WordTable:
         """
         if not dates:
             write_message("Using the last update time for the rank method")
-            query = """SELECT last_updated FROM rnkMETHOD WHERE name='%s'
+            query = """SELECT last_updated FROM `rnkMETHOD` WHERE name='%s'
             """ % options["current_run"]
             res = run_sql(query)
 
@@ -414,7 +414,7 @@ class WordTable:
             else:
                 dates = (res[0][0],'')
 
-        query = """SELECT b.id FROM bibrec AS b WHERE b.modification_date >=
+        query = """SELECT b.id FROM `bibrec` AS b WHERE b.modification_date >=
         '%s'""" % dates[0]
         if dates[1]:
             query += "and b.modification_date <= '%s'" % dates[1]
@@ -469,11 +469,11 @@ class WordTable:
 
         # put words into reverse index table with FUTURE status:
         for recID in recIDs:
-            run_sql("INSERT INTO %sR (id_bibrec,termlist,type) VALUES (%%s,%%s,'FUTURE')" % self.tablename[:-1],
+            run_sql("INSERT INTO `%sR` (id_bibrec,termlist,type) VALUES (%%s,%%s,'FUTURE')" % self.tablename[:-1],
                     (recID, serialize_via_marshal(wlist[recID])))
             # ... and, for new records, enter the CURRENT status as empty:
             try:
-                run_sql("INSERT INTO %sR (id_bibrec,termlist,type) VALUES (%%s,%%s,'CURRENT')" % self.tablename[:-1],
+                run_sql("INSERT INTO `%sR` (id_bibrec,termlist,type) VALUES (%%s,%%s,'CURRENT')" % self.tablename[:-1],
                         (recID, serialize_via_marshal([])))
             except DatabaseError:
                 # okay, it's an already existing record, no problem
@@ -1156,12 +1156,12 @@ def getName(methname, ln=None, type='ln'):
     if ln is None:
         ln = CFG_SITE_LANG
     try:
-        rnkid = run_sql("SELECT id FROM rnkMETHOD where name='%s'" % methname)
+        rnkid = run_sql("SELECT id FROM `rnkMETHOD` where name='%s'" % methname)
         if rnkid:
             rnkid = str(rnkid[0][0])
-            res = run_sql("SELECT value FROM rnkMETHODNAME where type='%s' and ln='%s' and id_rnkMETHOD=%s" % (type, ln, rnkid))
+            res = run_sql("SELECT value FROM `rnkMETHODNAME` where type='%s' and ln='%s' and id_rnkMETHOD=%s" % (type, ln, rnkid))
             if not res:
-                res = run_sql("SELECT value FROM rnkMETHODNAME WHERE ln='%s' and id_rnkMETHOD=%s and type='%s'"  % (CFG_SITE_LANG, rnkid, type))
+                res = run_sql("SELECT value FROM `rnkMETHODNAME` WHERE ln='%s' and id_rnkMETHOD=%s and type='%s'"  % (CFG_SITE_LANG, rnkid, type))
             if not res:
                 return methname
             return res[0][0]

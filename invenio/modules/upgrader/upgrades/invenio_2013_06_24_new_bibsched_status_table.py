@@ -25,7 +25,7 @@ def info():
     return "New bibsched status (schSTATUS) table"
 
 def do_upgrade():
-    run_sql("""CREATE TABLE IF NOT EXISTS schSTATUS (
+    run_sql("""CREATE TABLE IF NOT EXISTS `schSTATUS` (
   name varchar(50),
   value mediumblob,
   PRIMARY KEY (name)

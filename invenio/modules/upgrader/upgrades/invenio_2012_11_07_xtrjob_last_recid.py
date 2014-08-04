@@ -27,7 +27,7 @@ def info():
     return "New xtrJOB.last_recid column"
 
 def do_upgrade():
-    create_statement = run_sql('SHOW CREATE TABLE xtrJOB')[0][1]
+    create_statement = run_sql('SHOW CREATE TABLE `xtrJOB`')[0][1]
     if '`last_recid` mediumint(8)' not in create_statement:
         run_sql("ALTER TABLE xtrJOB ADD COLUMN last_recid mediumint(8) unsigned NOT NULL")
 

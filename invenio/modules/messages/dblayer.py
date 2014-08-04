@@ -74,7 +74,7 @@ def get_message(uid, msgid):
                       DATE_FORMAT(m.sent_date, '%%Y-%%m-%%d %%H:%%i:%%s'),
                       DATE_FORMAT(m.received_date, '%%Y-%%m-%%d %%H:%%i:%%s'),
                       um.status
-               FROM   msgMESSAGE m,
+               FROM   `msgMESSAGE` m,
                       user_msgMESSAGE um,
                       user u
                WHERE  m.id=%s AND
@@ -103,7 +103,7 @@ def set_message_status(uid, msgid, new_status):
     @return: 1 if succes, 0 if not
     """
 
-    return int(run_sql("""UPDATE user_msgMESSAGE
+    return int(run_sql("""UPDATE `user_msgMESSAGE`
                              SET    status=%s
                            WHERE  id_user_to=%s AND
                                   id_msgMESSAGE=%s""",
@@ -117,7 +117,7 @@ def get_nb_new_messages_for_user(uid):
     update_user_inbox_for_reminders(uid)
     new_status = CFG_WEBMESSAGE_STATUS_CODE['NEW']
     res = run_sql("""SELECT count(id_msgMESSAGE)
-                       FROM user_msgMESSAGE
+                       FROM `user_msgMESSAGE`
                       WHERE id_user_to=%s AND
                        BINARY status=%s""",
                   (uid, new_status))
@@ -132,7 +132,7 @@ def get_nb_readable_messages_for_user(uid):
     """
     reminder_status = CFG_WEBMESSAGE_STATUS_CODE['REMINDER']
     query = """SELECT count(id_msgMESSAGE)
-               FROM user_msgMESSAGE
+               FROM `user_msgMESSAGE`
                WHERE id_user_to=%s AND
                      BINARY status!=%s"""
     params = (uid, reminder_status)
@@ -163,7 +163,7 @@ def get_all_messages_for_user(uid):
                        m.subject,
                        DATE_FORMAT(m.sent_date, '%%Y-%%m-%%d %%H:%%i:%%s'),
                        um.status
-                FROM   user_msgMESSAGE um,
+                FROM   `user_msgMESSAGE` um,
                        msgMESSAGE m,
                        user u
                 WHERE  um.id_user_to = %s AND
@@ -180,7 +180,7 @@ def count_nb_messages(uid):
     """
     uid = int(uid)
     query = """SELECT count(id_user_to)
-               FROM   user_msgMESSAGE
+               FROM   `user_msgMESSAGE`
                WHERE  id_user_to=%s
             """
     res = run_sql(query, (uid, ))
@@ -198,7 +198,7 @@ def delete_message_from_user_inbox(uid, msg_id):
     @param msg_id: message id
     @return: integer 1 if delete was successful, integer 0 else
     """
-    query1 = """DELETE FROM user_msgMESSAGE
+    query1 = """DELETE FROM `user_msgMESSAGE`
                 WHERE id_user_to=%s AND
                       id_msgMESSAGE=%s"""
     params1 = (uid, msg_id)
@@ -216,7 +216,7 @@ def check_if_need_to_delete_message_permanently(msg_ids):
     if not((type(msg_ids) is list) or (type(msg_ids) is tuple)):
         msg_ids = [msg_ids]
     query1 = """SELECT count(id_msgMESSAGE)
-                FROM user_msgMESSAGE
+                FROM `user_msgMESSAGE`
                 WHERE id_msgMESSAGE=%s"""
     messages_to_delete = []
     for msg_id in msg_ids:
@@ -225,7 +225,7 @@ def check_if_need_to_delete_message_permanently(msg_ids):
             messages_to_delete.append(int(msg_id))
 
     if len(messages_to_delete) > 0:
-        query2 = """DELETE FROM msgMESSAGE
+        query2 = """DELETE FROM `msgMESSAGE`
                     WHERE"""
         params2 = []
         for msg_id in messages_to_delete[0:-1]:
@@ -245,13 +245,13 @@ def delete_all_messages(uid):
     """
     reminder_status = CFG_WEBMESSAGE_STATUS_CODE['REMINDER']
     query1 = """SELECT id_msgMESSAGE
-               FROM user_msgMESSAGE
+               FROM `user_msgMESSAGE`
                WHERE id_user_to=%s AND
                      NOT(BINARY status like %s)"""
     params = (uid, reminder_status)
     msg_ids = map(get_element, run_sql(query1, params))
 
-    query2 = """DELETE FROM user_msgMESSAGE
+    query2 = """DELETE FROM `user_msgMESSAGE`
                 WHERE id_user_to=%s AND
                 NOT(BINARY status like %s)"""
     nb_messages = int(run_sql(query2, params))
@@ -349,7 +349,7 @@ def get_gids_from_groupnames(groupnames):
     if not((type(groupnames) is list) or (type(groupnames) is tuple)):
         groupnames = [groupnames]
     groups = {}
-    query = "SELECT name, id FROM usergroup WHERE BINARY name IN ("
+    query = "SELECT name, id FROM `usergroup` WHERE BINARY name IN ("
     query_params = ()
     if len(groupnames) > 0:
         for groupname in groupnames:
@@ -416,7 +416,7 @@ def create_message(uid_from,
     @return: id of the created message
     """
     now = convert_datestruct_to_datetext(localtime())
-    msg_id = run_sql("""INSERT INTO msgMESSAGE(id_user_from,
+    msg_id = run_sql("""INSERT INTO `msgMESSAGE` (id_user_from,
                                       sent_to_user_nicks,
                                       sent_to_group_names,
                                       subject,
@@ -446,7 +446,7 @@ def send_message(uids_to, msgid, status=CFG_WEBMESSAGE_STATUS_CODE['NEW']):
     user_problem = []
     if len(uids_to) > 0:
         users_quotas = check_quota(CFG_WEBMESSAGE_MAX_NB_OF_MESSAGES - 1)
-        query = """INSERT INTO user_msgMESSAGE (id_user_to, id_msgMESSAGE,
+        query = """INSERT INTO `user_msgMESSAGE` (id_user_to, id_msgMESSAGE,
                     status) VALUES """
         fixed_value = ",%s,%s)"
         query_params = []
@@ -474,7 +474,7 @@ def check_quota(nb_messages):
     from invenio.modules.access.control import acc_is_user_in_role, acc_get_role_id
     no_quota_role_ids = [acc_get_role_id(role) for role in CFG_WEBMESSAGE_ROLES_WITHOUT_QUOTA]
     res = {}
-    for uid, n in run_sql("SELECT id_user_to, COUNT(id_user_to) FROM user_msgMESSAGE GROUP BY id_user_to HAVING COUNT(id_user_to) > %s", (nb_messages, )):
+    for uid, n in run_sql("SELECT id_user_to, COUNT(id_user_to) FROM `user_msgMESSAGE` GROUP BY id_user_to HAVING COUNT(id_user_to) > %s", (nb_messages, )):
         user_info = collect_user_info(uid)
         for role_id in no_quota_role_ids:
             if acc_is_user_in_role(user_info, role_id):
@@ -493,7 +493,7 @@ def update_user_inbox_for_reminders(uid):
     reminder_status = CFG_WEBMESSAGE_STATUS_CODE['REMINDER']
     new_status = CFG_WEBMESSAGE_STATUS_CODE['NEW']
     query1 = """SELECT m.id
-                FROM   msgMESSAGE m,
+                FROM   `msgMESSAGE` m,
                        user_msgMESSAGE um
                 WHERE  um.id_user_to=%s AND
                        um.id_msgMESSAGE=m.id AND
@@ -504,7 +504,7 @@ def update_user_inbox_for_reminders(uid):
     res_ids = run_sql(query1, params1)
     out = len(res_ids)
     if (out>0):
-        query2 = """UPDATE user_msgMESSAGE
+        query2 = """UPDATE `user_msgMESSAGE`
                     SET    status=%s
                     WHERE  id_user_to=%s AND ("""
         query_params = [new_status, uid]
@@ -532,7 +532,7 @@ def get_groupnames_like(uid, pattern):
     groups = {}
     if pattern:
         # For this use case external groups are like invisible one
-        query1 = "SELECT id, name FROM usergroup WHERE name RLIKE %s AND join_policy like 'V%%' AND join_policy<>'VE'"
+        query1 = "SELECT id, name FROM `usergroup` WHERE name RLIKE %s AND join_policy like 'V%%' AND join_policy<>'VE'"
         try:
             res = run_sql(query1, (pattern,))
         except OperationalError:
@@ -541,7 +541,7 @@ def get_groupnames_like(uid, pattern):
         # assuming field0=key and field1=value
         map(lambda x: groups.setdefault(x[0], x[1]), res)
         query2 = """SELECT g.id, g.name
-                    FROM usergroup g, user_usergroup ug
+                    FROM `usergroup` g, user_usergroup ug
                     WHERE g.id=ug.id_usergroup AND ug.id_user=%s AND g.name RLIKE %s"""
         try:
             res = run_sql(query2, (uid, pattern))
@@ -567,8 +567,8 @@ def clean_messages():
     #find id and email from every user who has got an email
     query1 = """SELECT distinct(umsg.id_user_to),
                        user.email
-                FROM user_msgMESSAGE umsg
-                LEFT JOIN user ON
+                FROM `user_msgMESSAGE` umsg
+                LEFT JOIN `user` ON
                      umsg.id_user_to=user.id"""
     res1 = run_sql(query1)
     # if there is no email, user has disappeared
@@ -576,8 +576,8 @@ def clean_messages():
     # find ids from messages in user's inbox
     query2 = """SELECT distinct(umsg.id_msgMESSAGE),
                        msg.id
-                FROM user_msgMESSAGE umsg
-                LEFT JOIN msgMESSAGE msg ON
+                FROM `user_msgMESSAGE` umsg
+                LEFT JOIN `msgMESSAGE` msg ON
                      umsg.id_msgMESSAGE=msg.id"""
     res2 = run_sql(query2)
     # if there is no id, message was deleted from table msgMESSAGE...
@@ -586,7 +586,7 @@ def clean_messages():
         return str(el1) + ',' + str(el2)
     if len(users_deleted) or len(messages_deleted):
         # Suppress every referential error from user_msgMESSAGE
-        query3 = "DELETE FROM user_msgMESSAGE WHERE "
+        query3 = "DELETE FROM `user_msgMESSAGE` WHERE "
         query_params = []
         if len(users_deleted):
             query3 += "id_user_to IN (%s)"
@@ -599,8 +599,8 @@ def clean_messages():
         deleted_items = int(run_sql(query3, tuple(query_params)))
     # find every message that is nobody's inbox
     query4 = """SELECT msg.id
-                FROM msgMESSAGE msg
-                     LEFT JOIN user_msgMESSAGE umsg
+                FROM `msgMESSAGE` msg
+                     LEFT JOIN `user_msgMESSAGE` umsg
                                ON msg.id=umsg.id_msgMESSAGE
                 WHERE msg.sent_date<%s
                 GROUP BY umsg.id_msgMESSAGE
@@ -609,7 +609,7 @@ def clean_messages():
     res4 = map(lambda x: x[0], run_sql(query4, (sql_date, )))
     if len(res4):
         # delete these messages
-        query5 = "DELETE FROM msgMESSAGE WHERE "
+        query5 = "DELETE FROM `msgMESSAGE` WHERE "
         query5 += "id IN (%s)"
         deleted_items += int(run_sql(query5, (reduce(tuplize, res4), )))
     return deleted_items

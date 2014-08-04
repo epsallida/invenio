@@ -824,7 +824,7 @@ def get_current_issue(ln, journal_name):
     except:
         # start the first journal ever
         current_issue = get_first_issue_from_config(journal_name)
-        run_sql("""INSERT INTO jrnISSUE (id_jrnJOURNAL, issue_number, issue_display)
+        run_sql("""INSERT INTO `jrnISSUE` (id_jrnJOURNAL, issue_number, issue_display)
                         VALUES(%s, %s, %s)""",
                 (journal_id,
                  current_issue,
@@ -1222,7 +1222,7 @@ def get_journal_id(journal_name, ln=CFG_SITE_LANG):
             journal_id = None
     else:
         try:
-            res = run_sql("SELECT id FROM jrnJOURNAL WHERE name=%s",
+            res = run_sql("SELECT id FROM `jrnJOURNAL` WHERE name=%s",
                           (journal_name,))
             if len(res) > 0:
                 journal_id = res[0][0]
@@ -1310,7 +1310,7 @@ def get_journals_ids_and_names():
                 continue
     else:
         try:
-            res = run_sql("SELECT id, name FROM jrnJOURNAL ORDER BY id")
+            res = run_sql("SELECT id, name FROM `jrnJOURNAL` ORDER BY id")
             for journal_id, journal_name in res:
                 journals.append({'journal_id': journal_id,
                                  'journal_name': journal_name})

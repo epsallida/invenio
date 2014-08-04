@@ -52,7 +52,7 @@ def fetch_last_updated(name):
         " WHERE name = %s LIMIT 1"
     row = run_sql(select_sql, (name,))
     if not row:
-        sql = "INSERT INTO xtrJOB (name, last_updated, last_recid) " \
+        sql = "INSERT INTO `xtrJOB` (name, last_updated, last_recid) " \
             "VALUES (%s, '1970-01-01', 0)"
         run_sql(sql, (name,))
         row = run_sql(select_sql, (name,))
@@ -65,9 +65,9 @@ def fetch_last_updated(name):
 
 
 def store_last_updated(recid, creation_date, name):
-    sql = "UPDATE xtrJOB SET last_recid = %s WHERE name=%s AND last_recid < %s"
+    sql = "UPDATE `xtrJOB` SET last_recid = %s WHERE name=%s AND last_recid < %s"
     run_sql(sql, (recid, name, recid))
-    sql = "UPDATE xtrJOB SET last_updated = %s " \
+    sql = "UPDATE `xtrJOB` SET last_updated = %s " \
                 "WHERE name=%s AND last_updated < %s"
     iso_date = creation_date.isoformat()
     run_sql(sql, (iso_date, name, iso_date))

@@ -52,7 +52,7 @@ def estimate():
 def pre_upgrade():
     """  Run pre-upgrade checks (optional). """
     # Example of raising errors:
-    res = run_sql("show create table bibdoc")[0][1]
+    res = run_sql("show create table `bibdoc`")[0][1]
     global update_needed
     if not "more_info" in res:
         update_needed = False
@@ -92,7 +92,7 @@ def _update_database_structure_pre(logger):
     except Exception as e:
         logger.info("WARNING: Problem when altering table. Is the database really in the state from before the upgrade ? " + str(e))
 
-    run_sql("""CREATE TABLE IF NOT EXISTS bibdocmoreinfo (
+    run_sql("""CREATE TABLE IF NOT EXISTS `bibdocmoreinfo` (
         id_bibdoc mediumint(9) unsigned DEFAULT NULL,
         version tinyint(4) unsigned DEFAULT NULL,
         format VARCHAR(50) DEFAULT NULL,
@@ -117,9 +117,9 @@ def _backup_tables(logger):
     run_sql('DROP TABLE IF EXISTS bibdoc_bibdoc_backup_newdatamodel')
 
     try:
-        run_sql("""CREATE TABLE bibrec_bibdoc_backup_newdatamodel SELECT * FROM bibrec_bibdoc""")
-        run_sql("""CREATE TABLE bibdoc_backup_newdatamodel SELECT * FROM bibdoc""")
-        run_sql("""CREATE TABLE bibdoc_bibdoc_backup_newdatamodel SELECT * FROM bibdoc_bibdoc""")
+        run_sql("""CREATE TABLE `bibrec_bibdoc_backup_newdatamodel` SELECT * FROM `bibrec_bibdoc`""")
+        run_sql("""CREATE TABLE `bibdoc_backup_newdatamodel` SELECT * FROM `bibdoc`""")
+        run_sql("""CREATE TABLE `bibdoc_bibdoc_backup_newdatamodel` SELECT * FROM `bibdoc_bibdoc`""")
     except OperationalError as e:
         logger.info("Problem when backing up tables")
         raise
@@ -158,17 +158,17 @@ def _fix_recid(recid, logger):
             minfo = cPickle.loads(res2[0][1])
             # 2a migrating descriptions->version->format
             new_value = cPickle.dumps(minfo['descriptions'])
-            run_sql("INSERT INTO bibdocmoreinfo (id_bibdoc, namespace, data_key, data_value) VALUES (%s, %s, %s, %s)", (str(docid), "", "descriptions", new_value))
+            run_sql("INSERT INTO `bibdocmoreinfo` (id_bibdoc, namespace, data_key, data_value) VALUES (%s, %s, %s, %s)", (str(docid), "", "descriptions", new_value))
             # 2b migrating comments->version->format
             new_value = cPickle.dumps(minfo['comments'])
-            run_sql("INSERT INTO bibdocmoreinfo (id_bibdoc, namespace, data_key, data_value) VALUES (%s, %s, %s, %s)", (str(docid), "", "comments", new_value))
+            run_sql("INSERT INTO `bibdocmoreinfo` (id_bibdoc, namespace, data_key, data_value) VALUES (%s, %s, %s, %s)", (str(docid), "", "comments", new_value))
             # 2c migrating flags->flagname->version->format
             new_value = cPickle.dumps(minfo['flags'])
-            run_sql("INSERT INTO bibdocmoreinfo (id_bibdoc, namespace, data_key, data_value) VALUES (%s, %s, %s, %s)", (str(docid), "", "flags", new_value))
+            run_sql("INSERT INTO `bibdocmoreinfo` (id_bibdoc, namespace, data_key, data_value) VALUES (%s, %s, %s, %s)", (str(docid), "", "flags", new_value))
 
             # 3) Verify the correctness of moreinfo transformations
             try:
-                descriptions = cPickle.loads(run_sql("SELECT data_value FROM bibdocmoreinfo WHERE id_bibdoc=%s AND namespace=%s AND data_key=%s", (str(docid), '', 'descriptions'))[0][0])
+                descriptions = cPickle.loads(run_sql("SELECT data_value FROM `bibdocmoreinfo` WHERE id_bibdoc=%s AND namespace=%s AND data_key=%s", (str(docid), '', 'descriptions'))[0][0])
                 for version in minfo['descriptions']:
                     for docformat in minfo['descriptions'][version]:
                         v1 = descriptions[version][docformat]
@@ -180,7 +180,7 @@ def _fix_recid(recid, logger):
                 logger.info("ERROR: Document %s: Problem with retrieving descriptions: %s  MoreInfo: %s Descriptions: %s" % (str(docid), str(e), str(minfo), str(descriptions)))
 
             try:
-                comments = cPickle.loads(run_sql("SELECT data_value FROM bibdocmoreinfo WHERE id_bibdoc=%s AND namespace=%s AND data_key=%s", (str(docid), '', 'comments'))[0][0])
+                comments = cPickle.loads(run_sql("SELECT data_value FROM `bibdocmoreinfo` WHERE id_bibdoc=%s AND namespace=%s AND data_key=%s", (str(docid), '', 'comments'))[0][0])
                 for version in minfo['comments']:
                     for docformat in minfo['comments'][version]:
 
@@ -193,7 +193,7 @@ def _fix_recid(recid, logger):
                 logger.info("ERROR: Document %s: Problem with retrieving comments: %s MoreInfo: %s  Comments: %s" % (str(docid), str(e), str(minfo), str(comments)))
 
             try:
-                flags = cPickle.loads(run_sql("SELECT data_value FROM bibdocmoreinfo WHERE id_bibdoc=%s AND namespace=%s AND data_key=%s", (str(docid), '', 'flags'))[0][0])
+                flags = cPickle.loads(run_sql("SELECT data_value FROM `bibdocmoreinfo` WHERE id_bibdoc=%s AND namespace=%s AND data_key=%s", (str(docid), '', 'flags'))[0][0])
                 for flagname in minfo['flags']:
                     for version in minfo['flags'][flagname]:
                         for docformat in minfo['flags'][flagname][version]:

@@ -50,7 +50,7 @@ def get_dict():
 def do_upgrade():
     if not run_sql("SHOW TABLES LIKE 'rnkCITATIONDICT'"):
         run_sql("""
-CREATE TABLE IF NOT EXISTS rnkCITATIONDICT (
+CREATE TABLE IF NOT EXISTS `rnkCITATIONDICT` (
   citee int(10) unsigned NOT NULL,
   citer int(10) unsigned NOT NULL,
   last_updated datetime NOT NULL,
@@ -76,5 +76,5 @@ def estimate():
 def store_cites(recid, new_cites):
     now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     for cite in new_cites:
-        run_sql("""INSERT INTO rnkCITATIONDICT (citee, citer, last_updated)
+        run_sql("""INSERT INTO `rnkCITATIONDICT` (citee, citer, last_updated)
                    VALUES (%s, %s, %s)""", (recid, cite, now))

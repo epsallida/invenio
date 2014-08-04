@@ -26,7 +26,7 @@ def info():
 
 def do_upgrade():
     run_sql("""
-CREATE TABLE IF NOT EXISTS bibcheck_rules (
+CREATE TABLE IF NOT EXISTS `bibcheck_rules` (
   name varchar(150) NOT NULL,
   last_run datetime NOT NULL default '0000-00-00',
   PRIMARY KEY (name)

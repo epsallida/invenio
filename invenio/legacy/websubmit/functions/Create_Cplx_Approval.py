@@ -50,14 +50,14 @@ def Create_Cplx_Approval(parameters, curdir, form, user_info=None):
         group = fp.read()
         group = group.replace("/","_")
         group = re.sub("[\n\r]+","",group)
-        group_id = run_sql ("""SELECT id FROM usergroup WHERE name = %s""", (group,))[0][0]
+        group_id = run_sql ("""SELECT id FROM `usergroup` WHERE name = %s""", (group,))[0][0]
     else:
         return ""
 
-    sth = run_sql("SELECT rn FROM sbmCPLXAPPROVAL WHERE  doctype=%s and categ=%s and rn=%s and type=%s and id_group=%s", (doctype,category,rn,act,group_id))
+    sth = run_sql("SELECT rn FROM `sbmCPLXAPPROVAL` WHERE  doctype=%s and categ=%s and rn=%s and type=%s and id_group=%s", (doctype,category,rn,act,group_id))
     if len(sth) == 0:
-        run_sql("INSERT INTO  sbmCPLXAPPROVAL values(%s,%s,%s,%s,'waiting',%s,'','',NOW(),NOW(),'','','','','','')",(doctype,category,rn,act,group_id,))
+        run_sql("INSERT INTO  `sbmCPLXAPPROVAL` values(%s,%s,%s,%s,'waiting',%s,'','',NOW(),NOW(),'','','','','','')",(doctype,category,rn,act,group_id,))
     else:
-        run_sql("UPDATE sbmCPLXAPPROVAL SET dLastReq=NOW(), status='waiting', dProjectLeaderAction='' WHERE  doctype=%s and categ=%s and rn=%s and type=%s and id_group=%s", (doctype,category,rn,act,group_id))
+        run_sql("UPDATE `sbmCPLXAPPROVAL` SET dLastReq=NOW(), status='waiting', dProjectLeaderAction='' WHERE  doctype=%s and categ=%s and rn=%s and type=%s and id_group=%s", (doctype,category,rn,act,group_id))
     return ""
 

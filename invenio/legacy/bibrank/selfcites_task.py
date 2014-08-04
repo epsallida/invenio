@@ -123,7 +123,7 @@ def replace_cites(recid, new_cites):
     for cit in cites_to_add:
         write_message('adding cite %s %s' % (recid, cit), verbose=1)
         now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        run_sql("""INSERT INTO rnkSELFCITEDICT (citee, citer, last_updated)
+        run_sql("""INSERT INTO `rnkSELFCITEDICT` (citee, citer, last_updated)
                    VALUES (%s, %s, %s)""", (recid, cit, now))
 
     for cit in cites_to_delete:
@@ -196,7 +196,7 @@ def fetch_concerned_records(name, ids_param):
 
 def store_last_updated(name, date):
     """Updates method last run date"""
-    run_sql("UPDATE rnkMETHOD SET last_updated=%s WHERE name=%s", (date, name))
+    run_sql("UPDATE `rnkMETHOD` SET last_updated=%s WHERE name=%s", (date, name))
 
 
 def read_configuration(rank_method_code):
@@ -300,7 +300,7 @@ def fill_self_cites_tables(rank_method_code, config):
     algorithm = config['algorithm']
     tags = get_authors_tags()
     selfcites_dic = {}
-    all_ids = intbitset(run_sql('SELECT id FROM bibrec ORDER BY id'))
+    all_ids = intbitset(run_sql('SELECT id FROM `bibrec` ORDER BY id'))
     citations_fun = get_citations_fun(algorithm)
     write_message('using %s' % citations_fun.__name__)
     if algorithm == 'friends':

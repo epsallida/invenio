@@ -193,7 +193,8 @@ def create(default_data=True, quiet=False):
     from invenio.modules.jsonalchemy.wrappers import StorageEngine
 
     try:
-        test_db_connection()
+        #test_db_connection()
+        pass
     except Exception as e:
         from invenio.ext.logging.wrappers import get_traceback
         print('Cannot connect with the db:', e.message)

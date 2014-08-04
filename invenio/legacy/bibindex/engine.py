@@ -235,7 +235,7 @@ def init_temporary_reindex_tables(index_id, reindex_prefix="tmp_"):
             (wash_table_column_name(reindex_prefix), index_id)
     run_sql_drop_silently(query) # kwalitee: disable=sql
 
-    run_sql("""CREATE TABLE %sidxWORD%02dF (
+    run_sql("""CREATE TABLE `%sidxWORD%02dF` (
                         id mediumint(9) unsigned NOT NULL auto_increment,
                         term varchar(50) default NULL,
                         hitlist longblob,
@@ -243,22 +243,22 @@ def init_temporary_reindex_tables(index_id, reindex_prefix="tmp_"):
                         UNIQUE KEY term (term)
                         ) ENGINE=MyISAM""" % (reindex_prefix, index_id))
 
-    query = """DROP TABLE IF EXISTS %sidxWORD%02dR""" % \
+    query = """DROP TABLE IF EXISTS `%sidxWORD%02dR`""" % \
             (wash_table_column_name(reindex_prefix), index_id)
     run_sql_drop_silently(query) # kwalitee: disable=sql
 
-    run_sql("""CREATE TABLE %sidxWORD%02dR (
+    run_sql("""CREATE TABLE `%sidxWORD%02dR` (
                         id_bibrec mediumint(9) unsigned NOT NULL,
                         termlist longblob,
                         type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
                         PRIMARY KEY (id_bibrec,type)
                         ) ENGINE=MyISAM""" % (reindex_prefix, index_id))
 
-    query = """DROP TABLE IF EXISTS %sidxPAIR%02dF""" % \
+    query = """DROP TABLE IF EXISTS `%sidxPAIR%02dF`""" % \
             (wash_table_column_name(reindex_prefix), index_id)
     run_sql_drop_silently(query) # kwalitee: disable=sql
 
-    run_sql("""CREATE TABLE %sidxPAIR%02dF (
+    run_sql("""CREATE TABLE `%sidxPAIR%02dF` (
                         id mediumint(9) unsigned NOT NULL auto_increment,
                         term varchar(100) default NULL,
                         hitlist longblob,
@@ -266,22 +266,22 @@ def init_temporary_reindex_tables(index_id, reindex_prefix="tmp_"):
                         UNIQUE KEY term (term)
                         ) ENGINE=MyISAM""" % (reindex_prefix, index_id))
 
-    query = """DROP TABLE IF EXISTS %sidxPAIR%02dR""" % \
+    query = """DROP TABLE IF EXISTS `%sidxPAIR%02dR`""" % \
             (wash_table_column_name(reindex_prefix), index_id)
     run_sql_drop_silently(query) # kwalitee: disable=sql
 
-    run_sql("""CREATE TABLE %sidxPAIR%02dR (
+    run_sql("""CREATE TABLE `%sidxPAIR%02dR` (
                         id_bibrec mediumint(9) unsigned NOT NULL,
                         termlist longblob,
                         type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
                         PRIMARY KEY (id_bibrec,type)
                         ) ENGINE=MyISAM""" % (reindex_prefix, index_id))
 
-    query = """DROP TABLE IF EXISTS %sidxPHRASE%02dF""" % \
+    query = """DROP TABLE IF EXISTS `%sidxPHRASE%02dF`""" % \
             (wash_table_column_name(reindex_prefix), index_id)
     run_sql_drop_silently(query) # kwalitee: disable=sql
 
-    run_sql("""CREATE TABLE %sidxPHRASE%02dF (
+    run_sql("""CREATE TABLE `%sidxPHRASE%02dF` (
                         id mediumint(9) unsigned NOT NULL auto_increment,
                         term text default NULL,
                         hitlist longblob,
@@ -289,11 +289,11 @@ def init_temporary_reindex_tables(index_id, reindex_prefix="tmp_"):
                         KEY term (term(50))
                         ) ENGINE=MyISAM""" % (reindex_prefix, index_id))
 
-    query = """DROP TABLE IF EXISTS %sidxPHRASE%02dR""" %  \
+    query = """DROP TABLE IF EXISTS `%sidxPHRASE%02dR`""" %  \
             (wash_table_column_name(reindex_prefix), index_id)
     run_sql_drop_silently(query) # kwalitee: disable=sql
 
-    run_sql("""CREATE TABLE %sidxPHRASE%02dR (
+    run_sql("""CREATE TABLE `%sidxPHRASE%02dR` (
                         id_bibrec mediumint(9) unsigned NOT NULL default '0',
                         termlist longblob,
                         type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
@@ -322,7 +322,7 @@ def get_index_tokenizer(index_id):
     """Returns value of a tokenizer field from idxINDEX database table
        @param index_id: id of the index
     """
-    query = "SELECT tokenizer FROM idxINDEX WHERE id=%s" % index_id
+    query = "SELECT tokenizer FROM `idxINDEX` WHERE id=%s" % index_id
     out = None
     try:
         res = run_sql(query)
@@ -455,7 +455,7 @@ def truncate_index_table(index_name):
     if index_id:
         write_message('Truncating %s index table in order to reindex.' % \
                       index_name, verbose=2)
-        run_sql("""UPDATE idxINDEX SET last_updated='0000-00-00 00:00:00'
+        run_sql("""UPDATE `idxINDEX` SET last_updated='0000-00-00 00:00:00'
                    WHERE id=%s""", (index_id, ))
         run_sql("TRUNCATE idxWORD%02dF" % index_id) # kwalitee: disable=sql
         run_sql("TRUNCATE idxWORD%02dR" % index_id) # kwalitee: disable=sql
@@ -475,7 +475,7 @@ def update_index_last_updated(indexes, starting_time=None):
     for index_name in indexes:
         write_message("updating last_updated to %s...for %s index" % \
                       (starting_time, index_name), verbose=9)
-        run_sql("UPDATE idxINDEX SET last_updated=%s WHERE name=%s",
+        run_sql("UPDATE `idxINDEX` SET last_updated=%s WHERE name=%s",
                 (starting_time, index_name))
 
 
@@ -723,7 +723,7 @@ class AbstractIndexTable(object):
                           word, verbose=9)
             set = intbitset(self.value[word].keys())
             try:
-                run_sql("INSERT INTO %s (term, hitlist) VALUES (%%s, %%s)" % wash_table_column_name(self.table_name), (word, set.fastdump())) # kwalitee: disable=sql
+                run_sql("INSERT INTO `%s` (term, hitlist) VALUES (%%s, %%s)" % wash_table_column_name(self.table_name), (word, set.fastdump())) # kwalitee: disable=sql
             except Exception, e:
                 ## We send this exception to the admin only when is not
                 ## already reparing the problem.
@@ -966,12 +966,12 @@ class VirtualIndexTable(AbstractIndexTable):
             to_serialize = update_cache_for_record(index_name, recID, old_values, new_values)
             if len(to_serialize) == 0:
                 continue
-            run_sql("""INSERT INTO %s (id_bibrec,termlist,type)
+            run_sql("""INSERT INTO `%s` (id_bibrec,termlist,type)
                        VALUES (%%s,%%s,'FUTURE')""" % \
                        wash_table_column_name(virtual_tab_name),
                        (recID, serialize_via_marshal(to_serialize))) # kwalitee: disable=sql
             try:
-                run_sql("INSERT INTO %s (id_bibrec,termlist,type) VALUES (%%s,%%s,'CURRENT')" % wash_table_column_name(virtual_tab_name), (recID, serialize_via_marshal([]))) # kwalitee: disable=sql
+                run_sql("INSERT INTO `%s` (id_bibrec,termlist,type) VALUES (%%s,%%s,'CURRENT')" % wash_table_column_name(virtual_tab_name), (recID, serialize_via_marshal([]))) # kwalitee: disable=sql
             except DatabaseError:
                 pass
 
@@ -1003,9 +1003,9 @@ class VirtualIndexTable(AbstractIndexTable):
             to_serialize = insert_to_cache_for_record(index_name, recID, old_values, new_values)
             if len(to_serialize) == 0:
                 continue
-            run_sql("INSERT INTO %s (id_bibrec,termlist,type) VALUES (%%s,%%s,'FUTURE')" % wash_table_column_name(virtual_tab_name), (recID, serialize_via_marshal(to_serialize))) # kwalitee: disable=sql
+            run_sql("INSERT INTO `%s` (id_bibrec,termlist,type) VALUES (%%s,%%s,'FUTURE')" % wash_table_column_name(virtual_tab_name), (recID, serialize_via_marshal(to_serialize))) # kwalitee: disable=sql
             try:
-                run_sql("INSERT INTO %s (id_bibrec,termlist,type) VALUES (%%s,%%s,'CURRENT')" % wash_table_column_name(virtual_tab_name), (recID, serialize_via_marshal([]))) # kwalitee: disable=sql
+                run_sql("INSERT INTO `%s` (id_bibrec,termlist,type) VALUES (%%s,%%s,'CURRENT')" % wash_table_column_name(virtual_tab_name), (recID, serialize_via_marshal([]))) # kwalitee: disable=sql
             except DatabaseError:
                 pass
 
@@ -1034,9 +1034,9 @@ class VirtualIndexTable(AbstractIndexTable):
             to_serialize = remove_from_cache_for_record(index_name, recID, old_values)
             if len(to_serialize) == 0:
                 continue
-            run_sql("INSERT INTO %s (id_bibrec,termlist,type) VALUES (%%s,%%s,'FUTURE')" % wash_table_column_name(virtual_tab_name), (recID, serialize_via_marshal(to_serialize))) # kwalitee: disable=sql
+            run_sql("INSERT INTO `%s` (id_bibrec,termlist,type) VALUES (%%s,%%s,'FUTURE')" % wash_table_column_name(virtual_tab_name), (recID, serialize_via_marshal(to_serialize))) # kwalitee: disable=sql
             try:
-                run_sql("INSERT INTO %s (id_bibrec,termlist,type) VALUES (%%s,%%s,'CURRENT')" % wash_table_column_name(virtual_tab_name), (recID, serialize_via_marshal([]))) # kwalitee: disable=sql
+                run_sql("INSERT INTO `%s` (id_bibrec,termlist,type) VALUES (%%s,%%s,'CURRENT')" % wash_table_column_name(virtual_tab_name), (recID, serialize_via_marshal([]))) # kwalitee: disable=sql
             except DatabaseError:
                 pass
 
@@ -1305,7 +1305,7 @@ class WordTable(AbstractIndexTable):
             @param recID_ranges: low and high recIDs of ranges
             @type recID_ranges: list [[low_id1, high_id1], [low_id2, high_id2]...]
         """
-        query = """INSERT INTO %s (runtime, id_bibrec_low, id_bibrec_high, index_name, mode)
+        query = """INSERT INTO `%s` (runtime, id_bibrec_low, id_bibrec_high, index_name, mode)
                    VALUES (%%s, %%s, %%s, %%s, %%s)"""
         for index_id, index_name in self.virtual_indexes:
             tab_name = "idx%s%02dQ" % (self.table_type, index_id)
@@ -1472,10 +1472,10 @@ class WordTable(AbstractIndexTable):
         if len(wlist) == 0: return 0
         # put words into reverse index table with FUTURE status:
         for recID in recIDs:
-            run_sql("INSERT INTO %sR (id_bibrec,termlist,type) VALUES (%%s,%%s,'FUTURE')" % wash_table_column_name(self.table_name[:-1]), (recID, serialize_via_marshal(wlist[recID]))) # kwalitee: disable=sql
+            run_sql("INSERT INTO `%sR` (id_bibrec,termlist,type) VALUES (%%s,%%s,'FUTURE')" % wash_table_column_name(self.table_name[:-1]), (recID, serialize_via_marshal(wlist[recID]))) # kwalitee: disable=sql
             # ... and, for new records, enter the CURRENT status as empty:
             try:
-                run_sql("INSERT INTO %sR (id_bibrec,termlist,type) VALUES (%%s,%%s,'CURRENT')" % wash_table_column_name(self.table_name[:-1]), (recID, serialize_via_marshal([]))) # kwalitee: disable=sql
+                run_sql("INSERT INTO `%sR` (id_bibrec,termlist,type) VALUES (%%s,%%s,'CURRENT')" % wash_table_column_name(self.table_name[:-1]), (recID, serialize_via_marshal([]))) # kwalitee: disable=sql
             except DatabaseError:
                 # okay, it's an already existing record, no problem
                 pass
@@ -1878,7 +1878,7 @@ def get_recIDs_by_date_bibliographic(dates, index_name, force_all=False):
     """
     index_id = get_index_id_from_index_name(index_name)
     if not dates:
-        query = """SELECT last_updated FROM idxINDEX WHERE id=%s"""
+        query = """SELECT last_updated FROM `idxINDEX` WHERE id=%s"""
         res = run_sql(query, (index_id,))
         if not res:
             return set([])
@@ -1887,30 +1887,30 @@ def get_recIDs_by_date_bibliographic(dates, index_name, force_all=False):
         else:
             dates = (res[0][0], None)
     if dates[1] is None:
-        res = intbitset(run_sql("""SELECT b.id FROM bibrec AS b WHERE b.modification_date >= %s""",
+        res = intbitset(run_sql("""SELECT b.id FROM `bibrec` AS b WHERE b.modification_date >= %s""",
                                    (dates[0],)))
         if index_name == 'fulltext':
-            res |= intbitset(run_sql("""SELECT id_bibrec FROM bibrec_bibdoc JOIN bibdoc ON id_bibdoc=id
+            res |= intbitset(run_sql("""SELECT id_bibrec FROM `bibrec_bibdoc` JOIN `bibdoc` ON id_bibdoc=id
                                         WHERE text_extraction_date <= modification_date AND
                                         modification_date >= %s
                                         AND status<>'DELETED'""",
                                         (dates[0],)))
     elif dates[0] is None:
-        res = intbitset(run_sql("""SELECT b.id FROM bibrec AS b WHERE b.modification_date <= %s""",
+        res = intbitset(run_sql("""SELECT b.id FROM `bibrec` AS b WHERE b.modification_date <= %s""",
                                    (dates[1],)))
         if index_name == 'fulltext':
-            res |= intbitset(run_sql("""SELECT id_bibrec FROM bibrec_bibdoc JOIN bibdoc ON id_bibdoc=id
+            res |= intbitset(run_sql("""SELECT id_bibrec FROM `bibrec_bibdoc` JOIN `bibdoc` ON id_bibdoc=id
                                         WHERE text_extraction_date <= modification_date
                                         AND modification_date <= %s
                                         AND status<>'DELETED'""",
                                         (dates[1],)))
     else:
-        res = intbitset(run_sql("""SELECT b.id FROM bibrec AS b
+        res = intbitset(run_sql("""SELECT b.id FROM `bibrec` AS b
                                    WHERE b.modification_date >= %s AND
                                    b.modification_date <= %s""",
                                    (dates[0], dates[1])))
         if index_name == 'fulltext':
-            res |= intbitset(run_sql("""SELECT id_bibrec FROM bibrec_bibdoc JOIN bibdoc ON id_bibdoc=id
+            res |= intbitset(run_sql("""SELECT id_bibrec FROM `bibrec_bibdoc` JOIN `bibdoc` ON id_bibdoc=id
                                         WHERE text_extraction_date <= modification_date AND
                                         modification_date >= %s AND
                                         modification_date <= %s AND
@@ -1937,7 +1937,7 @@ def get_recIDs_by_date_authority(dates, index_name, force_all=False):
     index_id = get_index_id_from_index_name(index_name)
     index_tags = get_index_tags(index_name)
     if not dates:
-        query = """SELECT last_updated FROM idxINDEX WHERE id=%s"""
+        query = """SELECT last_updated FROM `idxINDEX` WHERE id=%s"""
         res = run_sql(query, (index_id,))
         if not res:
             return set([])
@@ -2002,7 +2002,7 @@ def get_recIDs_from_cli(indexes=[]):
     # need to first update idxINDEX table to find proper recIDs for reindexing
     if task_get_option("reindex"):
         for index_name in indexes:
-            run_sql("""UPDATE idxINDEX SET last_updated='0000-00-00 00:00:00'
+            run_sql("""UPDATE `idxINDEX` SET last_updated='0000-00-00 00:00:00'
                        WHERE name=%s""", (index_name,))
 
     if task_get_option("id"):
@@ -2061,7 +2061,7 @@ def remove_dependent_index(virtual_indexes, dependent_index):
             vit.remove_dependent_index(dependent_index)
             task_sleep_now_if_required()
 
-        query = """DELETE FROM idxINDEX_idxINDEX WHERE id_virtual=%s AND id_normal=%s"""
+        query = """DELETE FROM `idxINDEX_idxINDEX` WHERE id_virtual=%s AND id_normal=%s"""
         run_sql(query, (index_id, id_dependent))
 
 

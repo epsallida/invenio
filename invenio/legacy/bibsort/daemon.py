@@ -95,7 +95,7 @@ def load_configuration():
     run_sql("TRUNCATE TABLE bsrMETHOD")
     write_message('Old data has been deleted from bsrMETHOD table', verbose=5)
     for row in to_insert:
-        run_sql("INSERT INTO bsrMETHOD(name, definition, washer) \
+        run_sql("INSERT INTO `bsrMETHOD` (name, definition, washer) \
                 VALUES (%s, %s, %s)", (row[0], row[1], row[2]))
         write_message('Method %s has been inserted into bsrMETHOD table' \
                       %row[0], verbose=5)

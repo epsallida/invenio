@@ -178,7 +178,7 @@ def get_modification_date(recid):
     Return empty string if no record or modification date in UTC.
     """
     out = ""
-    res = run_sql("SELECT DATE_FORMAT(modification_date,'%%Y-%%m-%%d %%H:%%i:%%s') FROM bibrec WHERE id=%s", (recid,), 1)
+    res = run_sql("SELECT DATE_FORMAT(modification_date,'%%Y-%%m-%%d %%H:%%i:%%s') FROM `bibrec` WHERE id=%s", (recid,), 1)
     if res and res[0][0]:
         out = localtime_to_utc(res[0][0])
     return out
@@ -589,7 +589,7 @@ def get_set_last_update(set_spec=""):
     Returns the last_update of a given set (or of all sets) in UTC
     """
     if set_spec:
-        last_update = run_sql("SELECT DATE_FORMAT(MAX(last_updated),'%%Y-%%m-%%d %%H:%%i:%%s') FROM oaiREPOSITORY WHERE setSpec=%s", (set_spec, ))[0][0]
+        last_update = run_sql("SELECT DATE_FORMAT(MAX(last_updated),'%%Y-%%m-%%d %%H:%%i:%%s') FROM `oaiREPOSITORY` WHERE setSpec=%s", (set_spec, ))[0][0]
     else:
         last_update = run_sql("SELECT DATE_FORMAT(MAX(last_updated),'%Y-%m-%d %H:%i:%s') FROM oaiREPOSITORY")[0][0]
     if last_update:
@@ -622,11 +622,11 @@ def filter_out_based_on_date_range(recids, fromdate="", untildate="", set_spec=N
     recids = intbitset(recids) ## Let's clone :-)
 
     if fromdate and untildate:
-        recids &= intbitset(run_sql("SELECT id FROM bibrec WHERE modification_date BETWEEN %s AND %s", (fromdate, untildate)))
+        recids &= intbitset(run_sql("SELECT id FROM `bibrec` WHERE modification_date BETWEEN %s AND %s", (fromdate, untildate)))
     elif fromdate:
-        recids &= intbitset(run_sql("SELECT id FROM bibrec WHERE modification_date >= %s", (fromdate, )))
+        recids &= intbitset(run_sql("SELECT id FROM `bibrec` WHERE modification_date >= %s", (fromdate, )))
     elif untildate:
-        recids &= intbitset(run_sql("SELECT id FROM bibrec WHERE modification_date <= %s", (untildate, )))
+        recids &= intbitset(run_sql("SELECT id FROM `bibrec` WHERE modification_date <= %s", (untildate, )))
 
     if cfg.get('CFG_OAI_FILTER_RESTRICTED_RECORDS', True):
         recids = recids - get_all_restricted_recids()

@@ -42,15 +42,15 @@ def retrieve_bibdoc_bibdoc():
     return run_sql('SELECT id_bibdoc1, id_bibdoc2 from bibdoc_bibdoc')
 
 def get_recid_from_docid(docid):
-    return run_sql('SELECT id_bibrec FROM bibrec_bibdoc WHERE id_bibdoc=%s', (docid, ))
+    return run_sql('SELECT id_bibrec FROM `bibrec_bibdoc` WHERE id_bibdoc=%s', (docid, ))
 
 def backup_tables(drop=False):
     """This function create a backup of bibrec_bibdoc, bibdoc and bibdoc_bibdoc tables. Returns False in case dropping of previous table is needed."""
     if drop:
         run_sql('DROP TABLE bibdoc_bibdoc_backup_for_icon')
     try:
-        run_sql("""CREATE TABLE bibdoc_bibdoc_backup_for_icon (KEY id_bibdoc1(id_bibdoc1),
-                KEY id_bibdoc2(id_bibdoc2)) SELECT * FROM bibdoc_bibdoc""")
+        run_sql("""CREATE TABLE `bibdoc_bibdoc_backup_for_icon` (KEY id_bibdoc1(id_bibdoc1),
+                KEY id_bibdoc2(id_bibdoc2)) SELECT * FROM `bibdoc_bibdoc`""")
     except OperationalError as e:
         if not drop:
             return False
@@ -77,7 +77,7 @@ def fix_bibdoc_bibdoc(id_bibdoc1, id_bibdoc2, logfile):
         for a_file in the_icon.list_latest_files():
             the_bibdoc.add_icon(a_file.get_full_path(), format=a_file.get_format())
         the_icon.delete()
-        run_sql("DELETE FROM bibdoc_bibdoc WHERE id_bibdoc1=%s AND id_bibdoc2=%s", (id_bibdoc1, id_bibdoc2))
+        run_sql("DELETE FROM `bibdoc_bibdoc` WHERE id_bibdoc1=%s AND id_bibdoc2=%s", (id_bibdoc1, id_bibdoc2))
         print("OK")
         print("OK", file=logfile)
         return True

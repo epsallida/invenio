@@ -286,7 +286,7 @@ def external_collection_apply_changes(changes_list):
         return
 
     sql_values = ", ".join(changes_list)
-    sql = 'INSERT INTO collection_externalcollection (id_collection, id_externalcollection, type) VALUES ' + sql_values + 'ON DUPLICATE KEY UPDATE type=VALUES(type);'
+    sql = 'INSERT INTO `collection_externalcollection` (id_collection, id_externalcollection, type) VALUES ' + sql_values + 'ON DUPLICATE KEY UPDATE type=VALUES(type);'
     run_sql(sql)
 
 # Misc functions
@@ -305,10 +305,10 @@ def external_collection_getid(external_collection):
     if 'id' in external_collection.__dict__:
         return external_collection.id
 
-    query = 'SELECT id FROM externalcollection WHERE name="%(name)s";' % {'name': external_collection.name}
+    query = 'SELECT id FROM `externalcollection` WHERE name="%(name)s";' % {'name': external_collection.name}
     results = run_sql(query)
     if not results:
-        query = 'INSERT INTO externalcollection (name) VALUES ("%(name)s");' % {'name': external_collection.name}
+        query = 'INSERT INTO `externalcollection` (name) VALUES ("%(name)s");' % {'name': external_collection.name}
         run_sql(query)
         return external_collection_getid(external_collection)
 

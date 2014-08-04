@@ -26,12 +26,12 @@ from random import randint
 ## Functions related to the organisation of catalogues:
 
 def insert_submission_collection(collection_name):
-    qstr = """INSERT INTO sbmCOLLECTION (name) VALUES (%s)"""
+    qstr = """INSERT INTO `sbmCOLLECTION` (name) VALUES (%s)"""
     qres = run_sql(qstr, (collection_name,))
     return int(qres)
 
 def update_score_of_collection_child_of_submission_collection_at_scorex(id_father, old_score, new_score):
-    qstr = """UPDATE sbmCOLLECTION_sbmCOLLECTION """ \
+    qstr = """UPDATE `sbmCOLLECTION_sbmCOLLECTION` """ \
            """SET catalogue_order=%s WHERE id_father=%s AND catalogue_order=%s"""
     qres = run_sql(qstr, (new_score, id_father, old_score))
     return 0
@@ -40,14 +40,14 @@ def update_score_of_collection_child_of_submission_collection_with_colid_and_sco
                                                                                     id_son,
                                                                                     old_score,
                                                                                     new_score):
-    qstr = """UPDATE sbmCOLLECTION_sbmCOLLECTION """ \
+    qstr = """UPDATE `sbmCOLLECTION_sbmCOLLECTION` """ \
            """SET catalogue_order=%s """ \
            """WHERE id_father=%s AND id_son=%s AND catalogue_order=%s"""
     qres = run_sql(qstr, (new_score, id_father, id_son, old_score))
     return 0
 
 def update_score_of_doctype_child_of_submission_collection_at_scorex(id_father, old_score, new_score):
-    qstr = """UPDATE sbmCOLLECTION_sbmDOCTYPE """ \
+    qstr = """UPDATE `sbmCOLLECTION_sbmDOCTYPE` """ \
            """SET catalogue_order=%s WHERE id_father=%s AND catalogue_order=%s"""
     qres = run_sql(qstr, (new_score, id_father, old_score))
     return 0
@@ -56,14 +56,14 @@ def update_score_of_doctype_child_of_submission_collection_with_doctypeid_and_sc
                                                                                      id_son,
                                                                                      old_score,
                                                                                      new_score):
-    qstr = """UPDATE sbmCOLLECTION_sbmDOCTYPE """ \
+    qstr = """UPDATE `sbmCOLLECTION_sbmDOCTYPE` """ \
            """SET catalogue_order=%s """ \
            """WHERE id_father=%s AND id_son=%s AND catalogue_order=%s"""
     qres = run_sql(qstr, (new_score, id_father, id_son, old_score))
     return 0
 
 def get_id_father_of_collection(collection_id):
-    qstr = """SELECT id_father FROM sbmCOLLECTION_sbmCOLLECTION """ \
+    qstr = """SELECT id_father FROM `sbmCOLLECTION_sbmCOLLECTION` """ \
            """WHERE id_son=%s """ \
            """LIMIT 1"""
     qres = run_sql(qstr, (collection_id,))
@@ -74,13 +74,13 @@ def get_id_father_of_collection(collection_id):
 
 def get_maximum_catalogue_score_of_collection_children_of_submission_collection(collection_id):
     qstr = """SELECT IFNULL(MAX(catalogue_order), 0) """ \
-           """FROM sbmCOLLECTION_sbmCOLLECTION """ \
+           """FROM `sbmCOLLECTION_sbmCOLLECTION` """ \
            """WHERE id_father=%s"""
     qres = int(run_sql(qstr, (collection_id,))[0][0])
     return qres
 
 def get_score_of_collection_child_of_submission_collection(id_father, id_son):
-    qstr = """SELECT catalogue_order FROM sbmCOLLECTION_sbmCOLLECTION """ \
+    qstr = """SELECT catalogue_order FROM `sbmCOLLECTION_sbmCOLLECTION` """ \
            """WHERE id_son=%s and id_father=%s """ \
            """LIMIT 1"""
     qres = run_sql(qstr, (id_son, id_father))
@@ -91,7 +91,7 @@ def get_score_of_collection_child_of_submission_collection(id_father, id_son):
 
 def get_score_of_previous_collection_child_above(id_father, score):
     qstr = """SELECT MAX(catalogue_order) """ \
-           """FROM sbmCOLLECTION_sbmCOLLECTION """ \
+           """FROM `sbmCOLLECTION_sbmCOLLECTION` """ \
            """WHERE id_father=%s and catalogue_order < %s"""
     qres = run_sql(qstr, (id_father, score))
     try:
@@ -101,7 +101,7 @@ def get_score_of_previous_collection_child_above(id_father, score):
 
 def get_score_of_next_collection_child_below(id_father, score):
     qstr = """SELECT MIN(catalogue_order) """ \
-           """FROM sbmCOLLECTION_sbmCOLLECTION """ \
+           """FROM `sbmCOLLECTION_sbmCOLLECTION` """ \
            """WHERE id_father=%s and catalogue_order > %s"""
     qres = run_sql(qstr, (id_father, score))
     try:
@@ -110,7 +110,7 @@ def get_score_of_next_collection_child_below(id_father, score):
         return None
 
 def get_catalogue_score_of_doctype_child_of_submission_collection(id_father, id_son):
-    qstr = """SELECT catalogue_order FROM sbmCOLLECTION_sbmDOCTYPE """ \
+    qstr = """SELECT catalogue_order FROM `sbmCOLLECTION_sbmDOCTYPE` """ \
            """WHERE id_son=%s and id_father=%s """ \
            """LIMIT 1"""
     qres = run_sql(qstr, (id_son, id_father))
@@ -121,7 +121,7 @@ def get_catalogue_score_of_doctype_child_of_submission_collection(id_father, id_
 
 def get_score_of_previous_doctype_child_above(id_father, score):
     qstr = """SELECT MAX(catalogue_order) """ \
-           """FROM sbmCOLLECTION_sbmDOCTYPE """ \
+           """FROM `sbmCOLLECTION_sbmDOCTYPE` """ \
            """WHERE id_father=%s and catalogue_order < %s"""
     qres = run_sql(qstr, (id_father, score))
     try:
@@ -131,7 +131,7 @@ def get_score_of_previous_doctype_child_above(id_father, score):
 
 def get_score_of_next_doctype_child_below(id_father, score):
     qstr = """SELECT MIN(catalogue_order) """ \
-           """FROM sbmCOLLECTION_sbmDOCTYPE """ \
+           """FROM `sbmCOLLECTION_sbmDOCTYPE` """ \
            """WHERE id_father=%s and catalogue_order > %s"""
     qres = run_sql(qstr, (id_father, score))
     try:
@@ -141,19 +141,19 @@ def get_score_of_next_doctype_child_below(id_father, score):
 
 def get_maximum_catalogue_score_of_doctype_children_of_submission_collection(collection_id):
     qstr = """SELECT IFNULL(MAX(catalogue_order), 0) """ \
-           """FROM sbmCOLLECTION_sbmDOCTYPE """ \
+           """FROM `sbmCOLLECTION_sbmDOCTYPE` """ \
            """WHERE id_father=%s"""
     qres = int(run_sql(qstr, (collection_id,))[0][0])
     return qres
 
 
 def insert_collection_child_for_submission_collection(id_father, id_son, score):
-    qstr = """INSERT INTO sbmCOLLECTION_sbmCOLLECTION (id_father, id_son, catalogue_order) """ \
+    qstr = """INSERT INTO `sbmCOLLECTION_sbmCOLLECTION` (id_father, id_son, catalogue_order) """ \
            """VALUES (%s, %s, %s)"""
     qres = run_sql(qstr, (id_father, id_son, score))
 
 def insert_doctype_child_for_submission_collection(id_father, id_son, score):
-    qstr = """INSERT INTO sbmCOLLECTION_sbmDOCTYPE (id_father, id_son, catalogue_order) """ \
+    qstr = """INSERT INTO `sbmCOLLECTION_sbmDOCTYPE` (id_father, id_son, catalogue_order) """ \
            """VALUES (%s, %s, %s)"""
     qres = run_sql(qstr, (id_father, id_son, score))
 
@@ -170,8 +170,8 @@ def get_doctype_children_of_collection(id_father):
     """
     ## query to retrieve details of doctypes attached to a given collection:
     qstr_doctype_children = """SELECT col_doctype.id_son, doctype.ldocname, col_doctype.catalogue_order """ \
-                            """FROM sbmCOLLECTION_sbmDOCTYPE AS col_doctype """ \
-                            """INNER JOIN sbmDOCTYPE AS doctype """ \
+                            """FROM `sbmCOLLECTION_sbmDOCTYPE` AS col_doctype """ \
+                            """INNER JOIN `sbmDOCTYPE` AS doctype """ \
                             """ON col_doctype.id_son = doctype.sdocname """ \
                             """WHERE id_father=%s ORDER BY catalogue_order ASC"""
     res_doctype_children  = run_sql(qstr_doctype_children, (id_father,))
@@ -186,7 +186,7 @@ def get_collection_children_of_collection(id_father):
         of the given parent collection.
     """
     ## query to retrieve IDs of collections attached to a given collection:
-    qstr_collection_children = """SELECT id_son FROM sbmCOLLECTION_sbmCOLLECTION WHERE id_father=%s ORDER BY catalogue_order ASC"""
+    qstr_collection_children = """SELECT id_son FROM `sbmCOLLECTION_sbmCOLLECTION` WHERE id_father=%s ORDER BY catalogue_order ASC"""
     res_collection_children  = run_sql(qstr_collection_children, (id_father,))
     ## return the result of this query:
     return res_collection_children
@@ -201,7 +201,7 @@ def get_id_and_score_of_collection_children_of_collection(id_father):
     """
     ## query to retrieve IDs of collections attached to a given collection:
     qstr_collection_children = """SELECT id_son, catalogue_order """ \
-                               """FROM sbmCOLLECTION_sbmCOLLECTION """ \
+                               """FROM `sbmCOLLECTION_sbmCOLLECTION` """ \
                                """WHERE id_father=%s ORDER BY catalogue_order ASC"""
     res_collection_children  = run_sql(qstr_collection_children, (id_father,))
     ## return the result of this query:
@@ -213,7 +213,7 @@ def get_number_of_rows_for_submission_collection_as_submission_tree_branch(colle
        @param collection_id: (integer) - the id of the submission-collection.
        @return: (integer) - number of rows found by the query.
     """
-    qstr = """SELECT COUNT(*) FROM sbmCOLLECTION_sbmCOLLECTION WHERE id_son=%s"""
+    qstr = """SELECT COUNT(*) FROM `sbmCOLLECTION_sbmCOLLECTION` WHERE id_son=%s"""
     return int(run_sql(qstr, (collection_id,))[0][0])
 
 def get_number_of_rows_for_submission_collection(collection_id):
@@ -221,7 +221,7 @@ def get_number_of_rows_for_submission_collection(collection_id):
        @param collection_id: (integer) - the id of the submission-collection.
        @return: (integer) - number of rows found by the query.
     """
-    qstr = """SELECT COUNT(*) FROM sbmCOLLECTION WHERE id=%s"""
+    qstr = """SELECT COUNT(*) FROM `sbmCOLLECTION` WHERE id=%s"""
     return int(run_sql(qstr, (collection_id,))[0][0])
 
 def delete_submission_collection_details(collection_id):
@@ -230,7 +230,7 @@ def delete_submission_collection_details(collection_id):
         are to be deleted from the WebSubmit database.
        @return: (integer) - error code: 0 on successful delete; 1 on failure to delete.
     """
-    qstr = """DELETE FROM sbmCOLLECTION WHERE id=%s"""
+    qstr = """DELETE FROM `sbmCOLLECTION` WHERE id=%s"""
     run_sql(qstr, (collection_id,))
     ## check to see if submission-collection details deleted:
     numrows_submission_collection = get_number_of_rows_for_submission_collection(collection_id)
@@ -256,7 +256,7 @@ def delete_submission_collection_from_submission_tree(collection_id):
         are to be deleted from the WebSubmit database.
        @return: (integer) - error code: 0 on successful delete; 1 on failure to delete.
     """
-    qstr = """DELETE FROM sbmCOLLECTION_sbmCOLLECTION WHERE id_son=%s"""
+    qstr = """DELETE FROM `sbmCOLLECTION_sbmCOLLECTION` WHERE id_son=%s"""
     run_sql(qstr, (collection_id,))
     ## check to ensure that the submission-collection was deleted from the tree:
     numrows_collection = \
@@ -284,7 +284,7 @@ def get_collection_name(collection_id):
     """
     collection_name = None
     ## query to retrieve the name of a given collection:
-    qstr_collection_name = """SELECT name FROM sbmCOLLECTION WHERE id=%s"""
+    qstr_collection_name = """SELECT name FROM `sbmCOLLECTION` WHERE id=%s"""
     ## get the name of this collection:
     res_collection_name  = run_sql(qstr_collection_name, (collection_id,))
     try:
@@ -300,7 +300,7 @@ def delete_doctype_children_from_submission_collection(collection_id):
         the doctype-children are to be deleted.
        @return: (integer) - error code: 0 on successful delete; 1 on failure to delete.
     """
-    qstr = """DELETE FROM sbmCOLLECTION_sbmDOCTYPE WHERE id_father=%s"""
+    qstr = """DELETE FROM `sbmCOLLECTION_sbmDOCTYPE` WHERE id_father=%s"""
     run_sql(qstr, (collection_id,))
     ## check to see if doctype-children still remain attached to submission-collection:
     num_doctype_children = get_number_of_doctype_children_of_submission_collection(collection_id)
@@ -335,7 +335,7 @@ def get_count_of_doctype_instances_at_score_for_collection(doctypeid, id_father,
        @param catalogue_posn: (integer) - the score of the document type for that catalogue connection.
        @return: (integer) - number of rows found by the query.
     """
-    qstr = """SELECT COUNT(*) FROM sbmCOLLECTION_sbmDOCTYPE WHERE id_father=%s AND id_son=%s AND catalogue_order=%s"""
+    qstr = """SELECT COUNT(*) FROM `sbmCOLLECTION_sbmDOCTYPE` WHERE id_father=%s AND id_son=%s AND catalogue_order=%s"""
     return int(run_sql(qstr, (id_father, doctypeid, catalogue_score))[0][0])
 
 def get_number_of_doctype_children_of_submission_collection(collection_id):
@@ -343,7 +343,7 @@ def get_number_of_doctype_children_of_submission_collection(collection_id):
        @param collection_id: (integer) - the id of the submission-collection to which the doctype-children are attached.
        @return: (integer) - number of rows found by the query.
     """
-    qstr = """SELECT COUNT(*) FROM sbmCOLLECTION_sbmDOCTYPE WHERE id_father=%s"""
+    qstr = """SELECT COUNT(*) FROM `sbmCOLLECTION_sbmDOCTYPE` WHERE id_father=%s"""
     return int(run_sql(qstr, (collection_id,))[0][0])
 
 
@@ -356,7 +356,7 @@ def delete_doctype_from_position_on_submission_page(doctypeid, id_father, catalo
         document type to be deleted is connected.
        @return: (integer) - error code: 0 if delete was successful; 1 if delete failed;
     """
-    qstr = """DELETE FROM sbmCOLLECTION_sbmDOCTYPE WHERE id_father=%s AND id_son=%s AND catalogue_order=%s"""
+    qstr = """DELETE FROM `sbmCOLLECTION_sbmDOCTYPE` WHERE id_father=%s AND id_son=%s AND catalogue_order=%s"""
     run_sql(qstr, (id_father, doctypeid, catalogue_score))
     ## check to see whether this doctype was deleted:
     numrows_doctype = get_count_of_doctype_instances_at_score_for_collection(doctypeid, id_father, catalogue_score)
@@ -383,7 +383,7 @@ def update_score_of_doctype_child_of_collection(id_father, id_son, old_catalogue
        @param new_catalogue_score: (integer) - the new value of the doctype's score for the submission-collection
        @return: (integer) - 0
     """
-    qstr = """UPDATE sbmCOLLECTION_sbmDOCTYPE SET catalogue_order=%s """ \
+    qstr = """UPDATE `sbmCOLLECTION_sbmDOCTYPE` SET catalogue_order=%s """ \
            """WHERE id_father=%s AND id_son=%s AND catalogue_order=%s"""
     run_sql(qstr, (new_catalogue_score, id_father, id_son, old_catalogue_score))
     return 0
@@ -397,7 +397,7 @@ def update_score_of_collection_child_of_collection(id_father, id_son, old_catalo
        @param new_catalogue_score: (integer) - the new value of the collection's score for the submission-collection
        @return: (integer) - 0
     """
-    qstr = """UPDATE sbmCOLLECTION_sbmCOLLECTION SET catalogue_order=%s """ \
+    qstr = """UPDATE `sbmCOLLECTION_sbmCOLLECTION` SET catalogue_order=%s """ \
            """WHERE id_father=%s AND id_son=%s AND catalogue_order=%s"""
     run_sql(qstr, (new_catalogue_score, id_father, id_son, old_catalogue_score))
     return 0
@@ -465,7 +465,7 @@ def update_action_details(actid, actname, working_dir, status_text):
     # Check record with code 'actid' does not already exist:
     numrows_actid = get_number_actions_with_actid(actid)
     if numrows_actid == 1:
-        q ="""UPDATE sbmACTION SET lactname=%s, dir=%s, statustext=%s, md=CURDATE() WHERE sactname=%s"""
+        q ="""UPDATE `sbmACTION` SET lactname=%s, dir=%s, statustext=%s, md=CURDATE() WHERE sactname=%s"""
         run_sql(q, (actname, working_dir, status_text, actid))
         return 0 # Everything is OK
     else:
@@ -476,7 +476,7 @@ def get_action_details(actid):
        @param actid: Action Identifier Code (sactname).
        @return: tuple of tuples (one tuple per action row): (sactname,lactname,dir,statustext,cd,md).
     """
-    q = """SELECT act.sactname, act.lactname, act.dir, act.statustext, act.cd, act.md FROM sbmACTION AS act WHERE act.sactname=%s"""
+    q = """SELECT act.sactname, act.lactname, act.dir, act.statustext, act.cd, act.md FROM `sbmACTION` AS act WHERE act.sactname=%s"""
     return run_sql(q, (actid,))
 
 def get_actid_actname_allactions():
@@ -484,7 +484,7 @@ def get_actid_actname_allactions():
        in the WebSubmit database.
        @return: tuple of tuples: (actid,actname)
     """
-    q = """SELECT sactname,lactname FROM sbmACTION ORDER BY sactname ASC"""
+    q = """SELECT sactname,lactname FROM `sbmACTION` ORDER BY sactname ASC"""
     return run_sql(q)
 
 def get_number_actions_with_actid(actid):
@@ -492,7 +492,7 @@ def get_number_actions_with_actid(actid):
        @param actid: action id (sactname) to query for
        @return: an integer count of the number of actions in the websubmit database for this actid.
     """
-    q = """SELECT COUNT(sactname) FROM sbmACTION WHERE sactname=%s"""
+    q = """SELECT COUNT(sactname) FROM `sbmACTION` WHERE sactname=%s"""
     return int(run_sql(q, (actid,))[0][0])
 
 def insert_action_details(actid, actname, working_dir, status_text):
@@ -509,7 +509,7 @@ def insert_action_details(actid, actname, working_dir, status_text):
     numrows_actid = get_number_actions_with_actid(actid)
     if numrows_actid == 0:
         # insert new action:
-        q = """INSERT INTO sbmACTION (lactname,sactname,dir,cd,md,actionbutton,statustext) VALUES (%s,%s,%s,CURDATE(),CURDATE(),NULL,%s)"""
+        q = """INSERT INTO `sbmACTION` (lactname,sactname,dir,cd,md,actionbutton,statustext) VALUES (%s,%s,%s,CURDATE(),CURDATE(),NULL,%s)"""
         run_sql(q, (actname, actid, working_dir, status_text))
         return 0 # Everything is OK
     else:
@@ -524,12 +524,12 @@ def get_number_jschecks_with_chname(chname):
        @param chname: Check name/id (chname) to query for
        @return: an integer count of the number of Checks in the WebSubmit database for this chname.
     """
-    q = """SELECT COUNT(chname) FROM sbmCHECKS where chname=%s"""
+    q = """SELECT COUNT(chname) FROM `sbmCHECKS` where chname=%s"""
     return int(run_sql(q, (chname,))[0][0])
 
 def get_all_jscheck_names():
     """Return a list of the names of all WebSubmit JSChecks"""
-    q = """SELECT DISTINCT(chname) FROM sbmCHECKS ORDER BY chname ASC"""
+    q = """SELECT DISTINCT(chname) FROM `sbmCHECKS` ORDER BY chname ASC"""
     res = run_sql(q)
     return map(lambda x: str(x[0]), res)
 
@@ -538,7 +538,7 @@ def get_chname_alljschecks():
        in the WebSubmit database.
        @return: tuple of tuples: (chname)
     """
-    q = """SELECT chname FROM sbmCHECKS ORDER BY chname ASC"""
+    q = """SELECT chname FROM `sbmCHECKS` ORDER BY chname ASC"""
     return run_sql(q)
 
 def get_jscheck_details(chname):
@@ -546,7 +546,7 @@ def get_jscheck_details(chname):
        @param chname: Check name/Identifier Code (chname).
        @return: tuple of tuples (one tuple per check row): (chname,chdesc,cd,md).
     """
-    q = """SELECT ch.chname, ch.chdesc, ch.cd, ch.md FROM sbmCHECKS AS ch WHERE ch.chname=%s"""
+    q = """SELECT ch.chname, ch.chdesc, ch.cd, ch.md FROM `sbmCHECKS` AS ch WHERE ch.chname=%s"""
     return run_sql(q, (chname,))
 
 def insert_jscheck_details(chname, chdesc):
@@ -561,7 +561,7 @@ def insert_jscheck_details(chname, chdesc):
     numrows_chname = get_number_jschecks_with_chname(chname)
     if numrows_chname == 0:
         # insert new Check:
-        q = """INSERT INTO sbmCHECKS (chname,chdesc,cd,md,chefi1,chefi2) VALUES (%s,%s,CURDATE(),CURDATE(),NULL,NULL)"""
+        q = """INSERT INTO `sbmCHECKS` (chname,chdesc,cd,md,chefi1,chefi2) VALUES (%s,%s,CURDATE(),CURDATE(),NULL,NULL)"""
         run_sql(q, (chname, chdesc))
         return 0 # Everything is OK
     else:
@@ -578,7 +578,7 @@ def update_jscheck_details(chname, chdesc):
     # Check record with code 'chname' does not already exist:
     numrows_chname = get_number_jschecks_with_chname(chname)
     if numrows_chname == 1:
-        q = """UPDATE sbmCHECKS SET chdesc=%s, md=CURDATE() WHERE chname=%s"""
+        q = """UPDATE `sbmCHECKS` SET chdesc=%s, md=CURDATE() WHERE chname=%s"""
         run_sql(q, (chdesc, chname))
         return 0 # Everything is OK
     else:
@@ -592,12 +592,12 @@ def get_function_description(function):
        the function with the name held in the "function" parameter.
        @return: tuple of tuple (for one function): ((description,))
     """
-    q = """SELECT description FROM sbmALLFUNCDESCR where function=%s"""
+    q = """SELECT description FROM `sbmALLFUNCDESCR` where function=%s"""
     return run_sql(q, (function,))
 
 def get_function_parameter_vals_doctype(doctype, paramlist):
     res = []
-    q = """SELECT name, value FROM sbmPARAMETERS WHERE doctype=%s AND name=%s"""
+    q = """SELECT name, value FROM `sbmPARAMETERS` WHERE doctype=%s AND name=%s"""
     for par in paramlist:
         r = run_sql(q, (doctype, par))
         if len(r) > 0:
@@ -611,7 +611,7 @@ def get_function_parameters(function):
        @param function: the function name
        @return: tuple of tuple ((param,))
     """
-    q = """SELECT param FROM sbmFUNDESC WHERE function=%s ORDER BY param ASC"""
+    q = """SELECT param FROM `sbmFUNDESC` WHERE function=%s ORDER BY param ASC"""
     return run_sql(q, (function,))
 
 def get_number_parameters_with_paramname_funcname(funcname, paramname):
@@ -621,21 +621,21 @@ def get_number_parameters_with_paramname_funcname(funcname, paramname):
        @param paramname: name of the parameter whose instances for the given function are to be counted.
        @return: an integer count of the number of parameters matching the criteria.
     """
-    q = """SELECT COUNT(param) FROM sbmFUNDESC WHERE function=%s AND param=%s"""
+    q = """SELECT COUNT(param) FROM `sbmFUNDESC` WHERE function=%s AND param=%s"""
     return int(run_sql(q, (funcname, paramname))[0][0])
 
 def get_distinct_paramname_all_function_parameters():
     """Get the names of all function parameters.
        @return: tuple of tuples: (param,)
     """
-    q = """SELECT DISTINCT(param) FROM sbmFUNDESC ORDER BY param ASC"""
+    q = """SELECT DISTINCT(param) FROM `sbmFUNDESC` ORDER BY param ASC"""
     return run_sql(q)
 
 def get_distinct_paramname_all_websubmit_parameters():
     """Get the names of all WEBSUBMIT parameters (i.e. parameters that are used somewhere by WebSubmit actions.
        @return: tuple of tuples (param,)
     """
-    q = """SELECT DISTINCT(name) FROM sbmPARAMETERS ORDER BY name ASC"""
+    q = """SELECT DISTINCT(name) FROM `sbmPARAMETERS` ORDER BY name ASC"""
     return run_sql(q)
 
 def get_distinct_paramname_all_websubmit_function_parameters():
@@ -716,19 +716,19 @@ def regulate_score_of_all_functions_in_step_to_ascending_multiples_of_10_for_sub
 
 def get_number_of_functions_with_functionname_in_submission_at_step_and_score(doctype, action, function, step, score):
     """Get the number or rows for a particular function at a given step and score of a doctype submission"""
-    q = """SELECT COUNT(doctype) FROM sbmFUNCTIONS where doctype=%s AND action=%s AND function=%s AND step=%s AND score=%s"""
+    q = """SELECT COUNT(doctype) FROM `sbmFUNCTIONS` where doctype=%s AND action=%s AND function=%s AND step=%s AND score=%s"""
     return int(run_sql(q, (doctype, action, function, step, score))[0][0])
 
 def get_number_functions_doctypesubmission_step_score(doctype, action, step, score):
     """Get the number or rows for a particular function at a given step and score of a doctype submission"""
-    q = """SELECT COUNT(doctype) FROM sbmFUNCTIONS where doctype=%s AND action=%s AND step=%s AND score=%s"""
+    q = """SELECT COUNT(doctype) FROM `sbmFUNCTIONS` where doctype=%s AND action=%s AND step=%s AND score=%s"""
     return int(run_sql(q, (doctype, action, step, score))[0][0])
 
 def update_step_score_doctypesubmission_function(doctype, action, function, oldstep, oldscore, newstep, newscore):
     numrows_function = get_number_of_functions_with_functionname_in_submission_at_step_and_score(doctype=doctype, action=action,
                                                                                       function=function, step=oldstep, score=oldscore)
     if numrows_function == 1:
-        q = """UPDATE sbmFUNCTIONS SET step=%s, score=%s WHERE doctype=%s AND action=%s AND function=%s AND step=%s AND score=%s"""
+        q = """UPDATE `sbmFUNCTIONS` SET step=%s, score=%s WHERE doctype=%s AND action=%s AND function=%s AND step=%s AND score=%s"""
         run_sql(q, (newstep, newscore, doctype, action, function, oldstep, oldscore))
         return 0  ## Everything OK
     else:
@@ -808,12 +808,12 @@ def add_10_to_score_of_all_functions_in_step_of_submission(doctype, action, step
        @param step: (integer) the step in which all function scores are to be incremented by 10
        @return: None
     """
-    q = """UPDATE sbmFUNCTIONS SET score=score+10 WHERE doctype=%s AND action=%s AND step=%s"""
+    q = """UPDATE `sbmFUNCTIONS` SET score=score+10 WHERE doctype=%s AND action=%s AND step=%s"""
     run_sql(q, (doctype, action, step))
     return
 
 def update_score_of_allfunctions_from_score_within_step_in_submission_reduce_by_val(doctype, action, step, fromscore, val):
-    q = """UPDATE sbmFUNCTIONS SET score=score-%s WHERE doctype=%s AND action=%s AND step=%s AND score >= %s"""
+    q = """UPDATE `sbmFUNCTIONS` SET score=score-%s WHERE doctype=%s AND action=%s AND step=%s AND score >= %s"""
     run_sql(q, (val, doctype, action, step, fromscore))
     return
 
@@ -826,7 +826,7 @@ def add_10_to_score_of_all_functions_in_step_of_submission_and_with_score_equalt
        @param fromscore: (integer) the score from which all scores are incremented by 10
        @return: None
     """
-    q = """UPDATE sbmFUNCTIONS SET score=score+10 WHERE doctype=%s AND action=%s AND step=%s AND score >= %s"""
+    q = """UPDATE `sbmFUNCTIONS` SET score=score+10 WHERE doctype=%s AND action=%s AND step=%s AND score >= %s"""
     run_sql(q, (doctype, action, step, fromscore))
     return
 
@@ -840,7 +840,7 @@ def get_number_of_submission_functions_in_step_between_two_scores(doctype, actio
        @param score2: (integer) the second score boundary
        @return: (integer) the number of functions found
     """
-    q = """SELECT COUNT(doctype) FROM sbmFUNCTIONS WHERE doctype=%s AND action=%s AND step=%s AND (score BETWEEN %s AND %s)"""
+    q = """SELECT COUNT(doctype) FROM `sbmFUNCTIONS` WHERE doctype=%s AND action=%s AND step=%s AND (score BETWEEN %s AND %s)"""
     return int(run_sql(q, (doctype, action, step,
                            ((score1 <= score2 and score1) or (score2)),
                            ((score1 <= score2 and score2) or (score1))))[0][0])
@@ -1155,7 +1155,7 @@ def get_names_of_all_functions():
        The function names will be sorted in ascending alphabetical order.
        @return: a list of strings
     """
-    q = """SELECT function FROM sbmALLFUNCDESCR ORDER BY function ASC"""
+    q = """SELECT function FROM `sbmALLFUNCDESCR` ORDER BY function ASC"""
     res = run_sql(q)
     return map(lambda x: str(x[0]), res)
 
@@ -1164,7 +1164,7 @@ def get_funcname_funcdesc_allfunctions():
        description (description) for each WebSubmit function in the WebSubmit database.
        @return: tuple of tuples: ((function,description),(function,description)[,...])
     """
-    q = """SELECT function, description FROM sbmALLFUNCDESCR ORDER BY function ASC"""
+    q = """SELECT function, description FROM `sbmALLFUNCDESCR` ORDER BY function ASC"""
     return run_sql(q)
 
 def get_function_usage_details(function):
@@ -1182,9 +1182,9 @@ def get_function_usage_details(function):
             (doctype, docname, action id, action name, function-step, function-score)
     """
     q = """SELECT fun.doctype, dt.ldocname, fun.action, actn.lactname, fun.step, fun.score """ +\
-        """FROM sbmDOCTYPE AS dt LEFT JOIN sbmFUNCTIONS AS fun ON (fun.doctype=dt.sdocname) """ +\
-        """LEFT JOIN sbmIMPLEMENT as imp ON (fun.action=imp.actname AND fun.doctype=imp.docname) """ +\
-        """LEFT JOIN sbmACTION AS actn ON (actn.sactname=imp.actname) WHERE fun.function=%s """ +\
+        """FROM `sbmDOCTYPE` AS dt LEFT JOIN `sbmFUNCTIONS` AS fun ON (fun.doctype=dt.sdocname) """ +\
+        """LEFT JOIN `sbmIMPLEMENT` as imp ON (fun.action=imp.actname AND fun.doctype=imp.docname) """ +\
+        """LEFT JOIN `sbmACTION` AS actn ON (actn.sactname=imp.actname) WHERE fun.function=%s """ +\
         """ORDER BY dt.sdocname ASC, fun.action ASC, fun.step ASC, fun.score ASC"""
     return run_sql(q, (function,))
 
@@ -1193,7 +1193,7 @@ def get_number_of_functions_with_funcname(funcname):
        @param funcname: (string) the name of the function
        @return: an integer count of the number of Functions in the WebSubmit database for this function name.
     """
-    q = """SELECT COUNT(function) FROM sbmALLFUNCDESCR where function=%s"""
+    q = """SELECT COUNT(function) FROM `sbmALLFUNCDESCR` where function=%s"""
     return int(run_sql(q, (funcname,))[0][0])
 
 def insert_function_details(function, fundescr):
@@ -1201,7 +1201,7 @@ def insert_function_details(function, fundescr):
     numrows_function = get_number_of_functions_with_funcname(function)
     if numrows_function == 0:
         ## Insert new function
-        q = """INSERT INTO sbmALLFUNCDESCR (function, description) VALUES (%s, %s)"""
+        q = """INSERT INTO `sbmALLFUNCDESCR` (function, description) VALUES (%s, %s)"""
         run_sql(q, (function, fundescr))
         return 0 # Everything is OK
     else:
@@ -1217,7 +1217,7 @@ def update_function_description(funcname, funcdescr):
     numrows_function = get_number_of_functions_with_funcname(funcname)
     if numrows_function == 1:
         ## perform update of description
-        q = """UPDATE sbmALLFUNCDESCR SET description=%s WHERE function=%s"""
+        q = """UPDATE `sbmALLFUNCDESCR` SET description=%s WHERE function=%s"""
         run_sql(q, ( (funcdescr != "" and funcdescr) or (None), funcname ) )
         return 0 ## Everything OK
     else:
@@ -1233,7 +1233,7 @@ def delete_function_parameter(function, parameter_name):
     numrows_function_parameter = get_number_parameters_with_paramname_funcname(funcname=function, paramname=parameter_name)
     if numrows_function_parameter >= 1:
         ## perform deletion of parameter(s)
-        q = """DELETE FROM sbmFUNDESC WHERE function=%s AND param=%s"""
+        q = """DELETE FROM `sbmFUNDESC` WHERE function=%s AND param=%s"""
         run_sql(q, (function, parameter_name))
         return 0 ## Everything OK
     else:
@@ -1249,7 +1249,7 @@ def add_function_parameter(function, parameter_name):
     numrows_function_parameter = get_number_parameters_with_paramname_funcname(funcname=function, paramname=parameter_name)
     if numrows_function_parameter == 0:
         ## perform addition of parameter
-        q = """INSERT INTO sbmFUNDESC (function, param) VALUES (%s, %s)"""
+        q = """INSERT INTO `sbmFUNDESC` (function, param) VALUES (%s, %s)"""
         run_sql(q, (function, parameter_name))
         return 0 ## Everything OK
     else:
@@ -1262,7 +1262,7 @@ def get_number_elements_with_elname(elname):
        @param elname: Element name/id (name) to query for
        @return: an integer count of the number of Elements in the WebSubmit database for this elname.
     """
-    q = """SELECT COUNT(name) FROM sbmFIELDDESC where name=%s"""
+    q = """SELECT COUNT(name) FROM `sbmFIELDDESC` where name=%s"""
     return int(run_sql(q, (elname,))[0][0])
 
 def get_doctype_action_pagenb_for_submissions_using_element(elname):
@@ -1273,7 +1273,7 @@ def get_doctype_action_pagenb_for_submissions_using_element(elname):
                       "fidesc" in "sbmFIELD").
        @return: tuple of tuples (doctype, action, pagenb)
     """
-    q = """SELECT subm.docname, subm.actname, sf.pagenb FROM sbmIMPLEMENT AS subm LEFT JOIN sbmFIELD AS sf ON sf.subname=CONCAT(subm.actname, subm.docname) WHERE sf.fidesc=%s ORDER BY sf.subname ASC, sf.pagenb ASC"""
+    q = """SELECT subm.docname, subm.actname, sf.pagenb FROM `sbmIMPLEMENT` AS subm LEFT JOIN `sbmFIELD` AS sf ON sf.subname=CONCAT(subm.actname, subm.docname) WHERE sf.fidesc=%s ORDER BY sf.subname ASC, sf.pagenb ASC"""
     return run_sql(q, (elname,))
 
 def get_subname_pagenb_element_use(elname):
@@ -1284,7 +1284,7 @@ def get_subname_pagenb_element_use(elname):
                       "fidesc" in "sbmFIELD").
        @return: tuple of tuples (subname, pagenb)
     """
-    q = """SELECT sf.subname, sf.pagenb FROM sbmFIELD AS sf WHERE sf.fidesc=%s ORDER BY sf.subname ASC, sf.pagenb ASC"""
+    q = """SELECT sf.subname, sf.pagenb FROM `sbmFIELD` AS sf WHERE sf.fidesc=%s ORDER BY sf.subname ASC, sf.pagenb ASC"""
     return run_sql(q, (elname,))
 
 def get_elename_allelements():
@@ -1292,14 +1292,14 @@ def get_elename_allelements():
        element in the WebSubmit database.
        @return: tuple of tuples: (name)
     """
-    q = """SELECT name FROM sbmFIELDDESC ORDER BY name"""
+    q = """SELECT name FROM `sbmFIELDDESC` ORDER BY name"""
     return run_sql(q)
 
 def get_all_element_names():
     """Return a list of the names of all "elements" in the WebSubmit DB.
        @return: a list of strings, where each string is a WebSubmit element
     """
-    q = """SELECT DISTINCT(name) FROM sbmFIELDDESC ORDER BY name"""
+    q = """SELECT DISTINCT(name) FROM `sbmFIELDDESC` ORDER BY name"""
     res = run_sql(q)
     return map(lambda x: str(x[0]), res)
 
@@ -1310,7 +1310,7 @@ def get_element_details(elname):
                                                             val,fidesc,cd,md,modifytext)
     """
     q = "SELECT el.marccode, el.type, el.size, el.rows, el.cols, el.maxlength, " + \
-           "el.val, el.fidesc, el.cd, el.md, el.modifytext FROM sbmFIELDDESC AS el WHERE el.name=%s"
+           "el.val, el.fidesc, el.cd, el.md, el.modifytext FROM `sbmFIELDDESC` AS el WHERE el.name=%s"
     return run_sql(q, (elname,))
 
 def update_element_details(elname, elmarccode, eltype, elsize, elrows, elcols, elmaxlength, \
@@ -1333,7 +1333,7 @@ def update_element_details(elname, elmarccode, eltype, elsize, elrows, elcols, e
     # Check record with code 'elname' does not already exist:
     numrows_elname = get_number_elements_with_elname(elname)
     if numrows_elname == 1:
-        q = """UPDATE sbmFIELDDESC SET marccode=%s, type=%s, size=%s, rows=%s, cols=%s, maxlength=%s, """ +\
+        q = """UPDATE `sbmFIELDDESC` SET marccode=%s, type=%s, size=%s, rows=%s, cols=%s, maxlength=%s, """ +\
             """val=%s, fidesc=%s, modifytext=%s, md=CURDATE() WHERE name=%s"""
         run_sql(q, ( elmarccode,
                      (eltype != "" and eltype) or (None),
@@ -1371,7 +1371,7 @@ def insert_element_details(elname, elmarccode, eltype, elsize, elrows, elcols, \
     numrows_elname = get_number_elements_with_elname(elname)
     if numrows_elname == 0:
         # insert new Check:
-        q = """INSERT INTO sbmFIELDDESC (name, alephcode, marccode, type, size, rows, cols, """ +\
+        q = """INSERT INTO `sbmFIELDDESC` (name, alephcode, marccode, type, size, rows, cols, """ +\
             """maxlength, val, fidesc, cd, md, modifytext, fddfi2) VALUES(%s, NULL, """ +\
             """%s, %s, %s, %s, %s, %s, %s, %s, CURDATE(), CURDATE(), %s, NULL)"""
         run_sql(q, ( elname,
@@ -1397,7 +1397,7 @@ def get_docid_docname_alldoctypes():
        "doctype name" (ldocname) for each action in the WebSubmit database.
        @return: tuple of tuples: (docid,docname)
     """
-    q = """SELECT sdocname, ldocname FROM sbmDOCTYPE ORDER BY ldocname ASC"""
+    q = """SELECT sdocname, ldocname FROM `sbmDOCTYPE` ORDER BY ldocname ASC"""
     return run_sql(q)
 
 def get_docid_docname_and_docid_alldoctypes():
@@ -1405,7 +1405,7 @@ def get_docid_docname_and_docid_alldoctypes():
        "doctype name" (ldocname) for each action in the WebSubmit database.
        @return: tuple of tuples: (docid,docname)
     """
-    q = """SELECT sdocname, CONCAT(ldocname, " [", sdocname, "]") FROM sbmDOCTYPE ORDER BY ldocname ASC"""
+    q = """SELECT sdocname, CONCAT(ldocname, " [", sdocname, "]") FROM `sbmDOCTYPE` ORDER BY ldocname ASC"""
     return run_sql(q)
 
 def get_number_doctypes_docid(docid):
@@ -1413,7 +1413,7 @@ def get_number_doctypes_docid(docid):
        @param docid: unique ID of document type whose instances are to be counted.
        @return: an integer count of the number of document types in the WebSubmit database for this doctype id.
     """
-    q = """SELECT COUNT(sdocname) FROM sbmDOCTYPE where sdocname=%s"""
+    q = """SELECT COUNT(sdocname) FROM `sbmDOCTYPE` where sdocname=%s"""
     return int(run_sql(q, (docid,))[0][0])
 
 def get_number_functions_doctype(doctype):
@@ -1421,7 +1421,7 @@ def get_number_functions_doctype(doctype):
        @param doctype: unique ID of doctype for which the number of functions are to be counted
        @return: an integer count of the number of functions in the WebSubmit database for this doctype.
     """
-    q = """SELECT COUNT(doctype) FROM sbmFUNCTIONS where doctype=%s"""
+    q = """SELECT COUNT(doctype) FROM `sbmFUNCTIONS` where doctype=%s"""
     return int(run_sql(q, (doctype,))[0][0])
 
 def get_number_functions_action_doctype(doctype, action):
@@ -1430,7 +1430,7 @@ def get_number_functions_action_doctype(doctype, action):
        @param action: the action (of the document type "doctype") that owns the functions to be counted
        @return: an integer count of the number of functions in the WebSubmit database for this doctype/action.
     """
-    q = """SELECT COUNT(doctype) FROM sbmFUNCTIONS where doctype=%s AND action=%s"""
+    q = """SELECT COUNT(doctype) FROM `sbmFUNCTIONS` where doctype=%s AND action=%s"""
     return int(run_sql(q, (doctype, action))[0][0])
 
 def get_number_of_functions_in_step_of_submission(doctype, action, step):
@@ -1440,7 +1440,7 @@ def get_number_of_functions_in_step_of_submission(doctype, action, step):
        @param step:   (integer) the number of the step in which the functions to be counted are situated
        @return: an integer count of the number of functions found within the step of the submission
     """
-    q = """SELECT COUNT(doctype) FROM sbmFUNCTIONS where doctype=%s AND action=%s AND step=%s"""
+    q = """SELECT COUNT(doctype) FROM `sbmFUNCTIONS` where doctype=%s AND action=%s AND step=%s"""
     return int(run_sql(q, (doctype, action, step))[0][0])
 
 def get_number_categories_doctype(doctype):
@@ -1448,7 +1448,7 @@ def get_number_categories_doctype(doctype):
        @param doctype: unique ID of doctype for which submission categories are to be counted
        @return: an integer count of the number of categories in the WebSubmit database for this doctype.
     """
-    q = """SELECT COUNT(doctype) FROM sbmCATEGORIES where doctype=%s"""
+    q = """SELECT COUNT(doctype) FROM `sbmCATEGORIES` where doctype=%s"""
     return int(run_sql(q, (doctype,))[0][0])
 
 def get_number_categories_doctype_category(doctype, categ):
@@ -1459,7 +1459,7 @@ def get_number_categories_doctype_category(doctype, categ):
        @param categ: the category ID of the category to be tested for
        @return: an integer count of the number of categories in the WebSubmit database for this doctype.
     """
-    q = """SELECT COUNT(sname) FROM sbmCATEGORIES where doctype=%s and sname=%s"""
+    q = """SELECT COUNT(sname) FROM `sbmCATEGORIES` where doctype=%s and sname=%s"""
     return int(run_sql(q, (doctype, categ))[0][0])
 
 def get_number_parameters_doctype(doctype):
@@ -1467,7 +1467,7 @@ def get_number_parameters_doctype(doctype):
        @param doctype: unique ID of doctype whose parameters are to be counted
        @return: an integer count of the number of parameters in the WebSubmit database for this doctype.
     """
-    q = """SELECT COUNT(name) FROM sbmPARAMETERS where doctype=%s"""
+    q = """SELECT COUNT(name) FROM `sbmPARAMETERS` where doctype=%s"""
     return int(run_sql(q, (doctype,))[0][0])
 
 def get_number_submissionfields_submissionnames(submission_names):
@@ -1481,7 +1481,7 @@ def get_number_submissionfields_submissionnames(submission_names):
         strings must be passed - where each string is a submission name.
        @return: an integer count of the number of fields in the WebSubmit database for these submission(s)
     """
-    q = """SELECT COUNT(subname) FROM sbmFIELD WHERE subname=%s"""
+    q = """SELECT COUNT(subname) FROM `sbmFIELD` WHERE subname=%s"""
     if type(submission_names) in (str, unicode):
         submission_names = (submission_names,)
     number_submissionnames = len(submission_names)
@@ -1494,8 +1494,8 @@ def get_number_submissionfields_submissionnames(submission_names):
     return int(run_sql(q, map(lambda x: str(x), submission_names))[0][0])
 
 def get_doctypeid_doctypes_implementing_action(action):
-    q = """SELECT doc.sdocname, CONCAT("[", doc.sdocname, "] ", doc.ldocname) FROM sbmDOCTYPE AS doc """\
-        """LEFT JOIN sbmIMPLEMENT AS subm ON """\
+    q = """SELECT doc.sdocname, CONCAT("[", doc.sdocname, "] ", doc.ldocname) FROM `sbmDOCTYPE` AS doc """\
+        """LEFT JOIN `sbmIMPLEMENT` AS subm ON """\
         """subm.docname = doc.sdocname """\
         """WHERE subm.actname=%s """\
         """ORDER BY doc.sdocname ASC"""
@@ -1506,7 +1506,7 @@ def get_number_submissions_doctype(doctype):
        @param doctype: the unique ID of the document type for which submissions are to be counted
        @return: an integer count of the number of submissions owned by this doctype
     """
-    q = """SELECT COUNT(subname) FROM sbmIMPLEMENT WHERE docname=%s"""
+    q = """SELECT COUNT(subname) FROM `sbmIMPLEMENT` WHERE docname=%s"""
     return int(run_sql(q, (doctype,))[0][0])
 
 def get_number_submissions_doctype_action(doctype, action):
@@ -1515,7 +1515,7 @@ def get_number_submissions_doctype_action(doctype, action):
        @param actname: the unique ID of the action that the submission implements, that is to be counted
        @return: an integer count of the number of submissions found for this doctype/action ID
     """
-    q = """SELECT COUNT(subname) FROM sbmIMPLEMENT WHERE docname=%s and actname=%s"""
+    q = """SELECT COUNT(subname) FROM `sbmIMPLEMENT` WHERE docname=%s and actname=%s"""
     return int(run_sql(q, (doctype, action))[0][0])
 
 def get_number_collection_doctype_entries_doctype(doctype):
@@ -1524,7 +1524,7 @@ def get_number_collection_doctype_entries_doctype(doctype):
        @return: an integer count of the number of collection-doctype entries found for the
         given document type
     """
-    q = """SELECT COUNT(id_father) FROM sbmCOLLECTION_sbmDOCTYPE WHERE id_son=%s"""
+    q = """SELECT COUNT(id_father) FROM `sbmCOLLECTION_sbmDOCTYPE` WHERE id_son=%s"""
     return int(run_sql(q, (doctype,))[0][0])
 
 def get_all_category_details_for_doctype(doctype):
@@ -1536,7 +1536,7 @@ def get_all_category_details_for_doctype(doctype):
        @return: (tuple) of tuples whereby each tuple is a row containing 3 items:
                             (short-name, long-name, position)
     """
-    q = """SELECT sname, lname, score FROM sbmCATEGORIES where doctype=%s ORDER BY score ASC,""" \
+    q = """SELECT sname, lname, score FROM `sbmCATEGORIES` where doctype=%s ORDER BY score ASC,""" \
         """ lname ASC"""
     return run_sql(q, (doctype,))
 
@@ -1545,7 +1545,7 @@ def get_all_categories_sname_lname_for_doctype_categsname(doctype, categsname):
        @param doctype: unique ID of doctype for which submission categories are to be counted
        @return: a tuple of tuples: (sname, lname)
     """
-    q = """SELECT sname, lname FROM sbmCATEGORIES where doctype=%s AND sname=%s"""
+    q = """SELECT sname, lname FROM `sbmCATEGORIES` where doctype=%s AND sname=%s"""
     return run_sql(q, (doctype, categsname) )
 
 def get_all_submissionnames_doctype(doctype):
@@ -1555,7 +1555,7 @@ def get_all_submissionnames_doctype(doctype):
        @param doctype: unique ID of the document type whose submissions are to be retrieved
        @return: tuple of tuples (subname,)
     """
-    q = """SELECT subname FROM sbmIMPLEMENT WHERE docname=%s ORDER BY subname ASC"""
+    q = """SELECT subname FROM `sbmIMPLEMENT` WHERE docname=%s ORDER BY subname ASC"""
     return run_sql(q, (doctype,))
 
 def get_actname_all_submissions_doctype(doctype):
@@ -1565,7 +1565,7 @@ def get_actname_all_submissions_doctype(doctype):
        @param doctype: unique ID of the document type whose actions are to be retrieved
        @return: tuple of tuples (actname,)
     """
-    q = """SELECT actname FROM sbmIMPLEMENT WHERE docname=%s ORDER BY actname ASC"""
+    q = """SELECT actname FROM `sbmIMPLEMENT` WHERE docname=%s ORDER BY actname ASC"""
     return run_sql(q, (doctype,))
 
 def get_submissiondetails_doctype_action(doctype, action):
@@ -1577,7 +1577,7 @@ def get_submissiondetails_doctype_action(doctype, action):
          stpage, endtext)
     """
     q = """SELECT subname, docname, actname, displayed, nbpg, cd, md, buttonorder, statustext, level, """ \
-        """score, stpage, endtxt FROM sbmIMPLEMENT WHERE docname=%s AND actname=%s"""
+        """score, stpage, endtxt FROM `sbmIMPLEMENT` WHERE docname=%s AND actname=%s"""
     return run_sql(q, (doctype, action))
 
 def get_all_categories_of_doctype_ordered_by_score_lname(doctype):
@@ -1587,7 +1587,7 @@ def get_all_categories_of_doctype_ordered_by_score_lname(doctype):
        @return: (tuple) or tuples, whereby each tuple is a row representing a category, with
         the following structure:  (sname, lname, score)
     """
-    qstr = """SELECT sname, lname, score FROM sbmCATEGORIES WHERE doctype=%s ORDER BY score ASC, lname ASC"""
+    qstr = """SELECT sname, lname, score FROM `sbmCATEGORIES` WHERE doctype=%s ORDER BY score ASC, lname ASC"""
     res = run_sql(qstr, (doctype,))
     return res
 
@@ -1598,7 +1598,7 @@ def update_score_of_doctype_category(doctype, categid, newscore):
        @param newscore: (integer) the score that the category is to be given
        @return: (integer) - 0 on update of row; 1 on failure to update.
     """
-    qstr = """UPDATE sbmCATEGORIES SET score=%s WHERE doctype=%s AND sname=%s"""
+    qstr = """UPDATE `sbmCATEGORIES` SET score=%s WHERE doctype=%s AND sname=%s"""
     res = run_sql(qstr, (newscore, doctype, categid))
     if int(res) > 0:
         ## row(s) were updated
@@ -1640,7 +1640,7 @@ def move_category_to_new_score(doctype, sourcecateg, destinationcatg):
         is to be moved.
        @return: (integer) 0 - successfully moved category; 1 - failed to correctly move category.
     """
-    qstr_increment_scores_from_scorex = """UPDATE sbmCATEGORIES SET score=score+1 WHERE doctype=%s AND score >= %s"""
+    qstr_increment_scores_from_scorex = """UPDATE `sbmCATEGORIES` SET score=score+1 WHERE doctype=%s AND score >= %s"""
     move_categ_from_score = mave_categ_to_score = -1
 
     ## get the (categid, lname, score) of all categories for this document type:
@@ -1690,7 +1690,7 @@ def move_category_by_one_place_in_score(doctype, categsname, direction):
        @param direction: (string) - the direction in which to move the category ('up' or 'down').
        @return: (integer) - 0 on successful move of category; 1 on failure to properly move category.
     """
-    qstr_update_score = """UPDATE sbmCATEGORIES SET score=%s WHERE doctype=%s AND score=%s"""
+    qstr_update_score = """UPDATE `sbmCATEGORIES` SET score=%s WHERE doctype=%s AND score=%s"""
     move_categ_score  = -1
 
     ## get the (categid, lname, score) of all categories for this document type:
@@ -1764,7 +1764,7 @@ def update_submissiondetails_doctype_action(doctype, action, displayed, buttonor
     numrows_submission = get_number_submissions_doctype_action(doctype, action)
     if numrows_submission == 1:
         ## there is only one row for this submission - can update
-        q = """UPDATE sbmIMPLEMENT SET md=CURDATE(), displayed=%s, buttonorder=%s, statustext=%s, level=%s, """\
+        q = """UPDATE `sbmIMPLEMENT` SET md=CURDATE(), displayed=%s, buttonorder=%s, statustext=%s, level=%s, """\
             """score=%s, stpage=%s, endtxt=%s WHERE docname=%s AND actname=%s"""
         run_sql(q, (displayed,
                     ((str(buttonorder).isdigit() and int(buttonorder) >= 0) and buttonorder) or (None),
@@ -1792,7 +1792,7 @@ def update_doctype_details(doctype, doctypename, doctypedescr):
     numrows_doctype = get_number_doctypes_docid(docid=doctype)
     if numrows_doctype == 1:
         ## doctype exists - perform update
-        q = """UPDATE sbmDOCTYPE SET ldocname=%s, description=%s, md=CURDATE() WHERE sdocname=%s"""
+        q = """UPDATE `sbmDOCTYPE` SET ldocname=%s, description=%s, md=CURDATE() WHERE sdocname=%s"""
         run_sql(q, (doctypename, doctypedescr, doctype))
         return 0  ## Everything OK
     else:
@@ -1808,7 +1808,7 @@ def get_submissiondetails_all_submissions_doctype(doctype):
          stpage, endtext)
     """
     q = """SELECT subname, docname, actname, displayed, nbpg, cd, md, buttonorder, statustext, level, """ \
-        """score, stpage, endtxt FROM sbmIMPLEMENT WHERE docname=%s ORDER BY actname ASC"""
+        """score, stpage, endtxt FROM `sbmIMPLEMENT` WHERE docname=%s ORDER BY actname ASC"""
     return run_sql(q, (doctype,))
 
 def delete_doctype(doctype):
@@ -1821,7 +1821,7 @@ def delete_doctype(doctype):
        @return: 0 (ZERO) if doctype was deleted successfully; 1 (ONE) if doctype remains after the
         deletion attempt.
     """
-    q = """DELETE FROM sbmDOCTYPE WHERE sdocname=%s"""
+    q = """DELETE FROM `sbmDOCTYPE` WHERE sdocname=%s"""
     run_sql(q, (doctype,))
     numrows_doctype = get_number_doctypes_docid(doctype)
     if numrows_doctype == 0:
@@ -1845,7 +1845,7 @@ def delete_collection_doctype_entry_doctype(doctype):
        @return: 0 (ZERO) if doctype was deleted successfully from collection-doctypes list;
         1 (ONE) if doctype remains in the collection-doctypes list after the deletion attempt
     """
-    q = """DELETE FROM sbmCOLLECTION_sbmDOCTYPE WHERE id_son=%s"""
+    q = """DELETE FROM `sbmCOLLECTION_sbmDOCTYPE` WHERE id_son=%s"""
     run_sql(q, (doctype,))
     numrows_coll_doctype_doctype = get_number_collection_doctype_entries_doctype(doctype)
     if numrows_coll_doctype_doctype == 0:
@@ -1868,7 +1868,7 @@ def delete_all_submissions_doctype(doctype):
        @return: 0 (ZERO) if all submissions are deleted successfully; 1 (ONE) if submissions remain after the
         delete has been performed (i.e. all submissions could not be deleted for some reason)
     """
-    q = """DELETE FROM sbmIMPLEMENT WHERE docname=%s"""
+    q = """DELETE FROM `sbmIMPLEMENT` WHERE docname=%s"""
     run_sql(q, (doctype,))
     numrows_submissionsdoctype = get_number_submissions_doctype(doctype)
     if numrows_submissionsdoctype == 0:
@@ -1892,7 +1892,7 @@ def delete_all_parameters_doctype(doctype):
        @return: 0 (ZERO) if all parameters are deleted successfully; 1 (ONE) if parameters remain after the
         delete has been performed (i.e. all parameters could not be deleted for some reason)
     """
-    q = """DELETE FROM sbmPARAMETERS WHERE doctype=%s"""
+    q = """DELETE FROM `sbmPARAMETERS` WHERE doctype=%s"""
     run_sql(q, (doctype,))
     numrows_paramsdoctype = get_number_parameters_doctype(doctype)
     if numrows_paramsdoctype == 0:
@@ -1911,12 +1911,12 @@ def delete_all_parameters_doctype(doctype):
             return 1
 
 def get_functionname_step_score_allfunctions_afterreference_doctypesubmission(doctype, action, step, score):
-    q = """SELECT function, step, score FROM sbmFUNCTIONS WHERE (doctype=%s AND action=%s) AND ((step=%s AND score > %s)""" \
+    q = """SELECT function, step, score FROM `sbmFUNCTIONS` WHERE (doctype=%s AND action=%s) AND ((step=%s AND score > %s)""" \
         """ OR (step > %s)) ORDER BY step ASC, score ASC"""
     return run_sql(q, (doctype, action, step, score, step))
 
 def get_functionname_step_score_allfunctions_beforereference_doctypesubmission(doctype, action, step, score):
-    q = """SELECT function, step, score FROM sbmFUNCTIONS WHERE (doctype=%s AND action=%s) AND ((step=%s AND score < %s)"""
+    q = """SELECT function, step, score FROM `sbmFUNCTIONS` WHERE (doctype=%s AND action=%s) AND ((step=%s AND score < %s)"""
     if step > 1:
         q += """ OR (step < %s)"""
     q += """) ORDER BY step ASC, score ASC"""
@@ -1933,7 +1933,7 @@ def get_functionname_step_score_allfunctions_doctypesubmission(doctype, action):
        @param action: the action ID of the submission whose function details ore to be retrieved
        @return: a tuple of tuples: ((function, step, score),(function, step, score),[...])
     """
-    q = """SELECT function, step, score FROM sbmFUNCTIONS where doctype=%s AND action=%s ORDER BY step ASC, score ASC"""
+    q = """SELECT function, step, score FROM `sbmFUNCTIONS` where doctype=%s AND action=%s ORDER BY step ASC, score ASC"""
     return run_sql(q, (doctype, action))
 
 def get_name_step_score_of_all_functions_in_step_of_submission(doctype, action, step):
@@ -1944,13 +1944,13 @@ def get_name_step_score_of_all_functions_in_step_of_submission(doctype, action, 
        @param step: (integer) the step in which the functions are located
        @return: a tuple of tuples (function-name, step, score)
     """
-    q = """SELECT function, step, score FROM sbmFUNCTIONS WHERE doctype=%s AND action=%s AND step=%s ORDER BY score ASC"""
+    q = """SELECT function, step, score FROM `sbmFUNCTIONS` WHERE doctype=%s AND action=%s AND step=%s ORDER BY score ASC"""
     res = run_sql(q, (doctype, action, step))
     return res
 
 def delete_function_doctypesubmission_step_score(doctype, action, function, step, score):
     """Delete a given function at a particular step/score for a given doctype submission"""
-    q = """DELETE FROM sbmFUNCTIONS WHERE doctype=%s AND action=%s AND function=%s AND step=%s AND score=%s"""
+    q = """DELETE FROM `sbmFUNCTIONS` WHERE doctype=%s AND action=%s AND function=%s AND step=%s AND score=%s"""
     run_sql(q, (doctype, action, function, step, score))
     numrows_function_doctypesubmission_step_score = \
                 get_number_of_functions_with_functionname_in_submission_at_step_and_score(doctype=doctype,
@@ -1978,7 +1978,7 @@ def delete_function_doctypesubmission_step_score(doctype, action, function, step
 def delete_the_function_at_step_and_score_from_a_submission(doctype, action, function, step, score):
 ## THIS SHOULD REPLACE "delete_function_doctypesubmission_step_score(doctype, action, function, step, score)"
     """Delete a given function at a particular step/score for a given submission"""
-    q = """DELETE FROM sbmFUNCTIONS WHERE doctype=%s AND action=%s AND function=%s AND step=%s AND score=%s"""
+    q = """DELETE FROM `sbmFUNCTIONS` WHERE doctype=%s AND action=%s AND function=%s AND step=%s AND score=%s"""
     run_sql(q, (doctype, action, function, step, score))
     numrows_deletedfunc = \
            get_number_of_functions_with_functionname_in_submission_at_step_and_score(doctype=doctype,
@@ -2020,7 +2020,7 @@ def delete_function_at_step_and_score_from_submission(doctype, action, function,
        @Exceptions raised:
          InvenioWebSubmitAdminWarningDeleteFailed - when unable to delete the function
     """
-    q = """DELETE FROM sbmFUNCTIONS WHERE doctype=%s AND action=%s AND function=%s AND step=%s AND score=%s"""
+    q = """DELETE FROM `sbmFUNCTIONS` WHERE doctype=%s AND action=%s AND function=%s AND step=%s AND score=%s"""
     run_sql(q, (doctype, action, function, step, score))
     numrows_function_at_stepscore = \
             get_number_of_functions_with_functionname_in_submission_at_step_and_score(doctype=doctype,
@@ -2060,7 +2060,7 @@ def delete_all_functions_in_step_of_submission(doctype, action, step):
        @Exceptions raised:
            InvenioWebSubmitAdminWarningDeleteFailed - when unable to delete some or all of the functions
     """
-    q = """DELETE FROM sbmFUNCTIONS WHERE doctype=%s AND action=%s AND step=%s"""
+    q = """DELETE FROM `sbmFUNCTIONS` WHERE doctype=%s AND action=%s AND step=%s"""
     run_sql(q, (doctype, action, step))
     numrows_functions_in_step = get_number_of_functions_in_step_of_submission(doctype=doctype,
                                                                               action=action,
@@ -2090,7 +2090,7 @@ def delete_all_functions_foraction_doctype(doctype, action):
         1 (ONE) if functions for the doctype/action remain after the delete has been performed (i.e.
         the functions could not be deleted for some reason)
     """
-    q = """DELETE FROM sbmFUNCTIONS WHERE doctype=%s AND action=%s"""
+    q = """DELETE FROM `sbmFUNCTIONS` WHERE doctype=%s AND action=%s"""
     run_sql(q, (doctype, action))
     numrows_functions_actiondoctype = get_number_functions_action_doctype(doctype=doctype, action=action)
     if numrows_functions_actiondoctype == 0:
@@ -2114,7 +2114,7 @@ def delete_all_functions_doctype(doctype):
        @return: 0 (ZERO) if all functions are deleted successfully; 1 (ONE) if functions remain after the
         delete has been performed (i.e. all functions could not be deleted for some reason)
     """
-    q = """DELETE FROM sbmFUNCTIONS WHERE doctype=%s"""
+    q = """DELETE FROM `sbmFUNCTIONS` WHERE doctype=%s"""
     run_sql(q, (doctype,))
     numrows_functionsdoctype = get_number_functions_doctype(doctype)
     if numrows_functionsdoctype == 0:
@@ -2138,10 +2138,10 @@ def clone_submissionfields_from_doctypesubmission_to_doctypesubmission(fromsub, 
     error_code = delete_all_submissionfields_submission(tosub)
     if error_code == 0:
         ## there are no fields for the submission "tosubm" - clone from "fromsub"
-        q = """INSERT INTO sbmFIELD (subname, pagenb, fieldnb, fidesc, fitext, level, sdesc, checkn, cd, md, """ \
+        q = """INSERT INTO `sbmFIELD` (subname, pagenb, fieldnb, fidesc, fitext, level, sdesc, checkn, cd, md, """ \
             """fiefi1, fiefi2) """\
             """(SELECT %s, pagenb, fieldnb, fidesc, fitext, level, sdesc, checkn, CURDATE(), CURDATE(), NULL, NULL """ \
-            """FROM sbmFIELD WHERE subname=%s)"""
+            """FROM `sbmFIELD` WHERE subname=%s)"""
         ## get number of submission fields for submission fromsub:
         numfields_fromsub = get_number_submissionfields_submissionnames(submission_names=fromsub)
         run_sql(q, (tosub, fromsub))
@@ -2167,8 +2167,8 @@ def clone_categories_fromdoctype_todoctype(fromdoctype, todoctype):
         ## first, count "fromdoctype"s categories:
         numcategs_fromdoctype = get_number_categories_doctype(fromdoctype)
         ## now perform the cloning:
-        q = """INSERT INTO sbmCATEGORIES (doctype, sname, lname, score) (SELECT %s, sname, lname, score """\
-            """FROM sbmCATEGORIES WHERE doctype=%s)"""
+        q = """INSERT INTO `sbmCATEGORIES` (doctype, sname, lname, score) (SELECT %s, sname, lname, score """\
+            """FROM `sbmCATEGORIES` WHERE doctype=%s)"""
         run_sql(q, (todoctype, fromdoctype))
         ## get number categories for "todoctype" (should be the same as "fromdoctype" if the cloning was successful):
         numcategs_todoctype = get_number_categories_doctype(todoctype)
@@ -2256,7 +2256,7 @@ def insert_function_into_submission_at_step_and_score(doctype, action, function,
     numrows_function = get_number_of_functions_with_funcname(function)
     if numrows_function > 0:
         ## perform the insert
-        q = """INSERT INTO sbmFUNCTIONS (doctype, action, function, step, score) VALUES(%s, %s, %s, %s, %s)"""
+        q = """INSERT INTO `sbmFUNCTIONS` (doctype, action, function, step, score) VALUES(%s, %s, %s, %s, %s)"""
         run_sql(q, (doctype, action, function, step, score))
         return
     else:
@@ -2274,8 +2274,8 @@ def clone_functions_foraction_fromdoctype_todoctype(fromdoctype, todoctype, acti
         ## count fromdoctype's functions for the given action
         numrows_functions_action_fromdoctype = get_number_functions_action_doctype(doctype=fromdoctype, action=action)
         ## perform the cloning:
-        q = """INSERT INTO sbmFUNCTIONS (doctype, action, function, score, step) (SELECT %s, action, function, """ \
-            """score, step FROM sbmFUNCTIONS WHERE doctype=%s AND action=%s)"""
+        q = """INSERT INTO `sbmFUNCTIONS` (doctype, action, function, score, step) (SELECT %s, action, function, """ \
+            """score, step FROM `sbmFUNCTIONS` WHERE doctype=%s AND action=%s)"""
         run_sql(q, (todoctype, fromdoctype, action))
         ## get number of functions for todoctype/action (these have just been cloned these from fromdoctype/action, so
         ## the counts should be the same)
@@ -2297,9 +2297,9 @@ def get_number_functionparameters_for_action_doctype(action, doctype):
        @return: an integer count of the number of parameters associated with the given action
         of the given document type
     """
-    q = """SELECT COUNT(DISTINCT(par.name)) FROM sbmFUNDESC AS fundesc """ \
-           """LEFT JOIN sbmPARAMETERS AS par ON fundesc.param = par.name """ \
-           """LEFT JOIN sbmFUNCTIONS AS func ON par.doctype = func.doctype AND fundesc.function = func.function """ \
+    q = """SELECT COUNT(DISTINCT(par.name)) FROM `sbmFUNDESC` AS fundesc """ \
+           """LEFT JOIN `sbmPARAMETERS` AS par ON fundesc.param = par.name """ \
+           """LEFT JOIN `sbmFUNCTIONS` AS func ON par.doctype = func.doctype AND fundesc.function = func.function """ \
            """WHERE par.doctype=%s AND func.action=%s"""
     return int(run_sql(q, (doctype, action))[0][0])
 
@@ -2323,7 +2323,7 @@ def delete_functionparameters_doctype_submission(doctype, action):
     delete_params = _get_list_params_to_delete(potential_delete_params=params_doctype_action, keep_params=params_to_keep)
     ## now, if there are parameters to delete, do it:
     if len(delete_params) > 0:
-        q = """DELETE FROM sbmPARAMETERS WHERE doctype=%s AND (name=%s"""
+        q = """DELETE FROM `sbmPARAMETERS` WHERE doctype=%s AND (name=%s"""
         if len(delete_params) > 1:
             for i in range(1, len(delete_params)):
                 q += """ OR name=%s"""
@@ -2355,7 +2355,7 @@ def update_value_of_function_parameter_for_doctype(doctype, paramname, paramval)
            InvenioWebSubmitAdminTooManyRows - when multiple rows found for parameter
            InvenioWebSubmitAdminNoRowsFound - when no rows found for parameter
     """
-    q = """UPDATE sbmPARAMETERS SET value=%s WHERE doctype=%s AND name=%s"""
+    q = """UPDATE `sbmPARAMETERS` SET value=%s WHERE doctype=%s AND name=%s"""
     ## get number of rows found for the parameter:
     numrows_param = get_numberparams_doctype_paramname(doctype=doctype, paramname=paramname)
     if numrows_param == 1:
@@ -2383,14 +2383,14 @@ def get_parameters_name_and_value_for_function_of_doctype(doctype, function):
        @param function: the name of the function from which the parameters names/values are to be retrieved
        @return: a tuple of 2-celled tuples, each tuple containing 2 strings: (parameter-name, parameter-value)
     """
-    q = """SELECT param.name, param.value FROM sbmPARAMETERS AS param """\
-        """LEFT JOIN sbmFUNDESC AS func ON func.param=param.name """\
+    q = """SELECT param.name, param.value FROM `sbmPARAMETERS` AS param """\
+        """LEFT JOIN `sbmFUNDESC` AS func ON func.param=param.name """\
         """WHERE func.function=%s AND param.doctype=%s """\
         """ORDER BY param.name ASC"""
     return run_sql(q, (function, doctype))
 
 def get_value_of_parameter_for_doctype(doctype, parameter):
-    q = """SELECT value FROM sbmPARAMETERS WHERE doctype=%s AND name=%s"""
+    q = """SELECT value FROM `sbmPARAMETERS` WHERE doctype=%s AND name=%s"""
     res = run_sql(q, (doctype, parameter))
     if len(res) > 0:
         return res[0][0]
@@ -2404,9 +2404,9 @@ def get_functionparameternames_doctype_action(doctype, action):
        @return: a tuple of tuples, where each tuple represents a parameter name:
         (parameter name, parameter value, doctype)
     """
-    q = """SELECT DISTINCT(par.name) FROM sbmFUNDESC AS fundesc """ \
-           """LEFT JOIN sbmPARAMETERS AS par ON fundesc.param = par.name """ \
-           """LEFT JOIN sbmFUNCTIONS AS func ON par.doctype = func.doctype AND fundesc.function = func.function """ \
+    q = """SELECT DISTINCT(par.name) FROM `sbmFUNDESC` AS fundesc """ \
+           """LEFT JOIN `sbmPARAMETERS` AS par ON fundesc.param = par.name """ \
+           """LEFT JOIN `sbmFUNCTIONS` AS func ON par.doctype = func.doctype AND fundesc.function = func.function """ \
            """WHERE par.doctype=%s AND func.action=%s """\
            """GROUP BY par.name """ \
            """ORDER BY fundesc.function ASC, par.name ASC"""
@@ -2419,9 +2419,9 @@ def get_functionparameternames_doctype_not_action(doctype, action):
        @return: a tuple of tuples, where each tuple represents a parameter name:
         (parameter name, parameter value, doctype)
     """
-    q = """SELECT DISTINCT(par.name) FROM sbmFUNDESC AS fundesc """ \
-           """LEFT JOIN sbmPARAMETERS AS par ON fundesc.param = par.name """ \
-           """LEFT JOIN sbmFUNCTIONS AS func ON par.doctype = func.doctype AND fundesc.function = func.function """ \
+    q = """SELECT DISTINCT(par.name) FROM `sbmFUNDESC` AS fundesc """ \
+           """LEFT JOIN `sbmPARAMETERS` AS par ON fundesc.param = par.name """ \
+           """LEFT JOIN `sbmFUNCTIONS` AS func ON par.doctype = func.doctype AND fundesc.function = func.function """ \
            """WHERE par.doctype=%s AND func.action <> %s """\
            """GROUP BY par.name """ \
            """ORDER BY fundesc.function ASC, par.name ASC"""
@@ -2434,9 +2434,9 @@ def get_functionparameters_for_action_doctype(action, doctype):
        @return: a tuple of tuples, where each tuple represents a parameter/value:
         (parameter name, parameter value, doctype)
     """
-    q = """SELECT DISTINCT(par.name), par.value, par.doctype FROM sbmFUNDESC AS fundesc """ \
-           """LEFT JOIN sbmPARAMETERS AS par ON fundesc.param = par.name """ \
-           """LEFT JOIN sbmFUNCTIONS AS func ON par.doctype = func.doctype AND fundesc.function = func.function """ \
+    q = """SELECT DISTINCT(par.name), par.value, par.doctype FROM `sbmFUNDESC` AS fundesc """ \
+           """LEFT JOIN `sbmPARAMETERS` AS par ON fundesc.param = par.name """ \
+           """LEFT JOIN `sbmFUNCTIONS` AS func ON par.doctype = func.doctype AND fundesc.function = func.function """ \
            """WHERE par.doctype=%s AND func.action=%s """\
            """GROUP BY par.name """ \
            """ORDER BY fundesc.function ASC, par.name ASC"""
@@ -2449,16 +2449,16 @@ def get_numberparams_doctype_paramname(doctype, paramname):
        @return: an integer count of the number of times this parameter is found for the document type
         "doctype"
     """
-    q = """SELECT COUNT(name) FROM sbmPARAMETERS WHERE doctype=%s AND name=%s"""
+    q = """SELECT COUNT(name) FROM `sbmPARAMETERS` WHERE doctype=%s AND name=%s"""
     return int(run_sql(q, (doctype, paramname))[0][0])
 
 def get_doctype_docname_descr_cd_md_fordoctype(doctype):
-    q = """SELECT sdocname, ldocname, description, cd, md FROM sbmDOCTYPE WHERE sdocname=%s"""
+    q = """SELECT sdocname, ldocname, description, cd, md FROM `sbmDOCTYPE` WHERE sdocname=%s"""
     return run_sql(q, (doctype,))
 
 def get_actions_sname_lname_not_linked_to_doctype(doctype):
-    q = """SELECT actn.sactname, CONCAT("[", actn.sactname, "] ", actn.lactname) FROM sbmACTION AS actn """ \
-        """LEFT JOIN sbmIMPLEMENT AS subm ON subm.docname=%s AND actn.sactname=subm.actname """ \
+    q = """SELECT actn.sactname, CONCAT("[", actn.sactname, "] ", actn.lactname) FROM `sbmACTION` AS actn """ \
+        """LEFT JOIN `sbmIMPLEMENT` AS subm ON subm.docname=%s AND actn.sactname=subm.actname """ \
         """WHERE subm.actname IS NULL"""
     return run_sql(q, (doctype,))
 
@@ -2470,7 +2470,7 @@ def insert_parameter_doctype(doctype, paramname, paramval):
        @param paramval:
        @return:
     """
-    q = """INSERT INTO sbmPARAMETERS (doctype, name, value) VALUES (%s, %s, %s)"""
+    q = """INSERT INTO `sbmPARAMETERS` (doctype, name, value) VALUES (%s, %s, %s)"""
     numrows_paramdoctype = get_numberparams_doctype_paramname(doctype=doctype, paramname=paramname)
     if numrows_paramdoctype == 0:
         ## go ahead and insert
@@ -2508,7 +2508,7 @@ def update_category_description_doctype_categ(doctype, categ, categdescr):
     numrows_category_doctype = get_number_categories_doctype_category(doctype=doctype, categ=categ)
     if numrows_category_doctype == 1:
         ## perform update of description
-        q = """UPDATE sbmCATEGORIES SET lname=%s WHERE doctype=%s AND sname=%s"""
+        q = """UPDATE `sbmCATEGORIES` SET lname=%s WHERE doctype=%s AND sname=%s"""
         run_sql(q, (categdescr, doctype, categ))
         return 0 ## Everything OK
     else:
@@ -2522,8 +2522,8 @@ def insert_category_into_doctype(doctype, categ, categdescr):
        @param categdescr: (string) - the new category's description.
        @return: (integer) An error code: 0 on successful insert; 1 on failure to insert.
     """
-    qstr = """INSERT INTO sbmCATEGORIES (doctype, sname, lname, score) """\
-           """(SELECT %s, %s, %s, COUNT(sname)+1 FROM sbmCATEGORIES WHERE doctype=%s)"""
+    qstr = """INSERT INTO `sbmCATEGORIES` (doctype, sname, lname, score) """\
+           """(SELECT %s, %s, %s, COUNT(sname)+1 FROM `sbmCATEGORIES` WHERE doctype=%s)"""
     ## does this category already exist for this document type?
     numrows_categ = get_number_categories_doctype_category(doctype=doctype, categ=categ)
     if numrows_categ == 0:
@@ -2540,7 +2540,7 @@ def delete_category_doctype(doctype, categ):
        @param categ: the name/ID of the category to be deleted from doctype
        @return: 0 (ZERO) if the category was successfully deleted from this doctype; 1 (ONE) not;
     """
-    q = """DELETE FROM sbmCATEGORIES WHERE doctype=%s and sname=%s"""
+    q = """DELETE FROM `sbmCATEGORIES` WHERE doctype=%s and sname=%s"""
     run_sql(q, (doctype, categ))
     ## check to see whether this category still exists for the doctype:
     numrows_categorydoctype = get_number_categories_doctype_category(doctype=doctype, categ=categ)
@@ -2569,7 +2569,7 @@ def delete_all_categories_doctype(doctype):
        @return: 0 (ZERO) if all categories for this doctype are deleted successfully; 1 (ONE) if categories
         remain after the delete has been performed (i.e. all categories could not be deleted for some reason)
     """
-    q = """DELETE FROM sbmCATEGORIES WHERE doctype=%s"""
+    q = """DELETE FROM `sbmCATEGORIES` WHERE doctype=%s"""
     run_sql(q, (doctype,))
     numrows_categoriesdoctype = get_number_categories_doctype(doctype)
     if numrows_categoriesdoctype == 0:
@@ -2596,7 +2596,7 @@ def delete_all_submissionfields_submission(subname):
         fields remain after the deletion was performed (i.e. for some reason it was not possible to delete
         all fields for the submission).
     """
-    q = """DELETE FROM sbmFIELD WHERE subname=%s"""
+    q = """DELETE FROM `sbmFIELD` WHERE subname=%s"""
     run_sql(q, (subname,))
     numrows_submissionfields_subname = get_number_submissionfields_submissionnames(subname)
     if numrows_submissionfields_subname == 0:
@@ -2624,7 +2624,7 @@ def delete_all_submissionfields_doctype(doctype):
     number_submissions_doctype = len(all_submissions_doctype)
     if number_submissions_doctype > 0:
         ## for each of the submissions, delete the submission fields
-        q = """DELETE FROM sbmFIELD WHERE subname=%s"""
+        q = """DELETE FROM `sbmFIELD` WHERE subname=%s"""
         if number_submissions_doctype > 1:
             for i in range(1,number_submissions_doctype):
                 ## Ensure that we delete all elements used by all submissions for the doctype in question:
@@ -2657,7 +2657,7 @@ def delete_submissiondetails_doctype(doctype, action):
        @return: 0 (ZERO) if all submissions are deleted successfully; 1 (ONE) if submissions remain after the
         delete has been performed (i.e. all submissions could not be deleted for some reason)
     """
-    q = """DELETE FROM sbmIMPLEMENT WHERE docname=%s AND actname=%s"""
+    q = """DELETE FROM `sbmIMPLEMENT` WHERE docname=%s AND actname=%s"""
     run_sql(q, (doctype, action))
     numrows_submissiondoctype = get_number_submissions_doctype_action(doctype, action)
     if numrows_submissiondoctype == 0:
@@ -2681,7 +2681,7 @@ def insert_doctype_details(doctype, doctypename, doctypedescr):
     numrows_doctype = get_number_doctypes_docid(doctype)
     if numrows_doctype == 0:
         # insert new document type:
-        q = """INSERT INTO sbmDOCTYPE (ldocname, sdocname, cd, md, description) VALUES (%s, %s, CURDATE(), CURDATE(), %s)"""
+        q = """INSERT INTO `sbmDOCTYPE` (ldocname, sdocname, cd, md, description) VALUES (%s, %s, CURDATE(), CURDATE(), %s)"""
         run_sql(q, (doctypename, doctype, (doctypedescr != "" and doctypedescr) or (None)))
         return 0 # Everything is OK
     else:
@@ -2691,9 +2691,9 @@ def insert_submission_details_clonefrom_submission(addtodoctype, action, clonefr
     numrows_submission_addtodoctype = get_number_submissions_doctype_action(addtodoctype, action)
     if numrows_submission_addtodoctype == 0:
         ## submission does not exist for "addtodoctype" - insert it
-        q = """INSERT INTO sbmIMPLEMENT (docname, actname, displayed, subname, nbpg, cd, md, buttonorder, statustext, level, """ \
+        q = """INSERT INTO `sbmIMPLEMENT` (docname, actname, displayed, subname, nbpg, cd, md, buttonorder, statustext, level, """ \
             """score, stpage, endtxt) (SELECT %s, %s, displayed, %s, nbpg, CURDATE(), CURDATE(), IFNULL(buttonorder, 100), statustext, level, """ \
-            """score, stpage, endtxt FROM sbmIMPLEMENT WHERE docname=%s AND actname=%s LIMIT 1)"""
+            """score, stpage, endtxt FROM `sbmIMPLEMENT` WHERE docname=%s AND actname=%s LIMIT 1)"""
         run_sql(q, (addtodoctype, action, "%s%s" % (action, addtodoctype), clonefromdoctype, action))
         return 0 ## cloning executed - everything OK
     else:
@@ -2717,7 +2717,7 @@ def insert_submission_details(doctype, action, displayed, nbpg, buttonorder, sta
     numrows_submission = get_number_submissions_doctype_action(doctype, action)
     if numrows_submission == 0:
         ## this submission does not exist for doctype - insert it
-        q = """INSERT INTO sbmIMPLEMENT (docname, actname, displayed, subname, nbpg, cd, md, buttonorder, statustext, level, """ \
+        q = """INSERT INTO `sbmIMPLEMENT` (docname, actname, displayed, subname, nbpg, cd, md, buttonorder, statustext, level, """ \
             """score, stpage, endtxt) VALUES(%s, %s, %s, %s, %s, CURDATE(), CURDATE(), %s, %s, %s, %s, %s, %s)"""
         run_sql(q, (doctype,
                     action,
@@ -2745,7 +2745,7 @@ def get_cd_md_numbersubmissionpages_doctype_action(doctype, action):
        @return: a tuple of tuples, where each tuple contains the creation date, the modification date, and
         the number of pages for the given submission: ((cd, md, nbpg), (cd, md, nbpg)[,...])
     """
-    q = """SELECT cd, md, nbpg FROM sbmIMPLEMENT WHERE docname=%s AND actname=%s LIMIT 1"""
+    q = """SELECT cd, md, nbpg FROM `sbmIMPLEMENT` WHERE docname=%s AND actname=%s LIMIT 1"""
     return run_sql(q, (doctype, action))
 
 def get_numbersubmissionpages_doctype_action(doctype, action):
@@ -2756,7 +2756,7 @@ def get_numbersubmissionpages_doctype_action(doctype, action):
        @param action: (string) the unique name/ID of an action.
        @return: an integer - the number of pages found for the submission
     """
-    q = """SELECT nbpg FROM sbmIMPLEMENT WHERE docname=%s AND actname=%s LIMIT 1"""
+    q = """SELECT nbpg FROM `sbmIMPLEMENT` WHERE docname=%s AND actname=%s LIMIT 1"""
     res = run_sql(q, (doctype, action))
     if len(res) > 0:
         try:
@@ -2774,7 +2774,7 @@ def get_numberfields_submissionpage_doctype_action(doctype, action, pagenum):
        @param pagenum: (integer) the number of the page on which fields are to be counted
        @return: (integer) the number of fields found on the page
     """
-    q = """SELECT COUNT(subname) FROM sbmFIELD WHERE pagenb=%s AND subname=%s"""
+    q = """SELECT COUNT(subname) FROM `sbmFIELD` WHERE pagenb=%s AND subname=%s"""
     return int(run_sql(q, (pagenum, """%s%s""" % (action, doctype)))[0][0])
 
 def get_number_of_fields_on_submissionpage_at_positionx(doctype, action, pagenum, positionx):
@@ -2784,7 +2784,7 @@ def get_number_of_fields_on_submissionpage_at_positionx(doctype, action, pagenum
        @param pagenum: (integer) the number of the page on which fields are to be counted
        @return: (integer) the number of fields found on the page
     """
-    q = """SELECT COUNT(subname) FROM sbmFIELD WHERE pagenb=%s AND subname=%s AND fieldnb=%s"""
+    q = """SELECT COUNT(subname) FROM `sbmFIELD` WHERE pagenb=%s AND subname=%s AND fieldnb=%s"""
     return int(run_sql(q, (pagenum, """%s%s""" % (action, doctype), positionx))[0][0])
 
 def swap_elements_adjacent_pages_doctype_action(doctype, action, page1, page2):
@@ -2798,7 +2798,7 @@ def swap_elements_adjacent_pages_doctype_action(doctype, action, page1, page2):
         ## atl least one page is out of range of legal pages:
         return 2
 
-    q = """UPDATE sbmFIELD SET pagenb=%s WHERE subname=%s AND pagenb=%s"""
+    q = """UPDATE `sbmFIELD` SET pagenb=%s WHERE subname=%s AND pagenb=%s"""
 
     ## move fields from p1 to tmp
     run_sql(q, (tmp_page, "%s%s" % (action, doctype), page1))
@@ -2828,17 +2828,17 @@ def swap_elements_adjacent_pages_doctype_action(doctype, action, page1, page2):
     return 0
 
 def update_modificationdate_fields_submissionpage(doctype, action, subpage):
-    q = """UPDATE sbmFIELD SET md=CURDATE() WHERE subname=%s AND pagenb=%s"""
+    q = """UPDATE `sbmFIELD` SET md=CURDATE() WHERE subname=%s AND pagenb=%s"""
     run_sql(q, ("%s%s" % (action, doctype), subpage))
     return 0
 
 def update_modificationdate_of_field_on_submissionpage(doctype, action, subpage, fieldnb):
-    q = """UPDATE sbmFIELD SET md=CURDATE() WHERE subname=%s AND pagenb=%s AND fieldnb=%s"""
+    q = """UPDATE `sbmFIELD` SET md=CURDATE() WHERE subname=%s AND pagenb=%s AND fieldnb=%s"""
     run_sql(q, ("%s%s" % (action, doctype), subpage, fieldnb))
     return 0
 
 def decrement_by_one_pagenumber_submissionelements_abovepage(doctype, action, frompage):
-    q = """UPDATE sbmFIELD SET pagenb=pagenb-1, md=CURDATE() WHERE subname=%s AND pagenb > %s"""
+    q = """UPDATE `sbmFIELD` SET pagenb=pagenb-1, md=CURDATE() WHERE subname=%s AND pagenb > %s"""
     run_sql(q, ("%s%s" % (action, doctype), frompage))
     return 0
 
@@ -2851,8 +2851,8 @@ def get_details_and_description_of_all_fields_on_submissionpage(doctype, action,
         (fieldname, field-label, check-name, field-type, size, rows, cols, field-description, field-default-value)
     """
     q = """SELECT field.fidesc, field.fitext, field.checkn, el.type, el.size, el.rows, el.cols, el.fidesc, IFNULL(el.val,"") """\
-        """FROM sbmFIELD AS field """\
-        """LEFT JOIN sbmFIELDDESC AS el ON el.name=field.fidesc """\
+        """FROM `sbmFIELD` AS field """\
+        """LEFT JOIN `sbmFIELDDESC` AS el ON el.name=field.fidesc """\
         """WHERE field.subname=%s AND field.pagenb=%s """\
         """ORDER BY field.fieldnb ASC"""
     res = run_sql(q, ("%s%s" % (action, doctype), pagenum))
@@ -2874,9 +2874,9 @@ def insert_field_onto_submissionpage(doctype, action, pagenum, fieldname, fieldt
     """
     ## get the number of fields on the page onto which the new field is to be inserted:
     numfields_preinsert = get_numberfields_submissionpage_doctype_action(doctype=doctype, action=action, pagenum=pagenum)
-    q = """INSERT INTO sbmFIELD (subname, pagenb, fieldnb, fidesc, fitext, level, sdesc, checkn, cd, md, """ \
+    q = """INSERT INTO `sbmFIELD` (subname, pagenb, fieldnb, fidesc, fitext, level, sdesc, checkn, cd, md, """ \
         """fiefi1, fiefi2) """\
-        """(SELECT %s, %s, COUNT(subname)+1, %s, %s, %s, %s, %s, CURDATE(), CURDATE(), NULL, NULL FROM sbmFIELD """ \
+        """(SELECT %s, %s, COUNT(subname)+1, %s, %s, %s, %s, %s, CURDATE(), CURDATE(), NULL, NULL FROM `sbmFIELD` """ \
         """WHERE subname=%s AND pagenb=%s)"""
     run_sql(q, ("%s%s" % (action, doctype), pagenum, fieldname, fieldtext,
                 fieldlevel, fieldshortdesc, fieldcheck, "%s%s" % (action, doctype), pagenum))
@@ -2888,7 +2888,7 @@ def insert_field_onto_submissionpage(doctype, action, pagenum, fieldname, fieldt
     return
 
 def delete_a_field_from_submissionpage(doctype, action, pagenum, fieldposn):
-    q = """DELETE FROM sbmFIELD WHERE subname=%s AND pagenb=%s AND fieldnb=%s"""
+    q = """DELETE FROM `sbmFIELD` WHERE subname=%s AND pagenb=%s AND fieldnb=%s"""
     run_sql(q, ("""%s%s""" % (action, doctype), pagenum, fieldposn))
     ## check number of fields at deleted field's position. If 0, promote all fields below it by 1 posn;
     ## If field(s) still exists at deleted field's posn, report error.
@@ -2926,7 +2926,7 @@ def update_details_of_a_field_on_a_submissionpage(doctype, action, pagenum, fiel
            InvenioWebSubmitAdminWarningTooManyRows - when multiple rows found for field
            InvenioWebSubmitAdminWarningNoRowsFound - when no rows found for field
     """
-    q = """UPDATE sbmFIELD SET fitext=%s, level=%s, sdesc=%s, checkn=%s, md=CURDATE() WHERE subname=%s AND pagenb=%s AND fieldnb=%s"""
+    q = """UPDATE `sbmFIELD` SET fitext=%s, level=%s, sdesc=%s, checkn=%s, md=CURDATE() WHERE subname=%s AND pagenb=%s AND fieldnb=%s"""
     queryargs = (fieldtext, fieldlevel, fieldshortdesc, fieldcheck, "%s%s" % (action, doctype), pagenum, fieldposn)
     ## get number of rows found for field:
     numrows_field = get_number_of_fields_on_submissionpage_at_positionx(doctype=doctype, action=action,
@@ -2982,7 +2982,7 @@ def update_modification_date_for_submission(doctype, action):
        @param action: (string) the unique ID of an action
        @return: None
     """
-    q = """UPDATE sbmIMPLEMENT SET md=CURDATE() WHERE docname=%s AND actname=%s"""
+    q = """UPDATE `sbmIMPLEMENT` SET md=CURDATE() WHERE docname=%s AND actname=%s"""
     run_sql(q, (doctype, action))
     return
 
@@ -3002,7 +3002,7 @@ def move_field_on_submissionpage_from_positionx_to_positiony(doctype, action, pa
         return 1
         #return 'WRN_WEBSUBMITADMIN_INVALID_FIELD_NUMBERS_SUPPLIED_WHEN_TRYING_TO_MOVE_FIELD_ON_SUBMISSION_PAGE'
 
-    q = """UPDATE sbmFIELD SET fieldnb=%s WHERE subname=%s AND pagenb=%s AND fieldnb=%s"""
+    q = """UPDATE `sbmFIELD` SET fieldnb=%s WHERE subname=%s AND pagenb=%s AND fieldnb=%s"""
     ## process movement:
     if movefieldfrom - movefieldto in (1, -1):
         ## fields are adjacent - swap them around:
@@ -3115,7 +3115,7 @@ def increment_position_of_all_fields_atposition_greaterthan_positionx_on_submiss
     """
     if type(increment) is not int:
         increment = 1
-    q = """UPDATE sbmFIELD SET fieldnb=fieldnb+%s WHERE subname=%s AND pagenb=%s AND fieldnb > %s"""
+    q = """UPDATE `sbmFIELD` SET fieldnb=fieldnb+%s WHERE subname=%s AND pagenb=%s AND fieldnb > %s"""
     res = run_sql(q, (increment, "%s%s" % (action, doctype), pagenum, positionx))
     try:
         return int(res)
@@ -3134,7 +3134,7 @@ def decrement_position_of_all_fields_atposition_greaterthan_positionx_on_submiss
     """
     if type(decrement) is not int:
         decrement = 1
-    q = """UPDATE sbmFIELD SET fieldnb=fieldnb-%s WHERE subname=%s AND pagenb=%s AND fieldnb > %s"""
+    q = """UPDATE `sbmFIELD` SET fieldnb=fieldnb-%s WHERE subname=%s AND pagenb=%s AND fieldnb > %s"""
     res = run_sql(q, (decrement, "%s%s" % (action, doctype), pagenum, positionx))
     try:
         return int(res)
@@ -3142,7 +3142,7 @@ def decrement_position_of_all_fields_atposition_greaterthan_positionx_on_submiss
         return None
 
 def delete_allfields_submissionpage_doctype_action(doctype, action, pagenum):
-    q = """DELETE FROM sbmFIELD WHERE pagenb=%s AND subname=%s"""
+    q = """DELETE FROM `sbmFIELD` WHERE pagenb=%s AND subname=%s"""
     run_sql(q, (pagenum, """%s%s""" % (action, doctype)))
     numrows_fields = get_numberfields_submissionpage_doctype_action(doctype=doctype,
                                                                         action=action, pagenum=pagenum)
@@ -3172,7 +3172,7 @@ def get_details_allsubmissionfields_on_submission_page(doctype, action, pagenum)
        @return: a tuple of tuples: (subname, fieldnb, fidesc, fitext, level, sdesc, checkn, cd, md). Each
         tuple contains the details of one element.
     """
-    q = """SELECT subname, fieldnb, fidesc, fitext, level, sdesc, checkn, cd, md FROM sbmFIELD """\
+    q = """SELECT subname, fieldnb, fidesc, fitext, level, sdesc, checkn, cd, md FROM `sbmFIELD` """\
         """WHERE subname=%s AND pagenb=%s ORDER BY fieldnb ASC"""
     return run_sql(q, ("%s%s" % (action, doctype), pagenum))
 
@@ -3187,7 +3187,7 @@ def get_details_of_field_at_positionx_on_submissionpage(doctype, action, pagenum
         tuple contains the details of one element.
     """
     fielddets = []
-    q = """SELECT subname, fieldnb, fidesc, fitext, level, sdesc, checkn, cd, md FROM sbmFIELD """\
+    q = """SELECT subname, fieldnb, fidesc, fitext, level, sdesc, checkn, cd, md FROM `sbmFIELD` """\
         """WHERE subname=%s AND pagenb=%s AND fieldnb=%s LIMIT 1"""
     res = run_sql(q, ("%s%s" % (action, doctype), pagenum, fieldposition))
     if len(res) > 0:
@@ -3198,7 +3198,7 @@ def decrement_by_one_number_submissionpages_doctype_action(doctype, action):
     numrows_submission = get_number_submissions_doctype_action(doctype, action)
     if numrows_submission == 1:
         ## there is only one row for this submission - can update
-        q = """UPDATE sbmIMPLEMENT SET nbpg=IFNULL(nbpg, 1)-1, md=CURDATE() WHERE docname=%s AND actname=%s and IFNULL(nbpg, 1) > 0"""
+        q = """UPDATE `sbmIMPLEMENT` SET nbpg=IFNULL(nbpg, 1)-1, md=CURDATE() WHERE docname=%s AND actname=%s and IFNULL(nbpg, 1) > 0"""
         run_sql(q, (doctype, action))
         return 0 ## Everything OK
     else:
@@ -3217,7 +3217,7 @@ def add_submission_page_doctype_action(doctype, action):
     numrows_submission = get_number_submissions_doctype_action(doctype, action)
     if numrows_submission == 1:
         ## there is only one row for this submission - can update
-        q = """UPDATE sbmIMPLEMENT SET nbpg=IFNULL(nbpg, 0)+1, md=CURDATE() WHERE docname=%s AND actname=%s"""
+        q = """UPDATE `sbmIMPLEMENT` SET nbpg=IFNULL(nbpg, 0)+1, md=CURDATE() WHERE docname=%s AND actname=%s"""
         run_sql(q, (doctype, action))
         return 0 ## Everything OK
     else:

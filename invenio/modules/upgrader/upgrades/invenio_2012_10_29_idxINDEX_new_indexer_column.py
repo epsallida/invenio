@@ -25,7 +25,7 @@ def info():
     return "New idxINDEX.indexer column"
 
 def do_upgrade():
-    create_statement = run_sql('SHOW CREATE TABLE idxINDEX')[0][1]
+    create_statement = run_sql('SHOW CREATE TABLE `idxINDEX`')[0][1]
     if '`indexer` varchar(10)' not in create_statement:
         run_sql("ALTER TABLE idxINDEX ADD COLUMN indexer varchar(10) NOT NULL default 'native' AFTER stemming_language;")
 

@@ -438,7 +438,7 @@ def get_rule_lastrun(rule_name):
     Get the last time a rule was run, or the oldest representable datetime
     if the rule was never ran.
     """
-    res = run_sql("SELECT last_run FROM bibcheck_rules WHERE name=%s;",
+    res = run_sql("SELECT last_run FROM `bibcheck_rules` WHERE name=%s;",
                   (rule_name,))
     if len(res) == 0 or res[0][0] is None:
         return datetime(1900, 1, 1)
@@ -456,10 +456,10 @@ def update_rule_last_run(rule_name):
             or task_get_option('no_tickets', False):
         return   # We don't want to update the database in this case
 
-    updated = run_sql("UPDATE bibcheck_rules SET last_run=%s WHERE name=%s;",
+    updated = run_sql("UPDATE `bibcheck_rules` SET last_run=%s WHERE name=%s;",
                       (task_get_task_param('task_starting_time'), rule_name,))
     if not updated: # rule not in the database, insert it
-        run_sql("INSERT INTO bibcheck_rules(name, last_run) VALUES (%s, %s)",
+        run_sql("INSERT INTO `bibcheck_rules` (name, last_run) VALUES (%s, %s)",
                 (rule_name, task_get_task_param('task_starting_time')))
 
 
@@ -468,7 +468,7 @@ def reset_rule_last_run(rule_name):
     Reset the last time a rule was run. This will cause the rule to be
     ran on all matching records (not only modified ones)
     """
-    run_sql("DELETE FROM bibcheck_rules WHERE name=%s", (rule_name,))
+    run_sql("DELETE FROM `bibcheck_rules` WHERE name=%s", (rule_name,))
 
 def load_plugins():
     """

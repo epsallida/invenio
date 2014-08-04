@@ -121,12 +121,12 @@ def createGuestUser():
     """
     if CFG_ACCESS_CONTROL_LEVEL_GUESTS == 0:
         try:
-            return run_sql("insert into user (email, note) values ('', '1')")
+            return run_sql("insert into `user` (email, note) values ('', '1')")
         except OperationalError:
             return None
     else:
         try:
-            return run_sql("insert into user (email, note) values ('', '0')")
+            return run_sql("insert into `user` (email, note) values ('', '0')")
         except OperationalError:
             return None
 
@@ -351,7 +351,7 @@ def isGuestUser(uid, run_on_slave=True):
 def isUserSubmitter(user_info):
     """Return True if the user is a submitter for something; False otherwise."""
     u_email = get_email(user_info['uid'])
-    res = run_sql("SELECT email FROM sbmSUBMISSIONS WHERE email=%s LIMIT 1", (u_email,), 1)
+    res = run_sql("SELECT email FROM `sbmSUBMISSIONS` WHERE email=%s LIMIT 1", (u_email,), 1)
     return len(res) > 0
 
 def isUserReferee(user_info):
@@ -371,7 +371,7 @@ def isUserAdmin(user_info):
 def isUserSuperAdmin(user_info):
     """Return True if the user is superadmin; False otherwise."""
     if run_sql("""SELECT r.id
-        FROM accROLE r LEFT JOIN user_accROLE ur
+        FROM `accROLE` r LEFT JOIN `user_accROLE` ur
         ON r.id = ur.id_accROLE
         WHERE r.name = %s AND
         ur.id_user = %s AND ur.expiration>=NOW() LIMIT 1""", (SUPERADMINROLE, user_info['uid']), 1, run_on_slave=True):
@@ -417,8 +417,10 @@ def confirm_email(email):
         activated = 0
     elif CFG_ACCESS_CONTROL_LEVEL_ACCOUNTS >= 2:
         return -1
+
     run_sql('UPDATE user SET note=%s where email=%s', (activated, email))
     res = run_sql('SELECT id FROM user where email=%s', (email,))
+
     if res:
         if CFG_ACCESS_CONTROL_NOTIFY_ADMIN_ABOUT_NEW_ACCOUNTS:
             send_new_admin_account_warning(email, CFG_SITE_ADMIN_EMAIL)
@@ -527,17 +529,17 @@ def updateDataUser(uid, email, nickname):
         return 0
 
     if CFG_ACCESS_CONTROL_LEVEL_ACCOUNTS < 2:
-        run_sql("update user set email=%s where id=%s", (email, uid))
+        run_sql("update `user` set email=%s where id=%s", (email, uid))
 
     if nickname and nickname != '':
-        run_sql("update user set nickname=%s where id=%s", (nickname, uid))
+        run_sql("update `user` set nickname=%s where id=%s", (nickname, uid))
 
     return 1
 
 def updatePasswordUser(uid, password):
     """Update the password of a user."""
     if CFG_ACCESS_CONTROL_LEVEL_ACCOUNTS < 3:
-        run_sql("update user set password=AES_ENCRYPT(email,%s) where id=%s", (password, uid))
+        run_sql("update `user` set password=AES_ENCRYPT(email,%s) where id=%s", (password, uid))
     return 1
 
 def merge_usera_into_userb(id_usera, id_userb):
@@ -565,7 +567,7 @@ def merge_usera_into_userb(id_usera, id_userb):
         table = ''
         try:
             for index, (table, column) in enumerate(CFG_WEBUSER_USER_TABLES):
-                run_sql("UPDATE %(table)s SET %(column)s=%%s WHERE %(column)s=%%s; DELETE FROM %(table)s WHERE %(column)s=%%s;" % {
+                run_sql("UPDATE `%(table)s` SET %(column)s=%%s WHERE %(column)s=%%s; DELETE FROM %(table)s WHERE %(column)s=%%s;" % {
                     'table': table,
                     'column': column
                 }, (id_userb, id_usera, id_usera))
@@ -631,7 +633,7 @@ def loginUser(req, p_un, p_pw, login_method):
             register_exception(req=req, alert_admin=True)
             raise
         if p_email: # Authenthicated externally
-            query_result = run_sql("SELECT id_user FROM userEXT WHERE id=%s and method=%s", (p_extid, login_method))
+            query_result = run_sql("SELECT id_user FROM `userEXT` WHERE id=%s and method=%s", (p_extid, login_method))
             if query_result:
                 ## User was already registered with this external method.
                 id_user = query_result[0][0]
@@ -653,13 +655,13 @@ def loginUser(req, p_un, p_pw, login_method):
                         if new_id == id_user:
                             raise AssertionError("We should not reach this situation: new_id=%s, id_user=%s, old_email=%s, p_email=%s" % (new_id, id_user, old_email, p_email))
                         merge_usera_into_userb(id_user, new_id)
-                        run_sql("DELETE FROM user WHERE id=%s", (id_user, ))
-                        for row in run_sql("SELECT method FROM userEXT WHERE id_user=%s", (id_user, )):
+                        run_sql("DELETE FROM `user` WHERE id=%s", (id_user, ))
+                        for row in run_sql("SELECT method FROM `userEXT` WHERE id_user=%s", (id_user, )):
                             ## For all known accounts of id_user not conflicting with new_id we move them to refer to new_id
-                            if not run_sql("SELECT method FROM userEXT WHERE id_user=%s AND method=%s", (new_id, row[0])):
-                                run_sql("UPDATE userEXT SET id_user=%s WHERE id_user=%s AND method=%s", (new_id, id_user, row[0]))
+                            if not run_sql("SELECT method FROM `userEXT` WHERE id_user=%s AND method=%s", (new_id, row[0])):
+                                run_sql("UPDATE `userEXT` SET id_user=%s WHERE id_user=%s AND method=%s", (new_id, id_user, row[0]))
                         ## And we delete the duplicate remaining ones :-)
-                        run_sql("DELETE FROM userEXT WHERE id_user=%s", (id_user, ))
+                        run_sql("DELETE FROM `userEXT` WHERE id_user=%s", (id_user, ))
                         id_user = new_id
                     else:
                         ## We just need to rename the email address of the
@@ -667,7 +669,7 @@ def loginUser(req, p_un, p_pw, login_method):
                         ## password will be then invalid, but its unlikely
                         ## the user is using both an external and a local
                         ## account.
-                        run_sql("UPDATE user SET email=%s WHERE id=%s", (p_email, id_user))
+                        run_sql("UPDATE `user` SET email=%s WHERE id=%s", (p_email, id_user))
             else:
                 ## User was not already registered with this external method.
                 query_result = run_sql("SELECT id FROM user WHERE email=%s", (p_email, ))
@@ -675,7 +677,7 @@ def loginUser(req, p_un, p_pw, login_method):
                     ## The user was already known with this email
                     id_user = query_result[0][0]
                     ## We fix the inconsistence in the userEXT table.
-                    run_sql("INSERT INTO userEXT(id, method, id_user) VALUES(%s, %s, %s) ON DUPLICATE KEY UPDATE id=%s, method=%s, id_user=%s", (p_extid, login_method, id_user, p_extid, login_method, id_user))
+                    run_sql("INSERT INTO `userEXT` (id, method, id_user) VALUES(%s, %s, %s) ON DUPLICATE KEY UPDATE id=%s, method=%s, id_user=%s", (p_extid, login_method, id_user, p_extid, login_method, id_user))
                 else:
                     ## First time user
                     p_pw_local = int(random.random() * 1000000)
@@ -704,7 +706,7 @@ def loginUser(req, p_un, p_pw, login_method):
                         return (None, p_email, p_pw_local, 19)
                     else:
                         return (None, p_email, p_pw_local, 13)
-                    run_sql("INSERT INTO userEXT(id, method, id_user) VALUES(%s, %s, %s)", (p_extid, login_method, id_user))
+                    run_sql("INSERT INTO `userEXT` (id, method, id_user) VALUES(%s, %s, %s)", (p_extid, login_method, id_user))
             if CFG_EXTERNAL_AUTHENTICATION[login_method].enforce_external_nicknames:
                 ## Let's still fetch a possibly upgraded nickname.
                 try: # Let's discover the external nickname!
@@ -782,7 +784,7 @@ def loginUser(req, p_un, p_pw, login_method):
         else:
             return (None, p_email, p_pw, 14)
     # Login successful! Updating the last access time
-    run_sql("UPDATE user SET last_login=NOW() WHERE email=%s", (p_email,))
+    run_sql("UPDATE `user` SET last_login=NOW() WHERE email=%s", (p_email,))
     return (id_user, p_email, p_pw, 0)
 
 
@@ -1084,7 +1086,7 @@ def list_users_in_role(role):
     @return: list of uids
     """
     res = run_sql("""SELECT uacc.id_user
-                       FROM user_accROLE uacc JOIN accROLE acc
+                       FROM `user_accROLE` uacc JOIN `accROLE` acc
                          ON uacc.id_accROLE=acc.id
                       WHERE acc.name=%s""",
                   (role,), run_on_slave=True)
@@ -1100,7 +1102,7 @@ def list_users_in_roles(role_list):
     if not(type(role_list) is list or type(role_list) is tuple):
         role_list = [role_list]
     query = """SELECT DISTINCT(uacc.id_user)
-               FROM user_accROLE uacc JOIN accROLE acc
+               FROM `user_accROLE` uacc JOIN `accROLE` acc
                     ON uacc.id_accROLE=acc.id
                """
     query_addons = ""
@@ -1141,7 +1143,7 @@ def get_user_preferences(uid):
 
 def set_user_preferences(uid, pref):
     assert(type(pref) == type({}))
-    run_sql("UPDATE user SET settings=%s WHERE id=%s",
+    run_sql("UPDATE `user` SET settings=%s WHERE id=%s",
             (serialize_via_marshal(pref), uid))
 
 def get_default_user_preferences():
@@ -1388,7 +1390,7 @@ def collect_user_info(req, login_time=False, refresh=False):
                         set_user_preferences(uid, prefs)
                         prefs = get_user_preferences(uid)
 
-                    run_sql('UPDATE user SET last_login=NOW() WHERE id=%s', (uid,))
+                    run_sql('UPDATE `user` SET last_login=NOW() WHERE id=%s', (uid,))
             if prefs:
                 for key, value in iteritems(prefs):
                     user_info[key.lower()] = value

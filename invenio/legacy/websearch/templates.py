@@ -3661,7 +3661,7 @@ class Template:
         _ = gettext_set_language(ln)
 
         # get query arguments:
-        res = run_sql("SELECT urlargs FROM query WHERE id=%s", (id_query,))
+        res = run_sql("SELECT urlargs FROM `query` WHERE id=%s", (id_query,))
         argd = {}
         if res:
             argd = cgi.parse_qs(res[0][0])

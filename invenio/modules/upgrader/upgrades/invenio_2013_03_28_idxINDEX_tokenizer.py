@@ -28,23 +28,23 @@ def info():
 
 def do_upgrade():
     #first step: change table
-    stmt = run_sql('SHOW CREATE TABLE idxINDEX')[0][1]
+    stmt = run_sql('SHOW CREATE TABLE `idxINDEX`')[0][1]
     if '`tokenizer` varchar(50)' not in stmt:
         run_sql("ALTER TABLE idxINDEX ADD COLUMN tokenizer varchar(50) NOT NULL default '' AFTER remove_latex_markup")
     #second step: update table
-    run_sql("""UPDATE idxINDEX SET tokenizer='BibIndexDefaultTokenizer' WHERE name IN
+    run_sql("""UPDATE `idxINDEX` SET tokenizer='BibIndexDefaultTokenizer' WHERE name IN
                             ('global', 'collection', 'abstract', 'keyword',
                              'reference', 'reportnumber', 'title', 'collaboration',
                              'affiliation', 'caption', 'exacttitle')""")
-    run_sql("""UPDATE idxINDEX SET tokenizer='BibIndexAuthorTokenizer' WHERE name IN
+    run_sql("""UPDATE `idxINDEX` SET tokenizer='BibIndexAuthorTokenizer' WHERE name IN
                             ('author', 'firstauthor')""")
-    run_sql("""UPDATE idxINDEX SET tokenizer='BibIndexExactAuthorTokenizer' WHERE name IN
+    run_sql("""UPDATE `idxINDEX` SET tokenizer='BibIndexExactAuthorTokenizer' WHERE name IN
                             ('exactauthor', 'exactfirstauthor')""")
-    run_sql("""UPDATE idxINDEX SET tokenizer='BibIndexFulltextTokenizer' WHERE name='fulltext'""")
-    run_sql("""UPDATE idxINDEX SET tokenizer='BibIndexAuthorCountTokenizer' WHERE name='authorcount'""")
-    run_sql("""UPDATE idxINDEX SET tokenizer='BibIndexJournalTokenizer' WHERE name='journal'""")
-    run_sql("""UPDATE idxINDEX SET tokenizer='BibIndexYearTokenizer' WHERE name='year'""")
-    run_sql("""UPDATE idxINDEX SET tokenizer='BibIndexDefaultTokenizer' WHERE tokenizer = ''""")
+    run_sql("""UPDATE `idxINDEX` SET tokenizer='BibIndexFulltextTokenizer' WHERE name='fulltext'""")
+    run_sql("""UPDATE `idxINDEX` SET tokenizer='BibIndexAuthorCountTokenizer' WHERE name='authorcount'""")
+    run_sql("""UPDATE `idxINDEX` SET tokenizer='BibIndexJournalTokenizer' WHERE name='journal'""")
+    run_sql("""UPDATE `idxINDEX` SET tokenizer='BibIndexYearTokenizer' WHERE name='year'""")
+    run_sql("""UPDATE `idxINDEX` SET tokenizer='BibIndexDefaultTokenizer' WHERE tokenizer = ''""")
 
 
 def estimate():

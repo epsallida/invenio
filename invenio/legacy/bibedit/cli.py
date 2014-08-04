@@ -78,7 +78,7 @@ def cli_clean_revisions(recid, dry_run=True, verbose=True):
             print('ERROR: record ID must be integer, not %s.' % recid)
             sys.exit(1)
     for recid in recids:
-        all_revisions = run_sql("SELECT marcxml, job_id, job_name, job_person, job_date FROM hstRECORD WHERE id_bibrec=%s ORDER BY job_date ASC", (recid,))
+        all_revisions = run_sql("SELECT marcxml, job_id, job_name, job_person, job_date FROM `hstRECORD` WHERE id_bibrec=%s ORDER BY job_date ASC", (recid,))
         previous_rec = {}
         deleted_revisions = 0
         for marcxml, job_id, job_name, job_person, job_date in all_revisions:
@@ -90,7 +90,7 @@ def cli_clean_revisions(recid, dry_run=True, verbose=True):
             if records_identical(current_rec, previous_rec):
                 deleted_revisions += 1
                 if not dry_run:
-                    run_sql("DELETE FROM hstRECORD WHERE id_bibrec=%s AND job_id=%s AND job_name=%s AND job_person=%s AND job_date=%s", (recid, job_id, job_name, job_person, job_date))
+                    run_sql("DELETE FROM `hstRECORD` WHERE id_bibrec=%s AND job_id=%s AND job_name=%s AND job_person=%s AND job_date=%s", (recid, job_id, job_name, job_person, job_date))
             previous_rec = current_rec
         if verbose and deleted_revisions:
             print("record %s: deleted %s duplicate revisions out of %s" % (recid, deleted_revisions, len(all_revisions)))
@@ -194,14 +194,14 @@ def check_rev(recid, verbose=True, fix=False):
 
 
 def fix_rev(recid, job_date, verbose=True):
-    sql = 'DELETE FROM hstRECORD WHERE id_bibrec = %s AND job_date = "%s"'
+    sql = 'DELETE FROM `hstRECORD` WHERE id_bibrec = %s AND job_date = "%s"'
     run_sql(sql, (recid, job_date))
 
 
 def cli_check_revisions(recid):
     if recid == '*':
         print('Checking all records')
-        recids = intbitset(run_sql("SELECT id FROM bibrec ORDER BY id"))
+        recids = intbitset(run_sql("SELECT id FROM `bibrec` ORDER BY id"))
         for index, rec in enumerate(recids):
             if index % 1000 == 0 and index:
                 print(index, 'records processed')
@@ -213,7 +213,7 @@ def cli_check_revisions(recid):
 def cli_fix_revisions(recid):
     if recid == '*':
         print('Fixing all records')
-        recids = intbitset(run_sql("SELECT id FROM bibrec ORDER BY id"))
+        recids = intbitset(run_sql("SELECT id FROM `bibrec` ORDER BY id"))
         for index, rec in enumerate(recids):
             if index % 1000 == 0 and index:
                 print(index, 'records processed')

@@ -56,7 +56,7 @@ def report_definitions_of_physical_tags():
     print("### 1 - PHYSICAL TAG DEFINITIONS")
     print()
     print("# MARC tag ... description")
-    res = run_sql('SELECT id,value,name FROM tag ORDER BY value')
+    res = run_sql('SELECT id,value,name FROM `tag` ORDER BY value')
     for row in res:
         (dummytagid, tagvalue, tagname) = row
         print("%s ... %s" % (tagvalue, tagname,))
@@ -71,7 +71,7 @@ def report_definitions_of_logical_fields():
     print("### 2 - LOGICAL FIELD DEFINITIONS")
     print()
     print("# logical field: associated physical tags", end=' ')
-    res = run_sql('SELECT id,name,code FROM field ORDER BY code')
+    res = run_sql('SELECT id,name,code FROM `field` ORDER BY code')
     for row in res:
         (fieldid, dummyfieldname, fieldcode) = row
         print()
@@ -146,7 +146,7 @@ def report_tag_usage():
             for row in res:
                 tag = row[0]
                 # detect how many records have this tag in use:
-                res_usage = run_sql("""SELECT DISTINCT(b.id) FROM bibrec AS b,
+                res_usage = run_sql("""SELECT DISTINCT(b.id) FROM `bibrec` AS b,
                                                            %s AS bb, %s AS bx
                                             WHERE b.id=bb.id_bibrec
                                               AND bb.id_bibxxx=bx.id

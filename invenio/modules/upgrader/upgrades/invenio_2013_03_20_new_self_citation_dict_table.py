@@ -30,7 +30,7 @@ def info():
 
 def do_upgrade():
     run_sql("""
-  CREATE TABLE IF NOT EXISTS rnkSELFCITEDICT (
+  CREATE TABLE IF NOT EXISTS `rnkSELFCITEDICT` (
   citee int(10) unsigned NOT NULL,
   citer int(10) unsigned NOT NULL,
   last_updated datetime NOT NULL,

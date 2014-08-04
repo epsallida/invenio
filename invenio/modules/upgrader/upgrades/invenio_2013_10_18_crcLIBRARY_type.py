@@ -25,8 +25,8 @@ def info():
     return "crcLIBRARY.type is now mandatory"
 
 def do_upgrade():
-    run_sql("UPDATE crcLIBRARY SET type='main' WHERE type IS NULL")
-    create_statement = run_sql('SHOW CREATE TABLE crcLIBRARY')[0][1]
+    run_sql("UPDATE `crcLIBRARY` SET type='main' WHERE type IS NULL")
+    create_statement = run_sql('SHOW CREATE TABLE `crcLIBRARY`')[0][1]
     if '`type` varchar(30) NOT NULL' not in create_statement:
         run_sql("ALTER TABLE crcLIBRARY CHANGE type type varchar(30) NOT NULL default 'main'")
 

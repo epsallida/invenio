@@ -31,7 +31,7 @@ def do_upgrade():
     all_tables = [t[0] for t in run_sql("SHOW TABLES LIKE 'idx%R'")] + \
                  [t[0] for t in run_sql("SHOW TABLES LIKE 'rnk%R'")]
     for table in all_tables:
-        create_statement = run_sql('SHOW CREATE TABLE %s' % table)[0][1]
+        create_statement = run_sql('SHOW CREATE TABLE `%s`' % table)[0][1]
         if 'KEY `type`' not in create_statement:
             run_sql("ALTER TABLE %s ADD INDEX type (type)" % (table,))
 

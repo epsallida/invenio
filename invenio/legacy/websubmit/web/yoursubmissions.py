@@ -109,7 +109,7 @@ def index(req, c=CFG_SITE_NAME, ln=CFG_SITE_LANG, order="", doctype="", deletedI
             currentdoctype = row[1]
             currentaction = ""
             currentstatus = ""
-            res2 = run_sql("SELECT ldocname FROM sbmDOCTYPE WHERE  sdocname=%s",(currentdoctype,))
+            res2 = run_sql("SELECT ldocname FROM `sbmDOCTYPE` WHERE  sdocname=%s",(currentdoctype,))
             if res2:
                 ldocname = res2[0][0]
             else:
@@ -117,7 +117,7 @@ def index(req, c=CFG_SITE_NAME, ln=CFG_SITE_LANG, order="", doctype="", deletedI
 
         if currentaction != row[2]:
             currentaction = row[2]
-            res2 = run_sql("SELECT lactname FROM sbmACTION WHERE  sactname=%s",(currentaction,))
+            res2 = run_sql("SELECT lactname FROM `sbmACTION` WHERE  sactname=%s",(currentaction,))
             if res2:
                 lactname = res2[0][0]
             else:

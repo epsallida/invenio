@@ -85,11 +85,11 @@ def Update_Approval_DB(parameters, curdir, form, user_info=None):
                 category = ""
         if category == "":
             category = "unknown"
-        sth = run_sql("SELECT status,dFirstReq,dLastReq,dAction FROM sbmAPPROVAL WHERE  doctype=%s and categ=%s and rn=%s", (doctype,category,rn,))
+        sth = run_sql("SELECT status,dFirstReq,dLastReq,dAction FROM `sbmAPPROVAL` WHERE  doctype=%s and categ=%s and rn=%s", (doctype,category,rn,))
         if len(sth) == 0:
-            run_sql("INSERT INTO sbmAPPROVAL (doctype, categ, rn, status, dFirstReq, dLastReq, dAction, access) VALUES (%s,%s,%s,'waiting',NOW(),NOW(),'',%s)", (doctype,category,rn,access,))
+            run_sql("INSERT INTO `sbmAPPROVAL` (doctype, categ, rn, status, dFirstReq, dLastReq, dAction, access) VALUES (%s,%s,%s,'waiting',NOW(),NOW(),'',%s)", (doctype,category,rn,access,))
         else:
-            run_sql("UPDATE sbmAPPROVAL SET dLastReq=NOW(), status='waiting' WHERE  doctype=%s and categ=%s and rn=%s", (doctype,category,rn,))
+            run_sql("UPDATE `sbmAPPROVAL` SET dLastReq=NOW(), status='waiting' WHERE  doctype=%s and categ=%s and rn=%s", (doctype,category,rn,))
     else:
         ## Since this is the "APP" action, this call of the function must be
         ## on behalf of the referee - in order to approve or reject an item.
@@ -116,7 +116,7 @@ def Update_Approval_DB(parameters, curdir, form, user_info=None):
         ## Either approve or reject the item, based upon the contents
         ## of 'decision':
         if decision == "approve":
-            run_sql("UPDATE sbmAPPROVAL SET dAction=NOW(),status='approved' WHERE  rn=%s", (rn,))
+            run_sql("UPDATE `sbmAPPROVAL` SET dAction=NOW(),status='approved' WHERE  rn=%s", (rn,))
         else:
-            run_sql("UPDATE sbmAPPROVAL SET dAction=NOW(),status='rejected' WHERE  rn=%s", (rn,))
+            run_sql("UPDATE `sbmAPPROVAL` SET dAction=NOW(),status='rejected' WHERE  rn=%s", (rn,))
     return ""

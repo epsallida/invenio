@@ -87,7 +87,7 @@ def cli_allocate_record(req):
         _log(msg)
         return _write(req, msg)
 
-    recid = run_sql("insert into bibrec (creation_date,modification_date) values(NOW(),NOW())")
+    recid = run_sql("insert into `bibrec` (creation_date,modification_date) values(NOW(),NOW())")
     return recid
 
 def cli_upload(req, file_content=None, mode=None, callback_url=None, nonce=None, special_treatment=None):
@@ -229,7 +229,7 @@ def metadata_upload(req, metafile=None, filetype=None, mode=None, exec_date=None
     jobid = task_low_level_submission(*task_arguments)
 
     # write batch upload history
-    run_sql("""INSERT INTO hstBATCHUPLOAD (user, submitdate,
+    run_sql("""INSERT INTO `hstBATCHUPLOAD` (user, submitdate,
             filename, execdate, id_schTASK, batch_mode)
             VALUES (%s, NOW(), %s, %s, %s, "metadata")""",
             (user_info['nickname'], metafilename,
@@ -354,7 +354,7 @@ def document_upload(req=None, folder="", matching="", mode="", exec_date="", exe
             jobid = task_low_level_submission(*task_arguments)
 
             # write batch upload history
-            run_sql("""INSERT INTO hstBATCHUPLOAD (user, submitdate,
+            run_sql("""INSERT INTO `hstBATCHUPLOAD` (user, submitdate,
                     filename, execdate, id_schTASK, batch_mode)
                     VALUES (%s, NOW(), %s, %s, %s, "document")""",
                     (user_info['nickname'], docfile,
@@ -375,7 +375,7 @@ def get_user_metadata_uploads(req):
     upload_list = run_sql("""SELECT DATE_FORMAT(h.submitdate, '%%Y-%%m-%%d %%H:%%i:%%S'), \
                             h.filename, DATE_FORMAT(h.execdate, '%%Y-%%m-%%d %%H:%%i:%%S'), \
                             s.status \
-                            FROM hstBATCHUPLOAD h INNER JOIN schTASK s \
+                            FROM `hstBATCHUPLOAD` h INNER JOIN `schTASK` s \
                             ON h.id_schTASK = s.id \
                             WHERE h.user=%s and h.batch_mode="metadata"
                             ORDER BY h.submitdate DESC""", (user_info['nickname'],))
@@ -387,7 +387,7 @@ def get_user_document_uploads(req):
     upload_list = run_sql("""SELECT DATE_FORMAT(h.submitdate, '%%Y-%%m-%%d %%H:%%i:%%S'), \
                           h.filename, DATE_FORMAT(h.execdate, '%%Y-%%m-%%d %%H:%%i:%%S'), \
                           s.status \
-                          FROM hstBATCHUPLOAD h INNER JOIN schTASK s \
+                          FROM `hstBATCHUPLOAD` h INNER JOIN `schTASK` s \
                           ON h.id_schTASK = s.id \
                           WHERE h.user=%s and h.batch_mode="document"
                           ORDER BY h.submitdate DESC""", (user_info['nickname'],))

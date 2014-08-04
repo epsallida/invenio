@@ -182,7 +182,7 @@ def get_all_public_records_modified_last_month(collections):
     for collection in collections:
         recids += get_collection_reclist(collection)
     recids = recids.difference(all_restricted_recids)
-    query = 'SELECT id, modification_date FROM bibrec WHERE modification_date > %s'
+    query = 'SELECT id, modification_date FROM `bibrec` WHERE modification_date > %s'
     res = run_sql(query, (one_month_ago,))
     return [(recid, lastmod) for (recid, lastmod) in res if recid in recids]
 

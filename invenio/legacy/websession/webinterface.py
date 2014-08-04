@@ -199,7 +199,7 @@ class WebInterfaceYourAccountPages(WebInterfaceDirectory):
                 lastupdated=__lastupdated__,
                 navmenuid='youraccount')
 
-        run_sql('UPDATE user SET password=AES_ENCRYPT(email,%s) WHERE email=%s', (args['password'], email))
+        run_sql('UPDATE `user` SET password=AES_ENCRYPT(email,%s) WHERE email=%s', (args['password'], email))
 
         mail_cookie_delete_cookie(reset_key)
 
@@ -1391,7 +1391,7 @@ class WebInterfaceYourAccountPages(WebInterfaceDirectory):
 
         # Save request token into database since it will be used in
         # authentication
-        query = """INSERT INTO oauth1_storage VALUES(%s, %s, NOW())"""
+        query = """INSERT INTO `oauth1_storage` VALUES(%s, %s, NOW())"""
         params = (request_token, request_token_secret)
         run_sql(query, params)
 

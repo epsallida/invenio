@@ -40,15 +40,15 @@ def Print_Success_CPLX(parameters, curdir, form, user_info=None):
         group = fp.read()
         group = group.replace("/","_")
         group = re.sub("[\n\r]+","",group)
-        group_id = run_sql ("""SELECT id FROM usergroup WHERE name = %s""", (group,))[0][0]
+        group_id = run_sql ("""SELECT id FROM `usergroup` WHERE name = %s""", (group,))[0][0]
     else:
         return ""
 
     t="<br /><br /><B>Your request has been taken into account!</B><br /><br />"
 
-    sth = run_sql("SELECT rn FROM sbmCPLXAPPROVAL WHERE  doctype=%s and categ=%s and rn=%s and type=%s and id_group=%s", (doctype,categ,rn,act,group_id))
+    sth = run_sql("SELECT rn FROM `sbmCPLXAPPROVAL` WHERE  doctype=%s and categ=%s and rn=%s and type=%s and id_group=%s", (doctype,categ,rn,act,group_id))
     if not len(sth) == 0:
-        run_sql("UPDATE sbmCPLXAPPROVAL SET dLastReq=NOW(), status='waiting', dProjectLeaderAction='' WHERE  doctype=%s and categ=%s and rn=%s and type=%s and id_group=%s", (doctype,categ,rn,act,group_id))
+        run_sql("UPDATE `sbmCPLXAPPROVAL` SET dLastReq=NOW(), status='waiting', dProjectLeaderAction='' WHERE  doctype=%s and categ=%s and rn=%s and type=%s and id_group=%s", (doctype,categ,rn,act,group_id))
 
         if (act == "RRP") or (act == "RPB"):
             t+="NOTE: Approval has already been requested for this document. You will be warned by email as soon as the Project Leader takes his/her decision regarding your document.<br /><br />"

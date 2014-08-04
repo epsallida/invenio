@@ -34,7 +34,7 @@ def do_upgrade():
     from invenio.config import CFG_BIBINDEX_REMOVE_STOPWORDS
     if CFG_BIBINDEX_REMOVE_STOPWORDS:
         if CFG_BIBINDEX_REMOVE_STOPWORDS == 1:
-            run_sql("UPDATE idxINDEX SET remove_stopwords='stopwords.kb'")
+            run_sql("UPDATE `idxINDEX` SET remove_stopwords='stopwords.kb'")
 
 
 def estimate():

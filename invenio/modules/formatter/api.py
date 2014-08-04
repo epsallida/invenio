@@ -522,12 +522,12 @@ def get_preformatted_record_date(recID, of):
 
 ##         if get_format_from_db(output_format) is None:
 ##             #Add new
-##             query = "UPDATE TABLE format "
+##             query = "UPDATE `TABLE` format "
 ##         else:
 ##             #Update
-##             query = "UPDATE TABLE format "
+##             query = "UPDATE `TABLE` format "
 
-##     query = "UPDATE TABLE format "
+##     query = "UPDATE `TABLE` format "
 ##     res = run_sql(query)
 ##     for row in res:
 ##         if not row[0] in output_formats:

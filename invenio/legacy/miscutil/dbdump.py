@@ -107,13 +107,13 @@ def check_slave_is_in_consistent_state(connection=None):
         connection = get_connection_for_dump_on_slave()
     i = 0
     ## Let's take the current status of dbdump (e.g. RUNNING, ABOUT TO STOP, etc.)...
-    current_status = run_sql("SELECT status FROM schTASK WHERE id=%s", (task_get_task_param('task_id'), ))[0][0]
+    current_status = run_sql("SELECT status FROM `schTASK` WHERE id=%s", (task_get_task_param('task_id'), ))[0][0]
     while True:
         if i == 10:
             ## Timeout!!
             raise StandardError("The slave seems not to pick up with the master")
         ## ...and let's see if it matches with what the slave sees.
-        if run_sql("SELECT status FROM schTASK WHERE id=%s AND status=%s", (task_get_task_param('task_id'), current_status), connection=connection):
+        if run_sql("SELECT status FROM `schTASK` WHERE id=%s AND status=%s", (task_get_task_param('task_id'), current_status), connection=connection):
             ## Bingo!
             return
         time.sleep(3)

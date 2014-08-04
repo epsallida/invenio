@@ -44,7 +44,7 @@ CFG_PROPOSED_ROLE_DESCRIPTION = "Group to access the following restricted collec
 def retrieve_restricted_collection():
     """Return a dictionary with collectionname -> apache group."""
 
-    res = run_sql('SELECT name, restricted FROM collection WHERE restricted<>""')
+    res = run_sql('SELECT name, restricted FROM `collection` WHERE restricted<>""')
     if res:
         return dict(res)
     else:

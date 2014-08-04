@@ -657,7 +657,7 @@ def _get_bibupload_task_ids():
     Ignore tasks submitted by user bibreformat.
 
     """
-    res = run_sql('''SELECT id FROM schTASK WHERE proc LIKE "bibupload%" AND user <> "bibreformat" AND status IN ("WAITING", "SCHEDULED", "RUNNING", "CONTINUING", "ABOUT TO STOP", "ABOUT TO SLEEP", "SLEEPING")''')
+    res = run_sql('''SELECT id FROM `schTASK` WHERE proc LIKE "bibupload%" AND user <> "bibreformat" AND status IN ("WAITING", "SCHEDULED", "RUNNING", "CONTINUING", "ABOUT TO STOP", "ABOUT TO SLEEP", "SLEEPING")''')
     return [row[0] for row in res]
 
 def _get_bibupload_filenames():

@@ -232,9 +232,9 @@ def selectCateg(doctype, ln = CFG_SITE_LANG):
 
 def selectCplxCateg(doctype, ln=CFG_SITE_LANG):
     t = ""
-    res = run_sql("SELECT ldocname FROM sbmDOCTYPE WHERE sdocname=%s", (doctype,))
+    res = run_sql("SELECT ldocname FROM `sbmDOCTYPE` WHERE sdocname=%s", (doctype,))
     title = res[0][0]
-    sth = run_sql("SELECT * FROM sbmCATEGORIES WHERE doctype=%s ORDER BY lname", (doctype,))
+    sth = run_sql("SELECT * FROM `sbmCATEGORIES` WHERE doctype=%s ORDER BY lname", (doctype,))
     if len(sth) == 0:
         categ = "unknown"
         return selectCplxDocument(doctype, categ, "", ln=ln)
@@ -583,36 +583,36 @@ def __is_Author (uid, sysno):
     return isAuthor
 
 def __db_count_doc (doctype, categ, status, apptype):
-    return run_sql("SELECT COUNT(*) FROM sbmCPLXAPPROVAL WHERE doctype=%s AND categ=%s AND status=%s AND type=%s",(doctype, categ, status, apptype,))[0][0]
+    return run_sql("SELECT COUNT(*) FROM `sbmCPLXAPPROVAL` WHERE doctype=%s AND categ=%s AND status=%s AND type=%s",(doctype, categ, status, apptype,))[0][0]
 
 def __db_get_infos (key):
-    return run_sql("SELECT status,id_group,id_bskBASKET,id_EdBoardGroup,dFirstReq,dLastReq,dEdBoardSel,dRefereeSel,dRefereeRecom,dEdBoardRecom,dPubComRecom,dProjectLeaderAction FROM sbmCPLXAPPROVAL WHERE rn=%s and type=%s", key)
+    return run_sql("SELECT status,id_group,id_bskBASKET,id_EdBoardGroup,dFirstReq,dLastReq,dEdBoardSel,dRefereeSel,dRefereeRecom,dEdBoardRecom,dPubComRecom,dProjectLeaderAction FROM `sbmCPLXAPPROVAL` WHERE rn=%s and type=%s", key)
 
 def __db_set_EdBoardSel_time (key):
-    run_sql("UPDATE sbmCPLXAPPROVAL SET dEdBoardSel=NOW() WHERE  rn=%s and type=%s", key)
+    run_sql("UPDATE `sbmCPLXAPPROVAL` SET dEdBoardSel=NOW() WHERE  rn=%s and type=%s", key)
 
 def __db_check_EdBoardGroup ((RN, apptype), id_EdBoardGroup, uid, group_descr):
     res = get_group_infos (id_EdBoardGroup)
     if len(res) == 0:
         id_EdBoardGroup = insert_new_group (uid, RN, group_descr % RN, "VM")
-        run_sql("UPDATE sbmCPLXAPPROVAL SET id_EdBoardGroup=%s WHERE  rn=%s and type=%s", (id_EdBoardGroup, RN, apptype,))
+        run_sql("UPDATE `sbmCPLXAPPROVAL` SET id_EdBoardGroup=%s WHERE  rn=%s and type=%s", (id_EdBoardGroup, RN, apptype,))
 
     return id_EdBoardGroup
 
 def __db_set_basket ((RN, apptype), id_bsk):
-    run_sql("UPDATE sbmCPLXAPPROVAL SET id_bskBASKET=%s, dRefereeSel=NOW() WHERE  rn=%s and type=%s", (id_bsk, RN, apptype,))
+    run_sql("UPDATE `sbmCPLXAPPROVAL` SET id_bskBASKET=%s, dRefereeSel=NOW() WHERE  rn=%s and type=%s", (id_bsk, RN, apptype,))
 
 def __db_set_RefereeRecom_time (key):
-    run_sql("UPDATE sbmCPLXAPPROVAL SET dRefereeRecom=NOW() WHERE  rn=%s and type=%s", key)
+    run_sql("UPDATE `sbmCPLXAPPROVAL` SET dRefereeRecom=NOW() WHERE  rn=%s and type=%s", key)
 
 def __db_set_EdBoardRecom_time (key):
-    run_sql("UPDATE sbmCPLXAPPROVAL SET dEdBoardRecom=NOW() WHERE  rn=%s and type=%s", key)
+    run_sql("UPDATE `sbmCPLXAPPROVAL` SET dEdBoardRecom=NOW() WHERE  rn=%s and type=%s", key)
 
 def __db_set_PubComRecom_time (key):
-    run_sql("UPDATE sbmCPLXAPPROVAL SET dPubComRecom=NOW() WHERE  rn=%s and type=%s", key)
+    run_sql("UPDATE `sbmCPLXAPPROVAL` SET dPubComRecom=NOW() WHERE  rn=%s and type=%s", key)
 
 def __db_set_status ((RN, apptype), status):
-    run_sql("UPDATE sbmCPLXAPPROVAL SET status=%s, dProjectLeaderAction=NOW() WHERE  rn=%s and type=%s", (status, RN, apptype,))
+    run_sql("UPDATE `sbmCPLXAPPROVAL` SET status=%s, dProjectLeaderAction=NOW() WHERE  rn=%s and type=%s", (status, RN, apptype,))
 
 def __doCplxAction(req, doctype, categ, RN, apptype, action, email_user_pattern, id_user, id_user_remove, validate, id_user_val, msg_subject, msg_body, reply, commentId, ln=CFG_SITE_LANG):
     """
@@ -720,7 +720,11 @@ def __doCplxAction(req, doctype, categ, RN, apptype, action, email_user_pattern,
             # users that are connected
             try:
                 users2 = run_sql("""SELECT DISTINCT u.id, u.email
+<<<<<<< HEAD
                 FROM user u LEFT JOIN user_usergroup ug ON u.id = ug.id_user
+=======
+                FROM `user` u LEFT JOIN `user_usergroup` ug ON u.id = ug.id_user
+>>>>>>> 53be1c7... general: postgres fixes
                 WHERE u.email<>'' AND ug.id_usergroup = %s AND u.email RLIKE %s
                 ORDER BY u.email """, (id_EdBoardGroup, email_user_pattern))
             except OperationalError:
@@ -755,7 +759,11 @@ def __doCplxAction(req, doctype, categ, RN, apptype, action, email_user_pattern,
         subtitle2 = _('Removing users from the editorial board')
 
         usersremove = run_sql("""SELECT DISTINCT u.id, u.email
+<<<<<<< HEAD
                             FROM user u LEFT JOIN user_usergroup ug ON u.id = ug.id_user
+=======
+                            FROM `user` u LEFT JOIN `user_usergroup` ug ON u.id = ug.id_user
+>>>>>>> 53be1c7... general: postgres fixes
                             WHERE u.email <> "" AND ug.id_usergroup = %s and user_status != 'A' AND user_status != 'P'
                             ORDER BY u.email """, (id_EdBoardGroup, ))
 
@@ -828,7 +836,7 @@ def __doCplxAction(req, doctype, categ, RN, apptype, action, email_user_pattern,
                 perform_request_send (uid, email_address, "", TEXT_RefereeSel_MSG_REFEREE_SUBJECT, TEXT_RefereeSel_MSG_REFEREE_BODY, 0, 0, 0, ln, 1)
                 sendMailToReferee(doctype, categ, RN, email_address, authors)
 
-                group_name = run_sql("""SELECT name FROM usergroup WHERE id = %s""", (id_group, ))[0][0]
+                group_name = run_sql("""SELECT name FROM `usergroup` WHERE id = %s""", (id_group, ))[0][0]
                 perform_request_send (int(id_user_val), "", group_name, TEXT_RefereeSel_MSG_GROUP_SUBJECT, TEXT_RefereeSel_MSG_GROUP_BODY)
                 sendMailToGroup(doctype, categ, RN, id_group, authors)
             return __displayCplxDocument(req, doctype, categ, RN, apptype, reply, commentId, ln)
@@ -1762,7 +1770,7 @@ def sendMailToGroup(doctype, categ, RN, group_id, authors):
            str(CFG_SITE_URL + "/publiline.py?flow=cplx&doctype="+doctype+"&ln=en&apptype=RRP&categ="+categ+"&RN="+RN))
 
     # send mails to all members of the ATLAS group
-    group_member_ids = run_sql("SELECT id_user FROM user_usergroup WHERE id_usergroup = '%s'" % (group_id))
+    group_member_ids = run_sql("SELECT id_user FROM `user_usergroup` WHERE id_usergroup = '%s'" % (group_id))
     for member_id in group_member_ids:
         member_email = run_sql("SELECT email FROM user WHERE id = '%s'" % (member_id))
         if not member_email[0][0] == "info@invenio-software.org":

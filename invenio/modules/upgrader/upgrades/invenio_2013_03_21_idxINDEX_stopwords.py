@@ -30,16 +30,16 @@ def info():
 
 def do_upgrade():
     #first step: change tables
-    stmt = run_sql('SHOW CREATE TABLE idxINDEX')[0][1]
+    stmt = run_sql('SHOW CREATE TABLE `idxINDEX`')[0][1]
     if '`remove_stopwords` varchar' not in stmt:
         run_sql("ALTER TABLE idxINDEX ADD COLUMN remove_stopwords varchar(255) NOT NULL default '' AFTER synonym_kbrs")
     #second step: fill tables
-    run_sql("UPDATE idxINDEX SET remove_stopwords='No'")
+    run_sql("UPDATE `idxINDEX` SET remove_stopwords='No'")
     #third step: load from invenio.cfg if necessary
     from invenio.config import CFG_BIBINDEX_REMOVE_STOPWORDS
     if CFG_BIBINDEX_REMOVE_STOPWORDS:
         if CFG_BIBINDEX_REMOVE_STOPWORDS == 1:
-            run_sql("UPDATE idxINDEX SET remove_stopwords='Yes'")
+            run_sql("UPDATE `idxINDEX` SET remove_stopwords='Yes'")
 
 
 def estimate():

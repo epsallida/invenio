@@ -64,7 +64,7 @@ def mail_cookie_create_common(kind, params, cookie_timeout=timedelta(days=1), on
     expiration = datetime.today()+cookie_timeout
     data = (kind, params, expiration, onetime)
     password = md5(str(random())).hexdigest()
-    cookie_id = run_sql('INSERT INTO accMAILCOOKIE (data,expiration,kind,onetime) VALUES '
+    cookie_id = run_sql('INSERT INTO `accMAILCOOKIE` (data,expiration,kind,onetime) VALUES '
         '(AES_ENCRYPT(%s, %s),%s,%s,%s)',
         (dumps(data), password, expiration.strftime(_datetime_format), kind, onetime))
     if cookie_id is None:
@@ -108,7 +108,7 @@ def mail_cookie_retrieve_kind(cookie):
     try:
         password = cookie[:16]+cookie[-16:]
         cookie_id = int(cookie[16:-16], 16)
-        res = run_sql("SELECT kind FROM accMAILCOOKIE WHERE id=%s", (cookie_id, ), run_on_slave=True)
+        res = run_sql("SELECT kind FROM `accMAILCOOKIE` WHERE id=%s", (cookie_id, ), run_on_slave=True)
         if res:
             kind = res[0][0]
             assert(kind in _authorizations_kind)
@@ -125,7 +125,7 @@ def mail_cookie_check_common(cookie, delete=False):
     except Exception as e:
         raise InvenioWebAccessMailCookieError, "Cookie not valid: %s" % e
     try:
-        res = run_sql("SELECT kind, AES_DECRYPT(data,%s), onetime, status FROM accMAILCOOKIE WHERE "
+        res = run_sql("SELECT kind, AES_DECRYPT(data,%s), onetime, status FROM `accMAILCOOKIE` WHERE "
             "id=%s AND expiration>=NOW()", (password, cookie_id), run_on_slave=True)
         if not res:
             raise StandardError
@@ -138,7 +138,7 @@ def mail_cookie_check_common(cookie, delete=False):
     if status == 'D':
         raise InvenioWebAccessMailCookieDeletedError, "Cookie has been deleted"
     if onetime or delete:
-        run_sql("UPDATE accMAILCOOKIE SET status='D' WHERE id=%s", (cookie_id, ))
+        run_sql("UPDATE `accMAILCOOKIE` SET status='D' WHERE id=%s", (cookie_id, ))
     return (kind, params)
 
 def mail_cookie_check_role(cookie, uid):
@@ -200,4 +200,4 @@ def mail_cookie_delete_cookie(cookie):
 
 def mail_cookie_gc():
     """Clean the table for expired cookies"""
-    return run_sql("DELETE FROM accMAILCOOKIE WHERE expiration<NOW()")
+    return run_sql("DELETE FROM `accMAILCOOKIE` WHERE expiration<NOW()")

@@ -26,7 +26,7 @@ def info():
 
 def do_upgrade():
     run_sql("""
-CREATE TABLE IF NOT EXISTS goto (
+CREATE TABLE IF NOT EXISTS `goto` (
   label varchar(150) NOT NULL,
   plugin varchar(150) NOT NULL,
   parameters text NOT NULL,

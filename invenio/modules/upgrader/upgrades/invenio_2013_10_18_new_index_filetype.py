@@ -33,7 +33,7 @@ def do_upgrade():
 
 def do_upgrade_atlantis():
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxWORD25F (
+            CREATE TABLE IF NOT EXISTS `idxWORD25F` (
               id mediumint(9) unsigned NOT NULL auto_increment,
               term varchar(50) default NULL,
               hitlist longblob,
@@ -42,7 +42,7 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxWORD25R (
+            CREATE TABLE IF NOT EXISTS `idxWORD25R` (
               id_bibrec mediumint(9) unsigned NOT NULL,
               termlist longblob,
               type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
@@ -50,7 +50,7 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxPAIR25F (
+            CREATE TABLE IF NOT EXISTS `idxPAIR25F` (
               id mediumint(9) unsigned NOT NULL auto_increment,
               term varchar(100) default NULL,
               hitlist longblob,
@@ -59,7 +59,7 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxPAIR25R (
+            CREATE TABLE IF NOT EXISTS `idxPAIR25R` (
               id_bibrec mediumint(9) unsigned NOT NULL,
               termlist longblob,
               type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
@@ -67,7 +67,7 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxPHRASE25F (
+            CREATE TABLE IF NOT EXISTS `idxPHRASE25F` (
               id mediumint(9) unsigned NOT NULL auto_increment,
               term text default NULL,
               hitlist longblob,
@@ -76,16 +76,16 @@ def do_upgrade_atlantis():
             ) ENGINE=MyISAM;
             """)
     run_sql("""
-            CREATE TABLE IF NOT EXISTS idxPHRASE25R (
+            CREATE TABLE IF NOT EXISTS `idxPHRASE25R` (
               id_bibrec mediumint(9) unsigned NOT NULL,
               termlist longblob,
               type enum('CURRENT','FUTURE','TEMPORARY') NOT NULL default 'CURRENT',
               PRIMARY KEY (id_bibrec,type)
             ) ENGINE=MyISAM;
             """)
-    run_sql("""INSERT INTO idxINDEX VALUES (25,'filetype','This index contains file extensions of the record.', '0000-00-00 00:00:00', '', 'native', '', 'No', 'No', 'No', 'BibIndexFiletypeTokenizer')""")
-    run_sql("""INSERT INTO field VALUES (38,'file type', 'filetype')""")
-    run_sql("""INSERT INTO idxINDEX_field (id_idxINDEX, id_field) VALUES (25,38)""")
+    run_sql("""INSERT INTO `idxINDEX` VALUES (25,'filetype','This index contains file extensions of the record.', '0000-00-00 00:00:00', '', 'native', '', 'No', 'No', 'No', 'BibIndexFiletypeTokenizer')""")
+    run_sql("""INSERT INTO `field` VALUES (38,'file type', 'filetype')""")
+    run_sql("""INSERT INTO `idxINDEX_field` (id_idxINDEX, id_field) VALUES (25,38)""")
 
 def estimate():
     return 1

@@ -187,7 +187,7 @@ def cli_quick_match_all_recids(options):
     if tmp_date_query:
         tmp_date_query = ' AND '.join(tmp_date_query)
         tmp_date_params = tuple(tmp_date_params)
-        query = 'SELECT id FROM bibrec WHERE %s' % tmp_date_query
+        query = 'SELECT id FROM `bibrec` WHERE %s' % tmp_date_query
         debug('Query: %s, param: %s' % (query, tmp_date_params))
         recids &= intbitset(run_sql(query % tmp_date_query, tmp_date_params))
         debug('After applying dates we obtain recids: %s' % recids)
@@ -251,7 +251,7 @@ def cli_quick_match_all_docids(options, recids=None):
     if tmp_query:
         tmp_query = ' AND '.join(tmp_query)
         tmp_params = tuple(tmp_params)
-        query = 'SELECT id FROM bibdoc WHERE %s' % tmp_query
+        query = 'SELECT id FROM `bibdoc` WHERE %s' % tmp_query
         debug('Query: %s, param: %s' % (query, tmp_params))
         docids &= intbitset(run_sql(query, tmp_params))
         debug('After applying dates we obtain docids: %s' % docids)
@@ -433,15 +433,15 @@ def cli_get_stats(dummy):
             for row in table:
                 print("\t".join(str(elem) for elem in row))
 
-    for collection, reclist in run_sql("SELECT name, reclist FROM collection ORDER BY name"):
+    for collection, reclist in run_sql("SELECT name, reclist FROM `collection` ORDER BY name"):
         print("-" * 79)
         print("Statistic for: %s " % collection)
         reclist = intbitset(reclist)
         if reclist:
             sqlreclist = "(" + ','.join(str(elem) for elem in reclist) + ')'
-            print_table("Formats", run_sql("SELECT COUNT(format) as c, format FROM bibrec_bibdoc AS bb JOIN bibdocfsinfo AS fs ON bb.id_bibdoc=fs.id_bibdoc WHERE id_bibrec in %s AND last_version=true GROUP BY format ORDER BY c DESC" % sqlreclist)) # kwalitee: disable=sql
-            print_table("Mimetypes", run_sql("SELECT COUNT(mime) as c, mime FROM bibrec_bibdoc AS bb JOIN bibdocfsinfo AS fs ON bb.id_bibdoc=fs.id_bibdoc WHERE id_bibrec in %s AND last_version=true GROUP BY mime ORDER BY c DESC" % sqlreclist)) # kwalitee: disable=sql
-            print_table("Sizes", run_sql("SELECT SUM(filesize) AS c FROM bibrec_bibdoc AS bb JOIN bibdocfsinfo AS fs ON bb.id_bibdoc=fs.id_bibdoc WHERE id_bibrec in %s AND last_version=true" % sqlreclist)) # kwalitee: disable=sql
+            print_table("Formats", run_sql("SELECT COUNT(format) as c, format FROM `bibrec_bibdoc` AS bb JOIN `bibdocfsinfo` AS fs ON bb.id_bibdoc=fs.id_bibdoc WHERE id_bibrec in %s AND last_version=true GROUP BY format ORDER BY c DESC" % sqlreclist)) # kwalitee: disable=sql
+            print_table("Mimetypes", run_sql("SELECT COUNT(mime) as c, mime FROM `bibrec_bibdoc` AS bb JOIN `bibdocfsinfo` AS fs ON bb.id_bibdoc=fs.id_bibdoc WHERE id_bibrec in %s AND last_version=true GROUP BY mime ORDER BY c DESC" % sqlreclist)) # kwalitee: disable=sql
+            print_table("Sizes", run_sql("SELECT SUM(filesize) AS c FROM `bibrec_bibdoc` AS bb JOIN `bibdocfsinfo` AS fs ON bb.id_bibdoc=fs.id_bibdoc WHERE id_bibrec in %s AND last_version=true" % sqlreclist)) # kwalitee: disable=sql
 
 class OptionParserSpecial(OptionParser):
     def format_help(self, *args, **kwargs):

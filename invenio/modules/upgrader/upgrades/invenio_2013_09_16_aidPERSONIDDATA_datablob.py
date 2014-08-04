@@ -36,14 +36,14 @@ def do_upgrade():
     run_sql("""ALTER TABLE aidPERSONIDDATA MODIFY data VARCHAR( 256 ) NULL DEFAULT NULL""")
 
     pids_with_tickets = set(run_sql("""select personid
-                                       from aidPERSONIDDATA
+                                       from `aidPERSONIDDATA`
                                        where tag like %s""",
                                        ('rt_%',) ))
     pids_with_tickets = [pid[0] for pid in pids_with_tickets]
 
     for pid in pids_with_tickets:
         request_tickets = run_sql("""select tag, data, opt1
-                                     from aidPERSONIDDATA
+                                     from `aidPERSONIDDATA`
                                      where personid=%s
                                      and tag like 'rt_%%'""",
                                      (pid,) )
@@ -71,12 +71,12 @@ def do_upgrade():
         new_request_tickets_num = len(new_request_tickets)
         new_request_tickets = serialize(new_request_tickets)
 
-        run_sql("""insert into aidPERSONIDDATA
+        run_sql("""insert into `aidPERSONIDDATA`
                    (personid, tag, datablob, opt1)
                    values (%s, %s, %s, %s)""",
                    (pid, 'request_tickets', new_request_tickets, new_request_tickets_num) )
 
-    run_sql("""delete from aidPERSONIDDATA
+    run_sql("""delete from `aidPERSONIDDATA`
                where tag like %s""",
                ('rt_%', ))
 

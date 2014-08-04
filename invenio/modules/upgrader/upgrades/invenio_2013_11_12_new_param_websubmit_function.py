@@ -25,7 +25,7 @@ def info():
     return "New 'deferRelatedFormatsCreation' parameter for Create_Upload_Files_Interface WebSubmit function"
 
 def do_upgrade():
-    run_sql("""INSERT INTO sbmFUNDESC VALUES ('Create_Upload_Files_Interface','deferRelatedFormatsCreation')""")
+    run_sql("""INSERT INTO `sbmFUNDESC` VALUES ('Create_Upload_Files_Interface','deferRelatedFormatsCreation')""")
 
 def estimate():
     """  Estimate running time of upgrade in seconds (optional). """

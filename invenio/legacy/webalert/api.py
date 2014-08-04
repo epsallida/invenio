@@ -75,7 +75,7 @@ def perform_display(permanent, uid, ln=CFG_SITE_LANG):
     # first detect number of queries:
     nb_queries_total = 0
     nb_queries_distinct = 0
-    query = "SELECT COUNT(*),COUNT(DISTINCT(id_query)) FROM user_query WHERE id_user=%s"
+    query = "SELECT COUNT(*),COUNT(DISTINCT(id_query)) FROM `user_query` WHERE id_user=%s"
     res = run_sql(query, (uid,), 1)
     try:
         nb_queries_total = res[0][0]
@@ -87,7 +87,7 @@ def perform_display(permanent, uid, ln=CFG_SITE_LANG):
     params = ()
     if permanent == "n":
         SQL_query = "SELECT DISTINCT(q.id),q.urlargs "\
-                    "FROM query q, user_query uq "\
+                    "FROM `query` q, user_query uq "\
                     "WHERE uq.id_user=%s "\
                     "AND uq.id_query=q.id "\
                     "ORDER BY q.id DESC"
@@ -95,7 +95,7 @@ def perform_display(permanent, uid, ln=CFG_SITE_LANG):
     else:
         # permanent="y"
         SQL_query = "SELECT q.id,q.urlargs "\
-                    "FROM query q "\
+                    "FROM `query` q "\
                     "WHERE q.type='p'"
     query_result = run_sql(SQL_query, params)
 
@@ -103,7 +103,7 @@ def perform_display(permanent, uid, ln=CFG_SITE_LANG):
     if len(query_result) > 0:
         for row in query_result :
             if permanent == "n":
-                res = run_sql("SELECT DATE_FORMAT(MAX(date),'%%Y-%%m-%%d %%H:%%i:%%s') FROM user_query WHERE id_user=%s and id_query=%s",
+                res = run_sql("SELECT DATE_FORMAT(MAX(date),'%%Y-%%m-%%d %%H:%%i:%%s') FROM `user_query` WHERE id_user=%s and id_query=%s",
                               (uid, row[0]))
                 try:
                     lastrun = res[0][0]
@@ -162,7 +162,7 @@ def perform_input_alert(action, id_query, alert_name, frequency, notification, i
     if not check_user_can_add_alert(uid, id_query):
         raise AlertError(_("You do not have rights for this operation."))
     # display query information
-    res = run_sql("SELECT urlargs FROM query WHERE id=%s", (id_query,))
+    res = run_sql("SELECT urlargs FROM `query` WHERE id=%s", (id_query,))
     try:
         urlargs = res[0][0]
     except:
@@ -226,7 +226,7 @@ def perform_add_alert(alert_name, frequency, notification,
         raise AlertError( _("You are not the owner of this basket.") )
 
     # add a row to the alerts table: user_query_basket
-    query = """INSERT INTO user_query_basket (id_user, id_query, id_basket,
+    query = """INSERT INTO `user_query_basket` (id_user, id_query, id_basket,
                                               frequency, date_creation, date_lastrun,
                                               alert_name, notification)
                VALUES (%s,%s,%s,%s,%s,'',%s,%s)"""
@@ -250,8 +250,8 @@ def perform_list_alerts(uid, ln=CFG_SITE_LANG):
                        a.alert_name, a.frequency,a.notification,
                        DATE_FORMAT(a.date_creation,'%%Y-%%m-%%d %%H:%%i:%%s'),
                        DATE_FORMAT(a.date_lastrun,'%%Y-%%m-%%d %%H:%%i:%%s')
-                FROM user_query_basket a LEFT JOIN query q ON a.id_query=q.id
-                                         LEFT JOIN bskBASKET b ON a.id_basket=b.id
+                FROM `user_query_basket` a LEFT JOIN `query` q ON a.id_query=q.id
+                                         LEFT JOIN `bskBASKET` b ON a.id_basket=b.id
                 WHERE a.id_user=%s
                 ORDER BY a.alert_name ASC """
     res = run_sql(query, (uid,))
@@ -363,7 +363,7 @@ def perform_update_alert(alert_name, frequency, notification, id_basket, id_quer
         check_alert_is_unique( id_basket, id_query, uid, ln)
 
     # update a row into the alerts table: user_query_basket
-    query = """UPDATE user_query_basket
+    query = """UPDATE `user_query_basket`
                SET alert_name=%s,frequency=%s,notification=%s,
                    date_creation=%s,date_lastrun='',id_basket=%s
                WHERE id_user=%s AND id_query=%s AND id_basket=%s"""
@@ -395,7 +395,7 @@ def account_list_alerts(uid, ln=CFG_SITE_LANG):
                        DATE_FORMAT(a.date_creation,'%%d %%b %%Y'),
                        DATE_FORMAT(a.date_lastrun,'%%d %%b %%Y'),
                        a.id_basket
-                FROM query q, user_query_basket a
+                FROM `query` q, user_query_basket a
                 WHERE a.id_user=%s AND a.id_query=q.id
                 ORDER BY a.alert_name ASC """
     res = run_sql(query, (uid,))
@@ -416,7 +416,7 @@ def account_list_searches(uid, ln=CFG_SITE_LANG):
     out = ""
     # first detect number of queries:
     nb_queries_total = 0
-    res = run_sql("SELECT COUNT(*) FROM user_query WHERE id_user=%s", (uid,), 1)
+    res = run_sql("SELECT COUNT(*) FROM `user_query` WHERE id_user=%s", (uid,), 1)
     try:
         nb_queries_total = res[0][0]
     except:

@@ -460,18 +460,18 @@ def cli_cmd_reset_sitename(conf):
     # reset CFG_SITE_NAME:
     sitename = conf.get("Invenio", "CFG_SITE_NAME")
     try:
-        run_sql("""INSERT INTO collection (id, name, dbquery, reclist) VALUES
+        run_sql("""INSERT INTO `collection` (id, name, dbquery, reclist) VALUES
                                           (1,%s,NULL,NULL)""", (sitename,))
     except IntegrityError:
-        run_sql("""UPDATE collection SET name=%s WHERE id=1""", (sitename,))
+        run_sql("""UPDATE `collection` SET name=%s WHERE id=1""", (sitename,))
     # reset CFG_SITE_NAME_INTL:
     for lang in conf.get("Invenio", "CFG_SITE_LANGS"):
         sitename_lang = conf.get("Invenio", "CFG_SITE_NAME_INTL")[lang]
         try:
-            run_sql("""INSERT INTO collectionname (id_collection, ln, type, value) VALUES
+            run_sql("""INSERT INTO `collectionname` (id_collection, ln, type, value) VALUES
                          (%s,%s,%s,%s)""", (1, lang, 'ln', sitename_lang))
         except IntegrityError:
-            run_sql("""UPDATE collectionname SET value=%s
+            run_sql("""UPDATE `collectionname` SET value=%s
                         WHERE ln=%s AND id_collection=1 AND type='ln'""",
                     (sitename_lang, lang))
     print("You may want to restart Apache now.")
@@ -495,7 +495,7 @@ def cli_cmd_reset_recstruct_cache(conf):
     if enable_recstruct_cache:
         print(">>> Searching records which need recstruct cache resetting; this may take a while...")
         all_recids = intbitset(run_sql("SELECT id FROM bibrec"))
-        good_recids = intbitset(run_sql("SELECT bibrec.id FROM bibrec JOIN bibfmt ON bibrec.id = bibfmt.id_bibrec WHERE format='recstruct' AND modification_date < last_updated"))
+        good_recids = intbitset(run_sql("SELECT bibrec.id FROM `bibrec` JOIN `bibfmt` ON bibrec.id = bibfmt.id_bibrec WHERE format='recstruct' AND modification_date < last_updated"))
         recids = all_recids - good_recids
         print(">>> Generating recstruct cache...")
         tot = len(recids)
@@ -505,13 +505,13 @@ def cli_cmd_reset_recstruct_cache(conf):
                 value = serialize_via_marshal(get_record(recid))
             except zlib.error, err:
                 print >> sys.stderr, "Looks like XM is corrupted for record %s. Let's recover it from bibxxx" % recid
-                run_sql("DELETE FROM bibfmt WHERE id_bibrec=%s AND format='xm'", (recid, ))
+                run_sql("DELETE FROM `bibfmt` WHERE id_bibrec=%s AND format='xm'", (recid, ))
                 xm_value = zlib.compress(print_record(recid, 'xm'))
-                run_sql("INSERT INTO bibfmt(id_bibrec, format, last_updated, value) VALUES(%s, 'xm', NOW(), %s)", (recid, xm_value))
+                run_sql("INSERT INTO `bibfmt` (id_bibrec, format, last_updated, value) VALUES(%s, 'xm', NOW(), %s)", (recid, xm_value))
                 value = serialize_via_marshal(get_record(recid))
 
-            run_sql("DELETE FROM bibfmt WHERE id_bibrec=%s AND format='recstruct'", (recid, ))
-            run_sql("INSERT INTO bibfmt(id_bibrec, format, last_updated, value) VALUES(%s, 'recstruct', NOW(), %s)", (recid, value))
+            run_sql("DELETE FROM `bibfmt` WHERE id_bibrec=%s AND format='recstruct'", (recid, ))
+            run_sql("INSERT INTO `bibfmt` (id_bibrec, format, last_updated, value) VALUES(%s, 'recstruct', NOW(), %s)", (recid, value))
             count += 1
             if count % 1000 == 0:
                 print("    ... done records %s/%s" % (count, tot))
@@ -520,7 +520,7 @@ def cli_cmd_reset_recstruct_cache(conf):
         print(">>> recstruct cache generated successfully.")
     else:
         print(">>> Cleaning recstruct cache...")
-        run_sql("DELETE FROM bibfmt WHERE format='recstruct'")
+        run_sql("DELETE FROM `bibfmt` WHERE format='recstruct'")
 
 
 def cli_cmd_reset_recjson_cache(conf):
@@ -541,15 +541,24 @@ def cli_cmd_reset_siteadminemail(conf):
     """
     Reset user-related tables with new CFG_SITE_ADMIN_EMAIL read from conf files.
     """
-    print(">>> Going to reset CFG_SITE_ADMIN_EMAIL...")
+    from invenio.ext.sqlalchemy import db
     from invenio.legacy.dbquery import run_sql
+
+    print(">>> Going to reset CFG_SITE_ADMIN_EMAIL...")
     siteadminemail = conf.get("Invenio", "CFG_SITE_ADMIN_EMAIL")
-    run_sql("DELETE FROM user WHERE id=1")
-    run_sql("""INSERT INTO user (id, email, password, note, nickname) VALUES
-                        (1, %s, AES_ENCRYPT(email, ''), 1, 'admin')""",
-            (siteadminemail,))
+
+    # run_sql("DELETE FROM user WHERE id=1")
+    # run_sql("""INSERT INTO user (id, email, password, note, nickname) VALUES
+    #       (1, %s, AES_ENCRYPT(email, ''), 1, 'admin')""",
+    #         (siteadminemail,))
+
+    User.query.get(1).delete()
+    db.session.add(User(id=1, nickname='admin', email=siteadminemail,
+                       password=''))
+
     print("You may want to restart Apache now.")
     print(">>> CFG_SITE_ADMIN_EMAIL reset successfully.")
+
 
 def cli_cmd_reset_fieldnames(conf):
     """
@@ -589,11 +598,11 @@ def cli_cmd_reset_fieldnames(conf):
         for (field_id, field_name) in field_id_name_list:
             if field_name in field_name_names:
                 try:
-                    run_sql("""INSERT INTO fieldname (id_field,ln,type,value) VALUES
+                    run_sql("""INSERT INTO `fieldname` (id_field,ln,type,value) VALUES
                                 (%s,%s,%s,%s)""", (field_id, lang, 'ln',
                                                 field_name_names[field_name]))
                 except IntegrityError:
-                    run_sql("""UPDATE fieldname SET value=%s
+                    run_sql("""UPDATE `fieldname` SET value=%s
                                 WHERE id_field=%s AND ln=%s AND type=%s""",
                             (field_name_names[field_name], field_id, lang, 'ln',))
         ## ditto for rank methods:
@@ -606,11 +615,11 @@ def cli_cmd_reset_fieldnames(conf):
         for (rankmethod_id, rankmethod_name) in rankmethod_id_name_list:
             if rankmethod_name in rankmethod_name_names:
                 try:
-                    run_sql("""INSERT INTO rnkMETHODNAME (id_rnkMETHOD,ln,type,value) VALUES
+                    run_sql("""INSERT INTO `rnkMETHODNAME` (id_rnkMETHOD,ln,type,value) VALUES
                                 (%s,%s,%s,%s)""", (rankmethod_id, lang, 'ln',
                                                    rankmethod_name_names[rankmethod_name]))
                 except IntegrityError:
-                    run_sql("""UPDATE rnkMETHODNAME SET value=%s
+                    run_sql("""UPDATE `rnkMETHODNAME` SET value=%s
                                 WHERE id_rnkMETHOD=%s AND ln=%s AND type=%s""",
                             (rankmethod_name_names[rankmethod_name], rankmethod_id, lang, 'ln',))
 
@@ -694,8 +703,8 @@ the above error message and fix the problem before continuing.""" % \
     try:
         try:
             beta_in_utf8 = "β" # Greek beta in UTF-8 is 0xCEB2
-            run_sql("CREATE TABLE test__invenio__utf8 (x char(1), y varbinary(2)) DEFAULT CHARACTER SET utf8 ENGINE=MyISAM;")
-            run_sql("INSERT INTO test__invenio__utf8 (x, y) VALUES (%s, %s)", (beta_in_utf8, beta_in_utf8))
+            run_sql("CREATE TABLE `test__invenio__utf8` (x char(1), y varbinary(2)) DEFAULT CHARACTER SET utf8 ENGINE=MyISAM;")
+            run_sql("INSERT INTO `test__invenio__utf8` (x, y) VALUES (%s, %s)", (beta_in_utf8, beta_in_utf8))
             res = run_sql("SELECT x,y,HEX(x),HEX(y),LENGTH(x),LENGTH(y),CHAR_LENGTH(x),CHAR_LENGTH(y) FROM test__invenio__utf8")
             assert res[0] == ('\xce\xb2', '\xce\xb2', 'CEB2', 'CEB2', 2L, 2L, 1L, 2L)
             run_sql("DROP TABLE test__invenio__utf8")

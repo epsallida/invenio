@@ -124,7 +124,7 @@ def get_field(recID, tag):
 def check_nbrecs_for_all_external_collections():
     """Check if any of the external collections have changed their total number of records, aka nbrecs.
     Return True if any of the total numbers of records have changed and False if they're all the same."""
-    res = run_sql("SELECT name FROM collection WHERE dbquery LIKE 'hostedcollection:%';")
+    res = run_sql("SELECT name FROM `collection` WHERE dbquery LIKE 'hostedcollection:%';")
     for row in res:
         coll_name = row[0]
         if (get_collection(coll_name)).check_nbrecs_for_external_collection():
@@ -182,7 +182,7 @@ class Collection:
         """Returns list of sample search queries for this collection.
         """
         res = run_sql("""SELECT example.body FROM example
-        LEFT JOIN collection_example on example.id=collection_example.id_example
+        LEFT JOIN `collection_example` on example.id=collection_example.id_example
         WHERE collection_example.id_collection=%s ORDER BY collection_example.score""", (self.id,))
         return [query[0] for query in res]
 
@@ -191,7 +191,7 @@ class Collection:
         The NAME_TYPE may be 'ln' (=long name), 'sn' (=short name), etc."""
         out = prolog
         i18name = ""
-        res = run_sql("SELECT value FROM collectionname WHERE id_collection=%s AND ln=%s AND type=%s", (self.id, ln, name_type))
+        res = run_sql("SELECT value FROM `collectionname` WHERE id_collection=%s AND ln=%s AND type=%s", (self.id, ln, name_type))
         try:
             i18name += res[0][0]
         except IndexError:
@@ -217,11 +217,11 @@ class Collection:
         @param box_type: can be 'r' (=Narrow by), 'v' (=Focus on), 'l' (=Latest additions)
         """
         i18name = ""
-        res = run_sql("SELECT value FROM collectionboxname WHERE id_collection=%s AND ln=%s AND type=%s", (self.id, ln, box_type))
+        res = run_sql("SELECT value FROM `collectionboxname` WHERE id_collection=%s AND ln=%s AND type=%s", (self.id, ln, box_type))
         try:
             i18name = res[0][0]
         except IndexError:
-            res = run_sql("SELECT value FROM collectionboxname WHERE id_collection=%s AND ln=%s AND type=%s", (self.id, CFG_SITE_LANG, box_type))
+            res = run_sql("SELECT value FROM `collectionboxname` WHERE id_collection=%s AND ln=%s AND type=%s", (self.id, CFG_SITE_LANG, box_type))
             try:
                 i18name = res[0][0]
             except IndexError:
@@ -248,7 +248,7 @@ class Collection:
         ancestors_ids = intbitset()
         id_son = self.id
         while 1:
-            query = "SELECT cc.id_dad,c.name FROM collection_collection AS cc, collection AS c "\
+            query = "SELECT cc.id_dad,c.name FROM `collection_collection` AS cc, collection AS c "\
                     "WHERE cc.id_son=%d AND c.id=cc.id_dad" % int(id_son)
             res = run_sql(query, None, 1)
             if res:
@@ -279,7 +279,7 @@ class Collection:
         "Returns list of direct sons of type 'type' for the current collection."
         sons = []
         id_dad = self.id
-        query = "SELECT cc.id_son,c.name FROM collection_collection AS cc, collection AS c "\
+        query = "SELECT cc.id_son,c.name FROM `collection_collection` AS cc, collection AS c "\
                 "WHERE cc.id_dad=%d AND cc.type='%s' AND c.id=cc.id_son ORDER BY score DESC, c.name ASC" % (int(id_dad), type)
         res = run_sql(query)
         for row in res:
@@ -291,7 +291,7 @@ class Collection:
         descendants = []
         descendant_ids = intbitset()
         id_dad = self.id
-        query = "SELECT cc.id_son,c.name FROM collection_collection AS cc, collection AS c "\
+        query = "SELECT cc.id_son,c.name FROM `collection_collection` AS cc, collection AS c "\
                 "WHERE cc.id_dad=%d AND cc.type='%s' AND c.id=cc.id_son ORDER BY score DESC" % (int(id_dad), type)
         res = run_sql(query)
         for row in res:
@@ -391,7 +391,7 @@ class Collection:
         """Creates portalboxes of language CFG_SITE_LANG of the position POSITION by consulting DB configuration database.
            The position may be: 'lt'='left top', 'rt'='right top', etc."""
         out = ""
-        query = "SELECT p.title,p.body FROM portalbox AS p, collection_portalbox AS cp "\
+        query = "SELECT p.title,p.body FROM `portalbox` AS p, collection_portalbox AS cp "\
                 " WHERE cp.id_collection=%d AND p.id=cp.id_portalbox AND cp.ln='%s' AND cp.position='%s' "\
                 " ORDER BY cp.score DESC" % (self.id, lang, position)
         res = run_sql(query)
@@ -568,7 +568,7 @@ class Collection:
     def create_searchoptions(self):
         "Produces 'Search options' portal box."
         box = ""
-        query = """SELECT DISTINCT(cff.id_field),f.code,f.name FROM collection_field_fieldvalue AS cff, field AS f
+        query = """SELECT DISTINCT(cff.id_field),f.code,f.name FROM `collection_field_fieldvalue` AS cff, field AS f
                    WHERE cff.id_collection=%d AND cff.id_fieldvalue IS NOT NULL AND cff.id_field=f.id
                    ORDER BY cff.score DESC""" % self.id
         res = run_sql(query)
@@ -577,7 +577,7 @@ class Collection:
                 field_id = row[0]
                 field_code = row[1]
                 field_name = row[2]
-                query_bis = """SELECT fv.value,fv.name FROM fieldvalue AS fv, collection_field_fieldvalue AS cff
+                query_bis = """SELECT fv.value,fv.name FROM `fieldvalue` AS fv, collection_field_fieldvalue AS cff
                                WHERE cff.id_collection=%d AND cff.type='seo' AND cff.id_field=%d AND fv.id=cff.id_fieldvalue
                                ORDER BY cff.score_fieldvalue DESC, cff.score DESC, fv.name ASC""" % (self.id, field_id)
                 res_bis = run_sql(query_bis)
@@ -600,7 +600,7 @@ class Collection:
         _ = gettext_set_language(ln)
 
         box = ""
-        query = """SELECT f.code,f.name FROM field AS f, collection_field_fieldvalue AS cff
+        query = """SELECT f.code,f.name FROM `field` AS f, collection_field_fieldvalue AS cff
                    WHERE id_collection=%d AND cff.type='soo' AND cff.id_field=f.id
                    ORDER BY cff.score DESC, f.name ASC""" % self.id
         values = [{'value' : '', 'text': "- %s -" % _("latest first")}]
@@ -700,7 +700,7 @@ class Collection:
 
 
         # get values
-        query = """SELECT f.code,f.name FROM field AS f, collection_field_fieldvalue AS cff
+        query = """SELECT f.code,f.name FROM `field` AS f, collection_field_fieldvalue AS cff
                    WHERE cff.type='sew' AND cff.id_collection=%d AND cff.id_field=f.id
                    ORDER BY cff.score DESC, f.name ASC"""  % self.id
         res = run_sql(query)
@@ -901,7 +901,7 @@ class Collection:
         try:
             ## In principle we could skip this update if old_reclist==reclist
             ## however we just update it here in case of race-conditions.
-            run_sql("UPDATE collection SET nbrecs=%s, reclist=%s WHERE id=%s",
+            run_sql("UPDATE `collection` SET nbrecs=%s, reclist=%s WHERE id=%s",
                     (self.nbrecs, self.reclist.fastdump(), self.id))
             if self.old_reclist != self.reclist:
                 self.reclist_updated_since_start = 1
@@ -1138,7 +1138,7 @@ def task_run_core():
                 v_type_descendants = coll.get_descendants(type='v')
                 colls += v_type_descendants
         else:
-            res = run_sql("SELECT name FROM collection ORDER BY id")
+            res = run_sql("SELECT name FROM `collection` ORDER BY id")
             for row in res:
                 colls.append(get_collection(row[0]))
         # secondly, update collection reclist cache:

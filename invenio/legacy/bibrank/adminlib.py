@@ -579,7 +579,7 @@ def get_rnk_code(rnkID):
     rnkID - id from rnkMETHOD"""
 
     try:
-        res = run_sql("SELECT name FROM rnkMETHOD where id=%s" % (rnkID))
+        res = run_sql("SELECT name FROM `rnkMETHOD` where id=%s" % (rnkID))
         return res
     except StandardError as e:
         return ()
@@ -602,7 +602,7 @@ def get_translations(rnkID):
     rnkID - the id of the rankmethod from rnkMETHOD """
 
     try:
-        res = run_sql("SELECT ln, type, value FROM rnkMETHODNAME where id_rnkMETHOD=%s ORDER BY ln,type" % (rnkID))
+        res = run_sql("SELECT ln, type, value FROM `rnkMETHODNAME` where id_rnkMETHOD=%s ORDER BY ln,type" % (rnkID))
         return res
     except StandardError as e:
         return ()
@@ -627,7 +627,7 @@ def get_rnk_col(rnkID, ln=CFG_SITE_LANG):
     rnkID - id from rnkMETHOD"""
 
     try:
-        res1 = dict(run_sql("SELECT id_collection, '' FROM collection_rnkMETHOD WHERE id_rnkMETHOD=%s" % rnkID))
+        res1 = dict(run_sql("SELECT id_collection, '' FROM `collection_rnkMETHOD` WHERE id_rnkMETHOD=%s" % rnkID))
         res2 = get_def_name('', "collection")
         result = filter(lambda x: x[0] in res1, res2)
         return result
@@ -650,7 +650,7 @@ def attach_col_rnk(rnkID, colID):
     colID - id of collection, as in collection table """
 
     try:
-        res = run_sql("INSERT INTO collection_rnkMETHOD(id_collection, id_rnkMETHOD) values (%s,%s)" % (colID, rnkID))
+        res = run_sql("INSERT INTO `collection_rnkMETHOD` (id_collection, id_rnkMETHOD) values (%s,%s)" % (colID, rnkID))
         return (1, "")
     except StandardError as e:
         return (0, e)
@@ -661,7 +661,7 @@ def detach_col_rnk(rnkID, colID):
     colID - id of collection, as in collection table """
 
     try:
-        res = run_sql("DELETE FROM collection_rnkMETHOD WHERE id_collection=%s AND id_rnkMETHOD=%s" % (colID, rnkID))
+        res = run_sql("DELETE FROM `collection_rnkMETHOD` WHERE id_collection=%s AND id_rnkMETHOD=%s" % (colID, rnkID))
         return (1, "")
     except StandardError as e:
         return (0, e)
@@ -671,10 +671,10 @@ def delete_rnk(rnkID, table=""):
     rnkID - delete all data in the tables associated with ranking and this id """
 
     try:
-        res = run_sql("DELETE FROM rnkMETHOD WHERE id=%s" % rnkID)
-        res = run_sql("DELETE FROM rnkMETHODNAME WHERE id_rnkMETHOD=%s" % rnkID)
-        res = run_sql("DELETE FROM collection_rnkMETHOD WHERE id_rnkMETHOD=%s" % rnkID)
-        res = run_sql("DELETE FROM rnkMETHODDATA WHERE id_rnkMETHOD=%s" % rnkID)
+        res = run_sql("DELETE FROM `rnkMETHOD` WHERE id=%s" % rnkID)
+        res = run_sql("DELETE FROM `rnkMETHODNAME` WHERE id_rnkMETHOD=%s" % rnkID)
+        res = run_sql("DELETE FROM `collection_rnkMETHOD` WHERE id_rnkMETHOD=%s" % rnkID)
+        res = run_sql("DELETE FROM `rnkMETHODDATA` WHERE id_rnkMETHOD=%s" % rnkID)
         if table:
             res = run_sql("truncate %s" % table)
             res = run_sql("truncate %sR" % table[:-1])
@@ -688,7 +688,7 @@ def modify_rnk(rnkID, rnkcode):
     rnkcode - new value for field 'name' in rnkMETHOD """
 
     try:
-        res = run_sql("UPDATE rnkMETHOD set name=%s WHERE id=%s", (rnkcode, rnkID))
+        res = run_sql("UPDATE `rnkMETHOD` set name=%s WHERE id=%s", (rnkcode, rnkID))
         return (1, "")
     except StandardError as e:
         return (0, e)
@@ -698,8 +698,8 @@ def add_rnk(rnkcode):
     rnkcode - the "code" for the rank method, to be used by bibrank daemon """
 
     try:
-        res = run_sql("INSERT INTO rnkMETHOD (name) VALUES (%s)", (rnkcode,))
-        res = run_sql("SELECT id FROM rnkMETHOD WHERE name=%s", (rnkcode,))
+        res = run_sql("INSERT INTO `rnkMETHOD` (name) VALUES (%s)", (rnkcode,))
+        res = run_sql("SELECT id FROM `rnkMETHOD` WHERE name=%s", (rnkcode,))
         if res:
             return (1, res[0][0])
         else:
@@ -1024,7 +1024,7 @@ def modify_translations(ID, langs, sel_type, trans, table, id_column=None):
                                   (ID, sel_type, langs[nr][0]))
             else:
                 if trans[nr]:
-                    res = run_sql("INSERT INTO %s%s (%s, type, ln, value) VALUES (%%s,%%s,%%s,%%s)" % (table, name, id_column),
+                    res = run_sql("INSERT INTO `%s%s` (%s, type, ln, value) VALUES (%%s,%%s,%%s,%%s)" % (table, name, id_column),
                                   (ID, sel_type, langs[nr][0], trans[nr]))
         return (1, "")
     except StandardError as e:

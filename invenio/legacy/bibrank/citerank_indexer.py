@@ -603,7 +603,7 @@ are written into this file: %s" % (nr_of_ranks, filename), verbose=2)
 def del_rank_method_data(rank_method_code):
     """Delete the data for a rank method from rnkMETHODDATA table"""
     id_ = run_sql("SELECT id from rnkMETHOD where name=%s", (rank_method_code, ))
-    run_sql("DELETE FROM rnkMETHODDATA WHERE id_rnkMETHOD=%s", (id_[0][0], ))
+    run_sql("DELETE FROM `rnkMETHODDATA` WHERE id_rnkMETHOD=%s", (id_[0][0], ))
 
 
 def into_db(dict_of_ranks, rank_method_code):
@@ -613,10 +613,10 @@ def into_db(dict_of_ranks, rank_method_code):
     del_rank_method_data(rank_method_code)
     serialized_data = serialize_via_marshal(dict_of_ranks)
     method_id_str = str(method_id[0][0])
-    run_sql("INSERT INTO rnkMETHODDATA(id_rnkMETHOD, relevance_data) \
+    run_sql("INSERT INTO `rnkMETHODDATA` (id_rnkMETHOD, relevance_data) \
         VALUES(%s, %s) ", (method_id_str, serialized_data, ))
     date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    run_sql("UPDATE rnkMETHOD SET last_updated=%s WHERE name=%s", \
+    run_sql("UPDATE `rnkMETHOD` SET last_updated=%s WHERE name=%s", \
         (date, rank_method_code))
     write_message("Finished writing the ranks into rnkMETHOD table", verbose=5)
 

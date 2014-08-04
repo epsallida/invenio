@@ -46,7 +46,7 @@ def get_bibupload_task_opts(task_ids):
     """Return a list with all set options for list of task IDs TASK_IDS."""
     res = []
     for task_id in task_ids:
-        res.append(run_sql("SELECT arguments FROM schTASK WHERE id=%s",
+        res.append(run_sql("SELECT arguments FROM `schTASK` WHERE id=%s",
                            (task_id, )))
     return res
 
@@ -72,12 +72,12 @@ def get_record_revisions(recid):
     """
     return run_sql("""SELECT id_bibrec,
                              DATE_FORMAT(job_date, '%%Y%%m%%d%%H%%i%%s')
-                        FROM hstRECORD WHERE id_bibrec=%s
+                        FROM `hstRECORD` WHERE id_bibrec=%s
                     ORDER BY job_date DESC""", (recid, ))
 
 def get_record_last_modification_date(recid):
     """Return last modification date, as timetuple, of record RECID."""
-    sql_res = run_sql('SELECT max(job_date) FROM  hstRECORD WHERE id_bibrec=%s',
+    sql_res = run_sql('SELECT max(job_date) FROM  `hstRECORD` WHERE id_bibrec=%s',
                       (recid, ))
     if sql_res[0][0] is None:
         return None
@@ -86,7 +86,7 @@ def get_record_last_modification_date(recid):
 
 def reserve_record_id():
     """Reserve a new record ID in the bibrec table."""
-    return run_sql("""INSERT INTO bibrec (creation_date, modification_date)
+    return run_sql("""INSERT INTO `bibrec` (creation_date, modification_date)
                        VALUES (NOW(), NOW())""")
 
 def get_related_hp_changesets(recId):
@@ -123,7 +123,7 @@ def delete_related_holdingpen_changes(recId):
     """
     A function removing all the Holding Pen changes related to a given record
     """
-    return run_sql("""DELETE FROM bibHOLDINGPEN WHERE id_bibrec=%s""",
+    return run_sql("""DELETE FROM `bibHOLDINGPEN` WHERE id_bibrec=%s""",
                    (recId, ))
 
 def get_record_revision_author(recid, td):
@@ -163,7 +163,7 @@ def cache_active(recid, uid):
 
 def deactivate_cache(recid, uid):
     """Mark BibEdit cache as non active."""
-    return run_sql("""UPDATE bibEDITCACHE SET is_active = 0
+    return run_sql("""UPDATE `bibEDITCACHE` SET is_active = 0
                       WHERE id_bibrec = %s AND uid = %s""", (recid, uid))
 
 
@@ -172,7 +172,7 @@ def update_cache_post_date(recid, uid):
     user has again accessed the record, so that locking will work correctly.
 
     """
-    run_sql("""UPDATE bibEDITCACHE SET post_date = NOW(), is_active = 1
+    run_sql("""UPDATE `bibEDITCACHE` SET post_date = NOW(), is_active = 1
                WHERE id_bibrec = %s AND uid = %s""", (recid, uid))
 
 def get_cache(recid, uid):
@@ -184,9 +184,9 @@ def get_cache(recid, uid):
 
 def update_cache(recid, uid, data):
     data_str = Pickle.dumps(data)
-    r = run_sql("""INSERT INTO bibEDITCACHE (id_bibrec, uid, data, post_date)
+    r = run_sql("""INSERT INTO `bibEDITCACHE` (id_bibrec, uid, data, post_date)
                    VALUES (%s, %s, %s, NOW())
-                   ON DUPLICATE KEY UPDATE data = %s, post_date = NOW(), is_active = 1""",
+                   ON DUPLICATE KEY UPDATE `data` = %s, post_date = NOW(), is_active = 1""",
                    (recid, uid, data_str, data_str))
 
 def get_cache_post_date(recid, uid):

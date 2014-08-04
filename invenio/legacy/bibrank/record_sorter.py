@@ -170,7 +170,7 @@ def is_method_valid(colID, rank_method_code):
     """
 
     if colID is None:
-        return run_sql("SELECT COUNT(*) FROM rnkMETHOD WHERE name=%s", (rank_method_code,))[0][0]
+        return run_sql("SELECT COUNT(*) FROM `rnkMETHOD` WHERE name=%s", (rank_method_code,))[0][0]
 
     enabled_colls = dict(run_sql("SELECT id_collection, score from collection_rnkMETHOD,rnkMETHOD WHERE id_rnkMETHOD=rnkMETHOD.id AND name=%s", (rank_method_code,)))
 
@@ -183,7 +183,7 @@ def is_method_valid(colID, rank_method_code):
         return 1
     else:
         while colID:
-            colID = run_sql("SELECT id_dad FROM collection_collection WHERE id_son=%s", (colID,))
+            colID = run_sql("SELECT id_dad FROM `collection_collection` WHERE id_son=%s", (colID,))
             if colID and colID[0][0] in enabled_colls:
                 return 1
             elif colID:

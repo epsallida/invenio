@@ -33,7 +33,7 @@ def record_exists(recID):
        Return -1 if it exists but is marked as deleted.
        Copy from search_engine"""
     out = 0
-    query = "SELECT id FROM bibrec WHERE id='%s'" % recID
+    query = "SELECT id FROM `bibrec` WHERE id='%s'" % recID
     res = run_sql(query, None, 1)
     if res:
         # record exists; now check whether it isn't marked as deleted:

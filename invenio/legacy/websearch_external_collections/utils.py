@@ -86,7 +86,7 @@ def get_collection_descendants(id_dad):
     "Returns list of all descendants of the collection having for id id_dad."
 
     descendants = []
-    results = run_sql("SELECT id_son FROM collection_collection WHERE id_dad=%s",
+    results = run_sql("SELECT id_son FROM `collection_collection` WHERE id_dad=%s",
                       (id_dad,))
     for result in results:
         id_son = int(result[0])

@@ -516,7 +516,7 @@ class InvenioSessionMySQL(InvenioSessionBase):
         session_expiry = time.time() + timeout + CFG_WEBSESSION_ONE_DAY
         session_expiry = convert_datestruct_to_datetext(time.gmtime(session_expiry))
 
-        run_sql("""INSERT INTO session(
+        run_sql("""INSERT INTO `session` (
                                     session_key,
                                     session_expiry,
                                     session_object,

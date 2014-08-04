@@ -414,7 +414,7 @@ def process_batch_job(batch_job_file):
     recdoc = BibRecDocs(batch_job['recid'])
 
     #--------------------#
-    # UPDATE FROM MASTER #
+    # UPDATE `FROM` `MASTER` #
     #--------------------#
 
     ## We want to add new stuff to the video's record, using the master as input

@@ -102,7 +102,7 @@ class ExternalOAuth1(ExternalAuth):
 
         # Get the request token secret from database and exchange it with the
         # access token.
-        query = """SELECT secret FROM oauth1_storage WHERE token = %s"""
+        query = """SELECT secret FROM `oauth1_storage` WHERE token = %s"""
         params = (args['oauth_token'],)
         try:
             # If the request token is already used, return

@@ -772,7 +772,7 @@ count events coming from those IPs."
                                     exclude-ip-list :test #'equal)))
                    (plusp (extract-recid-from-detailed-record-page-url
                              (httpd-log-entry-request httpd-log-entry-item))))
-              (format t "~&INSERT INTO rnkPAGEVIEWS (id_bibrec, client_host, view_time) VALUES ('~A', INET_ATON('~A'), '~A');"
+              (format t "~&INSERT INTO `rnkPAGEVIEWS` (id_bibrec, client_host, view_time) VALUES ('~A', INET_ATON('~A'), '~A');"
                       (extract-recid-from-detailed-record-page-url
                        (httpd-log-entry-request httpd-log-entry-item))
                       (httpd-log-entry-ip httpd-log-entry-item)

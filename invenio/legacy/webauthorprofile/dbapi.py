@@ -73,13 +73,13 @@ def get_cached_element(name, key):
 
 def precache_element(name, key):
     """ Updates the last_updated flag of a cache to prevent parallel recomputation of the same cache. """
-    run_sql("insert into wapCACHE (object_name,object_key,last_updated,object_status) values (%s,%s,now(),%s) "
+    run_sql("insert into `wapCACHE` (object_name,object_key,last_updated,object_status) values (%s,%s,now(),%s) "
             "on duplicate key update last_updated=now(),object_status=%s" ,
             (str(name), str(key), 'Precached', 'Precached'))
 
 def cache_element(name, key, value):
     """ Insert an element into cache or update already present element. """
-    run_sql("insert into wapCACHE (object_name,object_key,object_value,object_status,last_updated) values (%s,%s,%s,%s,now()) "
+    run_sql("insert into `wapCACHE` (object_name,object_key,object_value,object_status,last_updated) values (%s,%s,%s,%s,now()) "
             "on duplicate key update object_value=%s,last_updated=now(),object_status=%s" ,
             (str(name), str(key), str(value), 'UpToDate', str(value), 'UpToDate'))
 
@@ -95,7 +95,7 @@ def expire_all_cache_for_person(person_id):
 
 def get_expired_person_ids(expire_delay_days=CFG_WEBAUTHORPROFILE_CACHE_EXPIRED_DELAY_BIBSCHED):
     """ Returns pids with expired caches. """
-    keys = run_sql("select object_key from wapCACHE where object_status=%s or last_updated < "
+    keys = run_sql("select object_key from `wapCACHE` where object_status=%s or last_updated < "
                    "timestampadd(day, -%s, now())", ('Expired', expire_delay_days))
     keys = [int(x[0].split(':')[1]) for x in set(keys) if ':' in x[0]]
     return keys

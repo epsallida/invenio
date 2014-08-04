@@ -27,7 +27,7 @@ def info():
 def do_upgrade():
     res = run_sql("SELECT DISTINCT(id_virtual) FROM idxINDEX_idxINDEX")
     for row in res:
-        run_sql("UPDATE idxINDEX SET indexer='virtual' WHERE id=%s", (row[0],))
+        run_sql("UPDATE `idxINDEX` SET indexer='virtual' WHERE id=%s", (row[0],))
 
 def estimate():
     return 1

@@ -31,7 +31,7 @@ def do_upgrade():
     if not column_exists:
         run_sql("""
                 ALTER TABLE aidPERSONIDDATA
-                ADD COLUMN last_updated TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL
+                ADD COLUMN last_updated TIMESTAMP ON UPDATE `CURRENT_TIMESTAMP` NOT NULL
                 DEFAULT CURRENT_TIMESTAMP AFTER opt3,
                 ADD INDEX `timestamp-b` (`last_updated`)
 		""")

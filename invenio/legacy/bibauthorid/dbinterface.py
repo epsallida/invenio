@@ -87,7 +87,7 @@ def add_signature(sig, name, pid, flag=0, user_level=0):
         name = get_name_by_bibref(sig)
         name = create_normalized_name(split_name_parts(name))
 
-    run_sql("""insert into aidPERSONIDPAPERS
+    run_sql("""insert into `aidPERSONIDPAPERS`
                (personid, bibref_table, bibref_value, bibrec, name, flag, lcul)
                values (%s, %s, %s, %s, %s, %s, %s)""",
                (pid, str(sig[0]), sig[1], sig[2], name, flag, user_level) )
@@ -1240,19 +1240,19 @@ def get_author_to_confirmed_names_mapping(since=None):   ### get_all_modified_na
 def get_all_modified_names_from_personid(since=None):
     if since:
         all_pids = run_sql("SELECT DISTINCT personid "
-                           "FROM aidPERSONIDPAPERS "
+                           "FROM `aidPERSONIDPAPERS` "
                            "WHERE flag > -2 "
                            "AND last_updated > %s"
                            % since)
     else:
         all_pids = run_sql("SELECT DISTINCT personid "
-                           "FROM aidPERSONIDPAPERS "
+                           "FROM `aidPERSONIDPAPERS` "
                            "WHERE flag > -2 ")
 
     return ((name[0][0], set(n[1] for n in name), len(name))
             for name in (run_sql(
             "SELECT personid, name "
-            "FROM aidPERSONIDPAPERS "
+            "FROM `aidPERSONIDPAPERS` "
             "WHERE personid = %s "
             "AND flag > -2", p)
         for p in all_pids))
@@ -1519,7 +1519,7 @@ def add_author_data(pid, tag, value, opt1=None, opt2=None, opt3=None):   ### set
     @param opt3: opt3
     @type opt3: str
     '''
-    run_sql("""insert into aidPERSONIDDATA
+    run_sql("""insert into `aidPERSONIDDATA`
                (`personid`, `tag`, `data`, `opt1`, `opt2`, `opt3`)
                values (%s, %s, %s, %s, %s, %s)""",
                (pid, tag, value, opt1, opt2, opt3) )
@@ -1590,7 +1590,7 @@ def add_userid_to_author(pid, uid):
 
     pid_is_present = run_sql("select personid from aidPERSONIDDATA where tag='uid' and data=%s" , (uid,))
     if not pid_is_present:
-        run_sql("insert into aidPERSONIDDATA (personid, tag, data) values (%s, 'uid', %s)", (pid, uid))
+        run_sql("insert into `aidPERSONIDDATA` (personid, tag, data) values (%s, 'uid', %s)", (pid, uid))
     else:
         run_sql("update aidPERSONIDDATA set personid=%s where personid=%s and tag='uid' and data=%s", (pid, pid_is_present[0][0],uid))
 
@@ -1612,7 +1612,7 @@ def add_arxiv_papers_to_author(arxiv_papers, pid):
 
     arxiv_papers = serialize(arxiv_papers)
 
-    run_sql("""insert into aidPERSONIDDATA
+    run_sql("""insert into `aidPERSONIDDATA`
                (`personid`, `tag`, `datablob`)
                values (%s, %s, %s)""",
                (pid, 'arxiv_papers', arxiv_papers) )
@@ -1642,7 +1642,7 @@ def _add_external_id_to_author(pid, ext_sys, ext_id):   ### add_personID_externa
     @param ext_id: external identifier
     @type ext_id: str
     '''
-    run_sql("""insert into aidPERSONIDDATA
+    run_sql("""insert into `aidPERSONIDDATA`
                (personid, tag, data)
                values (%s, %s, %s)""",
                (pid, 'extid:%s' % ext_sys, ext_id) )
@@ -1708,7 +1708,7 @@ def update_request_ticket_for_author(pid, ticket_dict, tid=None):   ### update_r
     if request_tickets_exist:
         remove_request_ticket_for_author(pid)
 
-    run_sql("""insert into aidPERSONIDDATA
+    run_sql("""insert into `aidPERSONIDDATA`
                (personid, tag, datablob, opt1)
                values (%s, %s, %s, %s)""",
                (pid, 'request_tickets', request_tickets, request_tickets_num) )
@@ -1751,7 +1751,7 @@ def remove_request_ticket_for_author(pid, tid=None):   ### delete_request_ticket
     request_tickets_num = len(request_tickets)
     request_tickets = serialize(request_tickets)
 
-    run_sql("""insert into aidPERSONIDDATA
+    run_sql("""insert into `aidPERSONIDDATA`
                (personid, tag, datablob, opt1)
                values (%s, %s, %s, %s)""",
                (pid, 'request_tickets', request_tickets, request_tickets_num) )
@@ -1776,7 +1776,7 @@ def modify_canonical_name_of_authors(pids_newcnames=None):   ### change_personID
                    and (personid=%s or data=%s)""",
                    ('canonical_name', pid, newcname) )
 
-        run_sql("""insert into aidPERSONIDDATA
+        run_sql("""insert into `aidPERSONIDDATA`
                    (personid, tag, data)
                    values (%s, %s, %s)""",
                    (pid, 'canonical_name', newcname) )
@@ -2355,7 +2355,7 @@ def update_canonical_names_of_authors(pids=None, overwrite=False, suggested='', 
                     canonical_name = current_try
                     break
 
-            run_sql("""insert into aidPERSONIDDATA
+            run_sql("""insert into `idPERSONIDDATA`
                        (personid, tag, data)
                        values (%s, %s, %s)""",
                        (pid, 'canonical_name', canonical_name))
@@ -2624,7 +2624,7 @@ def back_up_author_paper_associations():   ### copy_personids
                `opt1` MEDIUMINT( 8 ) NULL DEFAULT NULL ,
                `opt2` MEDIUMINT( 8 ) NULL DEFAULT NULL ,
                `opt3` VARCHAR( 256 ) NULL DEFAULT NULL ,
-               `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+               `last_updated` TIMESTAMP ON UPDATE `CURRENT_TIMESTAMP` NOT NULL DEFAULT CURRENT_TIMESTAMP ,
                INDEX `personid-b` (`personid`) ,
                INDEX `tag-b` (`tag`) ,
                INDEX `data-b` (`data`) ,
@@ -2644,7 +2644,7 @@ def back_up_author_paper_associations():   ### copy_personids
                `name` VARCHAR( 256 ) NOT NULL ,
                `flag` SMALLINT( 2 ) NOT NULL DEFAULT  '0' ,
                `lcul` SMALLINT( 2 ) NOT NULL DEFAULT  '0' ,
-               `last_updated` TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+               `last_updated` TIMESTAMP ON UPDATE `CURRENT_TIMESTAMP` NOT NULL DEFAULT CURRENT_TIMESTAMP ,
                INDEX `personid-b` (`personid`) ,
                INDEX `reftable-b` (`bibref_table`) ,
                INDEX `refvalue-b` (`bibref_value`) ,
@@ -2920,7 +2920,7 @@ def save_cluster(named_cluster):
     name, cluster = named_cluster
     for sig in cluster.bibs:
         table, ref, rec = sig
-        run_sql("""insert into aidRESULTS
+        run_sql("""insert into `aidRESULTS`
                    (personid, bibref_table, bibref_value, bibrec)
                    values (%s, %s, %s, %s)""",
                    (name, str(table), ref, rec) )
@@ -3052,12 +3052,12 @@ def insert_user_log(userinfo, pid, action, tag, value, comment='', transactionid
     @rtype: int
     '''
     if timestamp is None:
-        run_sql("""insert into aidUSERINPUTLOG
+        run_sql("""insert into `aidUSERINPUTLOG`
                    (transactionid, timestamp, userinfo, userid, personid, action, tag, value, comment)
                    values (%s, now(), %s, %s, %s, %s, %s, %s, %s)""",
                    (transactionid, userinfo, userid, pid, action, tag, value, comment) )
     else:
-        run_sql("""insert into aidUSERINPUTLOG
+        run_sql("""insert into `aidUSERINPUTLOG`
                    (transactionid, timestamp, userinfo, userid, personid, action, tag, value, comment)
                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                    (transactionid, timestamp, userinfo, userid, pid, action, tag, value, comment) )
@@ -3146,7 +3146,7 @@ def set_dense_index_ready():
     '''
     Sets the search engine dense index ready to use.
     '''
-    run_sql("""insert into aidDENSEINDEX
+    run_sql("""insert into `aidDENSEINDEX`
                (name_id, person_name, personids)
                values (%s, %s, %s)""",
                (-1, '', '') )
@@ -3156,7 +3156,7 @@ def set_inverted_lists_ready():
     '''
     Sets the search engine inverted lists ready to use.
     '''
-    run_sql("""insert into aidINVERTEDLISTS
+    run_sql("""insert into `aidINVERTEDLISTS`
                (qgram, inverted_list, list_cardinality)
                values (%s,%s,%s)""",
                ('!'*bconfig.QGRAM_LEN, '', 0) )
@@ -3826,7 +3826,7 @@ def flush_data_to_db(table_name, column_names, args):   ### flush_data
 
     values_sqlstr = "(%s)" % ", ".join(repeat("%s", column_num))
     multiple_values_sqlstr = ", ".join(repeat(values_sqlstr, len(args)/column_num))
-    insert_query = 'insert into %s (%s) values %s' % (table_name, ", ".join(column_names), multiple_values_sqlstr)
+    insert_query = 'insert into `%s (%s)` values %s' % (table_name, ", ".join(column_names), multiple_values_sqlstr)
 
     run_sql(insert_query, args)
 

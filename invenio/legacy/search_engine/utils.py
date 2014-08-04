@@ -37,7 +37,7 @@ def record_exists(recID):
         return 0
 
     out = 0
-    res = run_sql("SELECT id FROM bibrec WHERE id=%s", (recID,), 1)
+    res = run_sql("SELECT id FROM `bibrec` WHERE id=%s", (recID,), 1)
     if res:
         # record exists; now check whether it isn't marked as deleted:
         dbcollids = get_fieldvalues(recID, "980__%")

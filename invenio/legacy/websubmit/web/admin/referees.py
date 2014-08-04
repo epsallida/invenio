@@ -115,7 +115,7 @@ def displayRefereesPage(doctype, warningText):
         doctype = '*'
         docname = "all catalogues"
     else:
-        res = run_sql("SELECT * FROM sbmDOCTYPE WHERE sdocname=%s", (doctype,))
+        res = run_sql("SELECT * FROM `sbmDOCTYPE` WHERE sdocname=%s", (doctype,))
         docname = res[0][0]
     t += warningText
     t += """
@@ -169,7 +169,7 @@ def displayUserTable(doctype):
     i = 0
     for role in referees.keys():
         categ = re.match("referee_%s_(.*)" % doctype, role).group(1)
-        res = run_sql("SELECT lname FROM sbmCATEGORIES WHERE sname=%s and doctype=%s", (categ, doctype,))
+        res = run_sql("SELECT lname FROM `sbmCATEGORIES` WHERE sname=%s and doctype=%s", (categ, doctype,))
         if len(res) > 0:
             categname = "Referee(s) for category: %s" % res[0][0]
         else:
@@ -217,7 +217,7 @@ def displayAddUser(doctype):
     t += '</select><br/>'
     t += '<select name="categ">'
     t += '<option value="*">All categories</option>'
-    res = run_sql("select lname,sname FROM sbmCATEGORIES WHERE doctype=%s ORDER BY lname", (doctype,))
+    res = run_sql("select lname,sname FROM `sbmCATEGORIES` WHERE doctype=%s ORDER BY lname", (doctype,))
     for row in res:
         t += '<option value="%s">%s</option>' % (row[1], row[0])
     t += '</select><br/>'

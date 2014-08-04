@@ -175,7 +175,7 @@ def bibupload_pending_recids():
     This function return the intbitset of all the records that are being
     (or are scheduled to be) touched by other bibuploads.
     """
-    options = run_sql("""SELECT arguments FROM schTASK WHERE status<>'DONE' AND
+    options = run_sql("""SELECT arguments FROM `schTASK` WHERE status<>'DONE' AND
         proc='bibupload' AND (status='RUNNING' OR status='CONTINUING' OR
         status='WAITING' OR status='SCHEDULED' OR status='ABOUT TO STOP' OR
         status='ABOUT TO SLEEP')""")
@@ -428,7 +428,7 @@ def bibupload(record, opt_mode=None, opt_notimechange=0, oai_rec_id="", pretend=
         if '005' in record:
             record_delete_field(record, '005')
             write_message("  Deleted the existing 005 tag.", verbose=2)
-        last_revision = run_sql("SELECT MAX(job_date) FROM hstRECORD WHERE id_bibrec=%s", (rec_id, ))[0][0]
+        last_revision = run_sql("SELECT MAX(job_date) FROM `hstRECORD` WHERE id_bibrec=%s", (rec_id, ))[0][0]
         if last_revision and last_revision.strftime("%Y%m%d%H%M%S.0") == now.strftime("%Y%m%d%H%M%S.0"):
             ## We are updating the same record within the same seconds! It's less than
             ## the minimal granularity. Let's pause for 1 more second to take a breath :-)
@@ -787,7 +787,7 @@ BibUpload task information:
             BIBCATALOG_SYSTEM.ticket_submit(subject="%s: %s by %s" % (msg, rec_id, user), recordid=rec_id, text=text, queue=CFG_BIBUPLOAD_CONFLICTING_REVISION_TICKET_QUEUE, owner=uid)
 
 def insert_record_into_holding_pen(record, oai_id, pretend=False):
-    query = "INSERT INTO bibHOLDINGPEN (oai_id, changeset_date, changeset_xml, id_bibrec) VALUES (%s, NOW(), %s, %s)"
+    query = "INSERT INTO `bibHOLDINGPEN` (oai_id, changeset_date, changeset_xml, id_bibrec) VALUES (%s, NOW(), %s, %s)"
     xml_record = record_xml_output(record)
     bibrec_ids = find_record_ids_by_oai_id(oai_id)  # here determining the identifier of the record
     if len(bibrec_ids) > 0:
@@ -861,7 +861,7 @@ def find_record_format(rec_id, bibformat):
        2 if found more than once (should never occur).
     """
     out = 0
-    query = """SELECT COUNT(*) FROM bibfmt WHERE id_bibrec=%s AND format=%s"""
+    query = """SELECT COUNT(*) FROM `bibfmt` WHERE id_bibrec=%s AND format=%s"""
     params = (rec_id, bibformat)
     res = []
     res = run_sql(query, params)
@@ -873,7 +873,7 @@ def find_record_from_recid(rec_id):
     Try to find record in the database from the REC_ID number.
     Return record ID if found, None otherwise.
     """
-    res = run_sql("SELECT id FROM bibrec WHERE id=%s",
+    res = run_sql("SELECT id FROM `bibrec` WHERE id=%s",
                     (rec_id,))
     if res:
         return res[0][0]
@@ -1267,7 +1267,7 @@ def create_new_record(rec_id=None, pretend=False):
             write_message("   ERROR: during the creation_new_record function: %s "
         % error, verbose=1, stream=sys.stderr)
             return None
-        if run_sql("SELECT id FROM bibrec WHERE id=%s", (rec_id, )):
+        if run_sql("SELECT id FROM `bibrec` WHERE id=%s", (rec_id, )):
             write_message("   ERROR: during the creation_new_record function: the requested rec_id %s already exists." % rec_id)
             return None
     if pretend:
@@ -1276,9 +1276,9 @@ def create_new_record(rec_id=None, pretend=False):
         else:
             return run_sql("SELECT max(id)+1 FROM bibrec")[0][0]
     if rec_id is not None:
-        return run_sql("INSERT INTO bibrec (id, creation_date, modification_date) VALUES (%s, NOW(), NOW())", (rec_id, ))
+        return run_sql("INSERT INTO `bibrec` (id, creation_date, modification_date) VALUES (%s, NOW(), NOW())", (rec_id, ))
     else:
-        return run_sql("INSERT INTO bibrec (creation_date, modification_date) VALUES (NOW(), NOW())")
+        return run_sql("INSERT INTO `bibrec` (creation_date, modification_date) VALUES (NOW(), NOW())")
 
 def insert_bibfmt(id_bibrec, marc, bibformat, modification_date='1970-01-01 00:00:00', pretend=False):
     """Insert the format in the table bibfmt"""
@@ -1327,7 +1327,7 @@ def insert_record_bibxxx(tag, value, pretend=False):
     # We got here only when the tag, value combination was not found,
     # so it is now necessary to insert the tag, value combination into
     # bibxxx table as new.
-    query = """INSERT INTO %s """ % table_name
+    query = """INSERT INTO `%s` """ % table_name
     query += """ (tag, value) values (%s , %s)"""
     params = (tag, value)
     if not pretend:
@@ -1343,7 +1343,7 @@ def insert_record_bibrec_bibxxx(table_name, id_bibxxx,
     full_table_name = 'bibrec_'+ table_name
 
     # insert the proper row into the table
-    query = """INSERT INTO %s """ % full_table_name
+    query = """INSERT INTO `%s` """ % full_table_name
     query += """(id_bibrec,id_bibxxx, field_number) values (%s , %s, %s)"""
     params = (id_bibrec, id_bibxxx, field_number)
     if not pretend:
@@ -2291,10 +2291,10 @@ def elaborate_fft_tags(record, rec_id, mode, pretend=False,
 def update_bibrec_date(now, bibrec_id, insert_mode_p, pretend=False):
     """Update the date of the record in bibrec table """
     if insert_mode_p:
-        query = """UPDATE bibrec SET creation_date=%s, modification_date=%s WHERE id=%s"""
+        query = """UPDATE `bibrec` SET creation_date=%s, modification_date=%s WHERE id=%s"""
         params = (now, now, bibrec_id)
     else:
-        query = """UPDATE bibrec SET modification_date=%s WHERE id=%s"""
+        query = """UPDATE `bibrec` SET modification_date=%s WHERE id=%s"""
         params = (now, bibrec_id)
     if not pretend:
         run_sql(query, params)
@@ -2317,7 +2317,7 @@ def update_bibfmt_format(id_bibrec, format_value, format_name, modification_date
         # compress the format_value value
         pickled_format_value =  compress(format_value)
         # update the format:
-        query = """UPDATE LOW_PRIORITY bibfmt SET last_updated=%s, value=%s WHERE id_bibrec=%s AND format=%s"""
+        query = """UPDATE `LOW_PRIORITY` bibfmt SET last_updated=%s, value=%s WHERE id_bibrec=%s AND format=%s"""
         params = (modification_date, pickled_format_value, id_bibrec, format_name)
         if not pretend:
             row_id  = run_sql(query, params)
@@ -2346,7 +2346,7 @@ def delete_bibfmt_format(id_bibrec, format_name, pretend=False):
     Delete format FORMAT_NAME from bibfmt table fo record ID_BIBREC.
     """
     if not pretend:
-        run_sql("DELETE LOW_PRIORITY FROM bibfmt WHERE id_bibrec=%s and format=%s", (id_bibrec, format_name))
+        run_sql("DELETE LOW_PRIORITY FROM `bibfmt` WHERE id_bibrec=%s and format=%s", (id_bibrec, format_name))
     return 0
 
 
@@ -2357,7 +2357,7 @@ def archive_marcxml_for_history(recID, affected_fields, pretend=False):
 
     Return 0 if everything went fine.  Return 1 otherwise.
     """
-    res = run_sql("SELECT id_bibrec, value, last_updated FROM bibfmt WHERE format='xm' AND id_bibrec=%s",
+    res = run_sql("SELECT id_bibrec, value, last_updated FROM `bibfmt` WHERE format='xm' AND id_bibrec=%s",
                     (recID,))
 
     db_affected_fields = ""
@@ -2373,7 +2373,7 @@ def archive_marcxml_for_history(recID, affected_fields, pretend=False):
         tmp_affected_fields.sort()
         db_affected_fields = ",".join(tmp_affected_fields)
     if res and not pretend:
-        run_sql("""INSERT INTO hstRECORD (id_bibrec, marcxml, job_id, job_name, job_person, job_date, job_details, affected_fields)
+        run_sql("""INSERT INTO `hstRECORD` (id_bibrec, marcxml, job_id, job_name, job_person, job_date, job_details, affected_fields)
                                     VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""",
                 (res[0][0], res[0][1], task_get_task_param('task_id', 0), 'bibupload', task_get_task_param('user', 'UNKNOWN'), res[0][2],
                     'mode: ' + task_get_option('mode', 'UNKNOWN') + '; file: ' + task_get_option('file_path', 'UNKNOWN') + '.',
@@ -3003,7 +3003,7 @@ def task_run_core():
 
 def log_record_uploading(oai_rec_id, task_id, bibrec_id, insertion_db, pretend=False):
     if oai_rec_id != "" and oai_rec_id != None:
-        query = """UPDATE oaiHARVESTLOG SET date_inserted=NOW(), inserted_to_db=%s, id_bibrec=%s WHERE oai_id = %s AND bibupload_task_id = %s ORDER BY date_harvested LIMIT 1"""
+        query = """UPDATE `oaiHARVESTLOG` SET date_inserted=NOW(), inserted_to_db=%s, id_bibrec=%s WHERE oai_id = %s AND bibupload_task_id = %s ORDER BY date_harvested LIMIT 1"""
         if not pretend:
             run_sql(query, (str(insertion_db), str(bibrec_id), str(oai_rec_id), str(task_id), ))
 

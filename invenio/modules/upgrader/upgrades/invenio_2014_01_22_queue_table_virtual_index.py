@@ -27,7 +27,7 @@ def info():
 def do_upgrade():
 	global_id = 1
 
-	run_sql("""CREATE TABLE IF NOT EXISTS idxWORD%02dQ (
+	run_sql("""CREATE TABLE IF NOT EXISTS `idxWORD%02dQ` (
 				  id mediumint(10) unsigned NOT NULL auto_increment,
 				  runtime datetime NOT NULL default '0000-00-00 00:00:00',
 				  id_bibrec_low mediumint(9) unsigned NOT NULL,
@@ -39,7 +39,7 @@ def do_upgrade():
 				  INDEX (runtime)
 				) ENGINE=MyISAM;""" % global_id)
 
-	run_sql("""CREATE TABLE IF NOT EXISTS idxPAIR%02dQ (
+	run_sql("""CREATE TABLE IF NOT EXISTS `idxPAIR%02dQ` (
 				  id mediumint(10) unsigned NOT NULL auto_increment,
 				  runtime datetime NOT NULL default '0000-00-00 00:00:00',
 				  id_bibrec_low mediumint(9) unsigned NOT NULL,
@@ -51,7 +51,7 @@ def do_upgrade():
 				  INDEX (runtime)
 				) ENGINE=MyISAM;""" % global_id)
 
-	run_sql("""CREATE TABLE IF NOT EXISTS idxPHRASE%02dQ (
+	run_sql("""CREATE TABLE IF NOT EXISTS `idxPHRASE%02dQ` (
 				  id mediumint(10) unsigned NOT NULL auto_increment,
 				  runtime datetime NOT NULL default '0000-00-00 00:00:00',
 				  id_bibrec_low mediumint(9) unsigned NOT NULL,

@@ -52,7 +52,7 @@ class SequenceGenerator(object):
         @return: result of insert SQL query
         @rtype: tuple
         """
-        run_sql("""INSERT INTO seqSTORE (seq_name, seq_value)
+        run_sql("""INSERT INTO `seqSTORE` (seq_name, seq_value)
                    VALUES (%s, %s)""",
                    (self.seq_name, value))
 

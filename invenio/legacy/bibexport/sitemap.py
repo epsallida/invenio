@@ -102,7 +102,7 @@ def get_all_public_collections(base_collections):
     def get_collection_last_modification(collection):
         """ last modification = modification date fo latest added record """
         last_mod = None
-        query_last_mod = "SELECT modification_date FROM bibrec WHERE id=%s"
+        query_last_mod = "SELECT modification_date FROM `bibrec` WHERE id=%s"
         try:
             latest_recid = collection.reclist.tolist()[-1]
         except IndexError:
@@ -138,14 +138,14 @@ def filter_fulltexts(recids, fulltext_type=None):
     if fulltext_type:
         query = """SELECT id_bibrec, max(modification_date)
                    FROM bibrec_bibdoc
-                   LEFT JOIN bibdoc ON bibrec_bibdoc.id_bibdoc=bibdoc.id
+                   LEFT JOIN `bibdoc` ON bibrec_bibdoc.id_bibdoc=bibdoc.id
                    WHERE type=%s
                    GROUP BY id_bibrec"""
         res = run_sql(query, (fulltext_type,))
     else:
         query = """SELECT id_bibrec, max(modification_date)
                    FROM bibrec_bibdoc
-                   LEFT JOIN bibdoc ON bibrec_bibdoc.id_bibdoc=bibdoc.id
+                   LEFT JOIN `bibdoc` ON bibrec_bibdoc.id_bibdoc=bibdoc.id
                    GROUP BY id_bibrec"""
         res = run_sql(query)
     return [(recid, max(lastmod, minimum_timestamp)) for (recid, lastmod) in res if recid in recids and BibRecDocs(recid).list_latest_files(list_hidden=False)]
