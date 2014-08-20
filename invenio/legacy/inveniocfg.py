@@ -543,6 +543,7 @@ def cli_cmd_reset_siteadminemail(conf):
     """
     from invenio.ext.sqlalchemy import db
     from invenio.legacy.dbquery import run_sql
+    from invenio.modules.accounts.models import User
 
     print(">>> Going to reset CFG_SITE_ADMIN_EMAIL...")
     siteadminemail = conf.get("Invenio", "CFG_SITE_ADMIN_EMAIL")
@@ -552,9 +553,14 @@ def cli_cmd_reset_siteadminemail(conf):
     #       (1, %s, AES_ENCRYPT(email, ''), 1, 'admin')""",
     #         (siteadminemail,))
 
-    User.query.get(1).delete()
-    db.session.add(User(id=1, nickname='admin', email=siteadminemail,
-                       password=''))
+    user = User.query.get(1)
+    if user is None:
+        user = User(id=1, nickname='admin', email=siteadminemail,
+                    password='')
+    else:
+        user.password = ''
+
+    db.session.merge(user)
 
     print("You may want to restart Apache now.")
     print(">>> CFG_SITE_ADMIN_EMAIL reset successfully.")
