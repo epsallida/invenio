@@ -704,7 +704,7 @@ def destroy_customevent(event_id=None):
         return "Custom event ID '%s' doesn't exist! Aborted." % event_id
     else:
         tbl_name = get_customevent_table(event_id)
-        run_sql("DROP TABLE %s" % wash_table_column_name(tbl_name)) # kwalitee: disable=sql
+        run_sql("DROP TABLE `%s`" % wash_table_column_name(tbl_name)) # kwalitee: disable=sql
         run_sql("DELETE FROM `staEVENT` WHERE id = %s", (event_id, ))
         return ("Custom event ID '%s' table '%s' was successfully destroyed.\n") \
                 % (event_id, tbl_name)

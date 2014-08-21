@@ -73,7 +73,7 @@ class TableUpdateTimesTest(InvenioTestCase):
         # run the test:
         self._check_table_update_time(test_table)
         # drop empty test table
-        dbquery.run_sql("DROP TABLE %s" % test_table)
+        dbquery.run_sql("DROP TABLE `%s`" % test_table)
 
     def test_utf8_python_mysqldb_mysql_storage_chain(self):
         """dbquery - UTF-8 in Python<->MySQLdb<->MySQL storage chain"""

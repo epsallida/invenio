@@ -113,7 +113,7 @@ def drop(yes_i_know=False, quiet=False):
         "data on filesystem!"))
 
     ## Step 1: test database connection
-    test_db_connection()
+    #test_db_connection()
     list(models)
 
     ## Step 2: disable foreign key checks
@@ -147,6 +147,8 @@ def drop(yes_i_know=False, quiet=False):
     tables = list(reversed(db.metadata.sorted_tables))
 
     def _dropper(items, prefix, dropper):
+        import ipdb
+        ipdb.set_trace()
         N = len(items)
         prefix = prefix.format(N)
         e = get_time_estimator(N)
@@ -156,12 +158,13 @@ def drop(yes_i_know=False, quiet=False):
 
         for i, table in enumerate(items):
             try:
-                if not quiet:
-                    print_progress(
-                        1.0 * (i+1) / N, prefix=prefix,
-                        suffix=str(datetime.timedelta(seconds=e()[0])))
+                # if not quiet:
+                #     print_progress(
+                #         1.0 * (i+1) / N, prefix=prefix,
+                #         suffix=str(datetime.timedelta(seconds=e()[0])))
                 dropper(table)
                 dropped += 1
+                print('\r', '>>> table dropped: ', table)
             except:
                 print('\r', '>>> problem with dropping ', table)
                 current_app.logger.exception(table)
@@ -233,6 +236,7 @@ def create(default_data=True, quiet=False):
                         suffix=str(datetime.timedelta(seconds=e()[0])))
                 creator(table)
                 created += 1
+                print('\r', '>>> table created: ', table)
             except:
                 print('\r', '>>> problem with dropping ', table)
                 current_app.logger.exception(table)

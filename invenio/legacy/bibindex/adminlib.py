@@ -2219,7 +2219,7 @@ def get_col_fld(colID=-1, type = '', id_field=''):
         return ""
 
 def get_idx(idxID=''):
-    sql = "SELECT id,name,description,last_updated,stemming_language, synonym_kbrs,remove_stopwords,remove_html_markup,remove_latex_markup,tokenizer FROM idxINDEX"
+    sql = "SELECT id,name,description,last_updated,stemming_language, synonym_kbrs,remove_stopwords,remove_html_markup,remove_latex_markup,tokenizer FROM `idxINDEX`"
     params = []
     try:
         if idxID:
@@ -2452,12 +2452,12 @@ def delete_idx(idxID):
         res = run_sql("DELETE FROM `idxINDEX` WHERE id=%s", (idxID, ))
         res = run_sql("DELETE FROM `idxINDEXNAME` WHERE id_idxINDEX=%s", (idxID, ))
         res = run_sql("DELETE FROM `idxINDEX_field` WHERE id_idxINDEX=%s", (idxID, ))
-        res = run_sql("DROP TABLE idxWORD%02dF" % idxID) # kwalitee: disable=sql
-        res = run_sql("DROP TABLE idxWORD%02dR" % idxID) # kwalitee: disable=sql
-        res = run_sql("DROP TABLE idxPAIR%02dF" % idxID) # kwalitee: disable=sql
-        res = run_sql("DROP TABLE idxPAIR%02dR" % idxID) # kwalitee: disable=sql
-        res = run_sql("DROP TABLE idxPHRASE%02dF" % idxID) # kwalitee: disable=sql
-        res = run_sql("DROP TABLE idxPHRASE%02dR" % idxID) # kwalitee: disable=sql
+        res = run_sql("DROP TABLE `idxWORD%02dF`" % idxID) # kwalitee: disable=sql
+        res = run_sql("DROP TABLE `idxWORD%02dR`" % idxID) # kwalitee: disable=sql
+        res = run_sql("DROP TABLE `idxPAIR%02dF`" % idxID) # kwalitee: disable=sql
+        res = run_sql("DROP TABLE `idxPAIR%02dR`" % idxID) # kwalitee: disable=sql
+        res = run_sql("DROP TABLE `idxPHRASE%02dF`" % idxID) # kwalitee: disable=sql
+        res = run_sql("DROP TABLE `idxPHRASE%02dR`" % idxID) # kwalitee: disable=sql
         return (1, "")
     except StandardError as e:
         return (0, e)
@@ -2608,7 +2608,7 @@ def drop_queue_tables(index_id):
         Drops queue tables.
         @param index_id: id of the index we want to drop tables for
     """
-    query = """DROP TABLE IF EXISTS idx%s%02dQ"""
+    query = """DROP TABLE IF EXISTS `idx%s%02dQ`"""
     run_sql(query % ("WORD", int(index_id)))
     run_sql(query % ("PAIR", int(index_id)))
     run_sql(query % ("PHRASE", int(index_id)))

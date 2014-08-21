@@ -218,12 +218,12 @@ def swap_temporary_reindex_tables(index_id, reindex_prefix="tmp_"):
         "%sidxPHRASE%02dF TO idxPHRASE%02dF;" % (reindex_prefix, index_id, index_id)
     )
     write_message("Dropping old index tables for id %s" % index_id)
-    run_sql_drop_silently("""DROP TABLE old_idxWORD%02dR,
-                             old_idxWORD%02dF,
-                             old_idxPAIR%02dR,
-                             old_idxPAIR%02dF,
-                             old_idxPHRASE%02dR,
-                             old_idxPHRASE%02dF""" % ((index_id, )* 6)
+    run_sql_drop_silently("""DROP TABLE `old_idxWORD%02dR`,
+                             `old_idxWORD%02dF`,
+                             `old_idxPAIR%02dR`,
+                             `old_idxPAIR%02dF`,
+                             `old_idxPHRASE%02dR`,
+                             `old_idxPHRASE%02dF`""" % ((index_id, )* 6)
                              ) # kwalitee: disable=sql
 
 
@@ -231,7 +231,7 @@ def init_temporary_reindex_tables(index_id, reindex_prefix="tmp_"):
     """Create reindexing temporary tables."""
     write_message("Creating new tmp index tables for id %s" % index_id)
 
-    query = """DROP TABLE IF EXISTS %sidxWORD%02dF""" % \
+    query = """DROP TABLE IF EXISTS `%sidxWORD%02dF`""" % \
             (wash_table_column_name(reindex_prefix), index_id)
     run_sql_drop_silently(query) # kwalitee: disable=sql
 

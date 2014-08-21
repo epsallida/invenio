@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `rnkCITATIONDICT` (
         if dic:
             for recid, cites in dic.iteritems():
                 store_cites(recid, cites)
-        run_sql("DROP TABLE IF EXISTS rnkCITATIONDATA")
+        run_sql("DROP TABLE IF EXISTS `rnkCITATIONDATA`")
 
 
 def estimate():
