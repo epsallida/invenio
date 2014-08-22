@@ -147,8 +147,6 @@ def drop(yes_i_know=False, quiet=False):
     tables = list(reversed(db.metadata.sorted_tables))
 
     def _dropper(items, prefix, dropper):
-        import ipdb
-        ipdb.set_trace()
         N = len(items)
         prefix = prefix.format(N)
         e = get_time_estimator(N)
@@ -221,6 +219,8 @@ def create(default_data=True, quiet=False):
     tables = db.metadata.sorted_tables
 
     def _creator(items, prefix, creator):
+        import ipdb
+        ipdb.set_trace()
         N = len(items)
         prefix = prefix.format(N)
         e = get_time_estimator(N)
@@ -234,11 +234,12 @@ def create(default_data=True, quiet=False):
                     print_progress(
                         1.0 * (i+1) / N, prefix=prefix,
                         suffix=str(datetime.timedelta(seconds=e()[0])))
+                print(table.name)
                 creator(table)
                 created += 1
                 print('\r', '>>> table created: ', table)
             except:
-                print('\r', '>>> problem with dropping ', table)
+                print('\r', '>>> problem with creating ', table)
                 current_app.logger.exception(table)
 
         if created == N:
