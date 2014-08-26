@@ -20,8 +20,9 @@
 """BibRank database models."""
 
 # General imports.
-
+# from alembic import op
 from flask import g
+from sqlalchemy.dialects.postgresql import ENUM
 from invenio.ext.sqlalchemy import db
 
 # Create your models here.
@@ -93,7 +94,8 @@ class RnkCITATIONDATAERR(db.Model):
     """Represent a RnkCITATIONDATAERR record."""
 
     __tablename__ = 'rnkCITATIONDATAERR'
-    type = db.Column(db.Enum('multiple-matches', 'not-well-formed'),
+    type = db.Column(ENUM('multiple-matches', 'not-well-formed',
+                     name='rnkdata_enum'),
                      primary_key=True)
     citinfo = db.Column(db.String(255), primary_key=True, server_default='')
 
@@ -106,7 +108,9 @@ class RnkCITATIONLOG(db.Model):
                    autoincrement=True, nullable=False)
     citee = db.Column(db.Integer(10, unsigned=True), nullable=False)
     citer = db.Column(db.Integer(10, unsigned=True), nullable=False)
-    type = db.Column(db.Enum('added', 'removed'), nullable=True)
+    type = db.Column(ENUM('added', 'removed', name='rnklog_enum',
+                     create_type=False),
+                     nullable=True)
     action_date = db.Column(db.DateTime, nullable=False)
     __table_args__ = (db.Index('citee', citee), db.Index('citer', citer),
                       db.Model.__table_args__)
@@ -194,7 +198,8 @@ class RnkWORD01R(db.Model):
                           db.ForeignKey(Bibrec.id), nullable=False,
                           primary_key=True)
     termlist = db.Column(db.LargeBinary, nullable=True)
-    type = db.Column(db.Enum('CURRENT', 'FUTURE', 'TEMPORARY'),
+    type = db.Column(db.Enum('CURRENT', 'FUTURE', 'TEMPORARY',
+                     name='rnkword_enum'),
                      nullable=False, server_default='CURRENT',
                      primary_key=True)
     bibrec = db.relationship(Bibrec, backref='word01rs')

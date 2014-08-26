@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 ## This file is part of Invenio.
-## Copyright (C) 2011, 2012 CERN.
+## Copyright (C) 2011, 2012, 2014 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -38,7 +38,7 @@ class AccACTION(db.Model):
                 nullable=True)
     description = db.Column(db.String(255), nullable=True)
     allowedkeywords = db.Column(db.String(255), nullable=True)
-    optional = db.Column(db.Enum('yes', 'no'), nullable=False,
+    optional = db.Column(db.Enum('yes', 'no', name='opt_action'), nullable=False,
                 server_default='no')
 
 class AccARGUMENT(db.Model):

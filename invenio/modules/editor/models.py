@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 ## This file is part of Invenio.
-## Copyright (C) 2011, 2012, 2013 CERN.
+## Copyright (C) 2011, 2012, 2013, 2014 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -23,11 +23,15 @@ BibEdit database models.
 """
 
 # General imports.
+from sqlalchemy.dialects import postgresql
 from invenio.ext.sqlalchemy import db
 
 # Create your models here.
 
 from invenio.modules.records.models import Record as Bibrec
+
+value_text_35 = db.Text(35)
+value_text_35 = value_text_35.with_variant(postgresql.TEXT(), 'postgresql')
 
 
 class BibHOLDINGPEN(db.Model):
@@ -172,8 +176,8 @@ class Bib00x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
-                index=True)
+    value = db.Column(value_text_35, nullable=False, index=True)
+
 
 class BibrecBib00x(db.Model):
     """Represents a BibrecBib00x record."""
@@ -203,7 +207,7 @@ class Bib01x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib01x(db.Model):
@@ -234,7 +238,7 @@ class Bib02x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib02x(db.Model):
@@ -265,7 +269,7 @@ class Bib03x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib03x(db.Model):
@@ -296,7 +300,7 @@ class Bib04x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib04x(db.Model):
@@ -327,7 +331,7 @@ class Bib05x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib05x(db.Model):
@@ -358,7 +362,7 @@ class Bib06x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib06x(db.Model):
@@ -389,7 +393,7 @@ class Bib07x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib07x(db.Model):
@@ -420,7 +424,7 @@ class Bib08x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib08x(db.Model):
@@ -451,7 +455,7 @@ class Bib09x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib09x(db.Model):
@@ -482,7 +486,7 @@ class Bib10x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib10x(db.Model):
@@ -513,7 +517,7 @@ class Bib11x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib11x(db.Model):
@@ -544,7 +548,7 @@ class Bib12x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib12x(db.Model):
@@ -575,7 +579,7 @@ class Bib13x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib13x(db.Model):
@@ -606,7 +610,7 @@ class Bib14x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib14x(db.Model):
@@ -637,7 +641,7 @@ class Bib15x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib15x(db.Model):
@@ -668,7 +672,7 @@ class Bib16x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib16x(db.Model):
@@ -699,7 +703,7 @@ class Bib17x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib17x(db.Model):
@@ -730,7 +734,7 @@ class Bib18x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib18x(db.Model):
@@ -761,7 +765,7 @@ class Bib19x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib19x(db.Model):
@@ -792,7 +796,7 @@ class Bib20x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib20x(db.Model):
@@ -823,7 +827,7 @@ class Bib21x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib21x(db.Model):
@@ -854,7 +858,7 @@ class Bib22x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib22x(db.Model):
@@ -885,7 +889,7 @@ class Bib23x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib23x(db.Model):
@@ -916,7 +920,7 @@ class Bib24x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib24x(db.Model):
@@ -947,7 +951,7 @@ class Bib25x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib25x(db.Model):
@@ -978,7 +982,7 @@ class Bib26x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib26x(db.Model):
@@ -1009,7 +1013,7 @@ class Bib27x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib27x(db.Model):
@@ -1040,7 +1044,7 @@ class Bib28x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib28x(db.Model):
@@ -1071,7 +1075,7 @@ class Bib29x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib29x(db.Model):
@@ -1102,7 +1106,7 @@ class Bib30x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib30x(db.Model):
@@ -1133,7 +1137,7 @@ class Bib31x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib31x(db.Model):
@@ -1164,7 +1168,7 @@ class Bib32x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib32x(db.Model):
@@ -1195,7 +1199,7 @@ class Bib33x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib33x(db.Model):
@@ -1226,7 +1230,7 @@ class Bib34x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib34x(db.Model):
@@ -1257,7 +1261,7 @@ class Bib35x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib35x(db.Model):
@@ -1288,7 +1292,7 @@ class Bib36x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib36x(db.Model):
@@ -1319,7 +1323,7 @@ class Bib37x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib37x(db.Model):
@@ -1350,7 +1354,7 @@ class Bib38x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib38x(db.Model):
@@ -1381,7 +1385,7 @@ class Bib39x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib39x(db.Model):
@@ -1412,7 +1416,7 @@ class Bib40x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib40x(db.Model):
@@ -1443,7 +1447,7 @@ class Bib41x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib41x(db.Model):
@@ -1474,7 +1478,7 @@ class Bib42x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib42x(db.Model):
@@ -1505,7 +1509,7 @@ class Bib43x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib43x(db.Model):
@@ -1536,7 +1540,7 @@ class Bib44x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib44x(db.Model):
@@ -1567,7 +1571,7 @@ class Bib45x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib45x(db.Model):
@@ -1598,7 +1602,7 @@ class Bib46x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib46x(db.Model):
@@ -1629,7 +1633,7 @@ class Bib47x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib47x(db.Model):
@@ -1660,7 +1664,7 @@ class Bib48x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib48x(db.Model):
@@ -1691,7 +1695,7 @@ class Bib49x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib49x(db.Model):
@@ -1722,7 +1726,7 @@ class Bib50x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib50x(db.Model):
@@ -1753,7 +1757,7 @@ class Bib51x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib51x(db.Model):
@@ -1784,7 +1788,7 @@ class Bib52x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib52x(db.Model):
@@ -1815,7 +1819,7 @@ class Bib53x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib53x(db.Model):
@@ -1846,7 +1850,7 @@ class Bib54x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib54x(db.Model):
@@ -1877,7 +1881,7 @@ class Bib55x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib55x(db.Model):
@@ -1908,7 +1912,7 @@ class Bib56x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib56x(db.Model):
@@ -1939,7 +1943,7 @@ class Bib57x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib57x(db.Model):
@@ -1970,7 +1974,7 @@ class Bib58x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib58x(db.Model):
@@ -2001,7 +2005,7 @@ class Bib59x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib59x(db.Model):
@@ -2032,7 +2036,7 @@ class Bib60x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib60x(db.Model):
@@ -2063,7 +2067,7 @@ class Bib61x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib61x(db.Model):
@@ -2094,7 +2098,7 @@ class Bib62x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib62x(db.Model):
@@ -2125,7 +2129,7 @@ class Bib63x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib63x(db.Model):
@@ -2156,7 +2160,7 @@ class Bib64x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib64x(db.Model):
@@ -2187,7 +2191,7 @@ class Bib65x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib65x(db.Model):
@@ -2218,8 +2222,11 @@ class Bib66x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    # value = db.Column(value_text_35, nullable=False,
+    #             index=True)
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
+
 
 class BibrecBib66x(db.Model):
     """Represents a BibrecBib66x record."""
@@ -2249,7 +2256,7 @@ class Bib67x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib67x(db.Model):
@@ -2280,7 +2287,7 @@ class Bib68x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib68x(db.Model):
@@ -2311,7 +2318,7 @@ class Bib69x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib69x(db.Model):
@@ -2342,7 +2349,7 @@ class Bib70x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib70x(db.Model):
@@ -2373,7 +2380,7 @@ class Bib71x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib71x(db.Model):
@@ -2404,7 +2411,7 @@ class Bib72x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib72x(db.Model):
@@ -2435,7 +2442,7 @@ class Bib73x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib73x(db.Model):
@@ -2466,7 +2473,7 @@ class Bib74x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib74x(db.Model):
@@ -2497,7 +2504,7 @@ class Bib75x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib75x(db.Model):
@@ -2528,7 +2535,7 @@ class Bib76x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib76x(db.Model):
@@ -2559,7 +2566,7 @@ class Bib77x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib77x(db.Model):
@@ -2590,7 +2597,7 @@ class Bib78x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib78x(db.Model):
@@ -2621,7 +2628,7 @@ class Bib79x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib79x(db.Model):
@@ -2652,7 +2659,7 @@ class Bib80x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib80x(db.Model):
@@ -2683,7 +2690,7 @@ class Bib81x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib81x(db.Model):
@@ -2714,7 +2721,7 @@ class Bib82x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib82x(db.Model):
@@ -2745,7 +2752,7 @@ class Bib83x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib83x(db.Model):
@@ -2776,7 +2783,7 @@ class Bib84x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib84x(db.Model):
@@ -2807,7 +2814,7 @@ class Bib85x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib85x(db.Model):
@@ -2838,7 +2845,7 @@ class Bib86x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib86x(db.Model):
@@ -2869,7 +2876,7 @@ class Bib87x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib87x(db.Model):
@@ -2900,7 +2907,7 @@ class Bib88x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib88x(db.Model):
@@ -2931,7 +2938,7 @@ class Bib89x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib89x(db.Model):
@@ -2962,7 +2969,7 @@ class Bib90x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib90x(db.Model):
@@ -2993,7 +3000,7 @@ class Bib91x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib91x(db.Model):
@@ -3024,7 +3031,7 @@ class Bib92x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib92x(db.Model):
@@ -3055,7 +3062,7 @@ class Bib93x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib93x(db.Model):
@@ -3086,7 +3093,7 @@ class Bib94x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib94x(db.Model):
@@ -3117,7 +3124,7 @@ class Bib95x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib95x(db.Model):
@@ -3148,7 +3155,7 @@ class Bib96x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib96x(db.Model):
@@ -3179,7 +3186,7 @@ class Bib97x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib97x(db.Model):
@@ -3210,7 +3217,7 @@ class Bib98x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib98x(db.Model):
@@ -3241,7 +3248,7 @@ class Bib99x(db.Model):
                 autoincrement=True)
     tag = db.Column(db.String(6), nullable=False, index=True,
                 server_default='')
-    value = db.Column(db.Text(35), nullable=False,
+    value = db.Column(value_text_35, nullable=False,
                 index=True)
 
 class BibrecBib99x(db.Model):

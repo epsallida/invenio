@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 ## This file is part of Invenio.
-## Copyright (C) 2011, 2012, 2013 CERN.
+## Copyright (C) 2011, 2012, 2013, 2014 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -28,6 +28,7 @@ from flask import g, url_for
 from intbitset import intbitset
 from six import iteritems
 from operator import itemgetter
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.orderinglist import ordering_list
 from sqlalchemy.orm.collections import InstrumentedList
@@ -166,7 +167,7 @@ class Collection(db.Model):
                 primary_key=True)
     name = db.Column(db.String(255), unique=True, index=True,
                 nullable=False)
-    dbquery = db.Column(db.Text(20), nullable=True,
+    dbquery = db.Column(db.Text(20).with_variant(postgresql.TEXT(), 'postgresql'), nullable=True,
                 index=True)
     nbrecs = db.Column(db.Integer(10, unsigned=True),
                 server_default='0')
@@ -790,7 +791,7 @@ class WebQuery(db.Model):
     id = db.Column(db.Integer(15, unsigned=True), primary_key=True,
                 autoincrement=True)
     type = db.Column(db.Char(1), nullable=False, server_default='r')
-    urlargs = db.Column(db.Text(100), nullable=False, index=True)
+    urlargs = db.Column(db.Text(100).with_variant(postgresql.TEXT(), 'postgresql'), nullable=False, index=True)
 
 
 class UserQuery(db.Model):

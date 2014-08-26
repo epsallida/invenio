@@ -179,6 +179,11 @@ def drop(yes_i_know=False, quiet=False):
     _dropper(StorageEngine.__storage_engine_registry__,
              '>>> Dropping {0} storage engines ...',
              lambda api: api.storage_engine.drop())
+    # ENUM('multiple-matches', 'not-well-formed',
+    #      name='rnkdata_enum').drop(bind=db.engine, checkfirst=False)
+
+    # ENUM('CURRENT', 'FUTURE', 'TEMPORARY', name='enum_type',
+    #      create_type=False).drop(bind=db.engine, checkfirst=False)
 
 
 @option_default_data
@@ -218,9 +223,10 @@ def create(default_data=True, quiet=False):
 
     tables = db.metadata.sorted_tables
 
+    # ENUM('CURRENT', 'FUTURE', 'TEMPORARY', name='enum_type',
+    #      create_type=False).create(bind=db.engine, checkfirst=False)
+
     def _creator(items, prefix, creator):
-        import ipdb
-        ipdb.set_trace()
         N = len(items)
         prefix = prefix.format(N)
         e = get_time_estimator(N)
@@ -234,12 +240,14 @@ def create(default_data=True, quiet=False):
                     print_progress(
                         1.0 * (i+1) / N, prefix=prefix,
                         suffix=str(datetime.timedelta(seconds=e()[0])))
-                print(table.name)
+                # print(table.name)
                 creator(table)
                 created += 1
                 print('\r', '>>> table created: ', table)
             except:
-                print('\r', '>>> problem with creating ', table)
+                # import ipdb
+                # ipdb.set_trace()
+                print('\r', '>>> problem with creating', table)
                 current_app.logger.exception(table)
 
         if created == N:
@@ -254,7 +262,6 @@ def create(default_data=True, quiet=False):
     _creator(StorageEngine.__storage_engine_registry__,
              '>>> Creating {0} storage engines ...',
              lambda api: api.storage_engine.create())
-
 
 @manager.command
 def diff():

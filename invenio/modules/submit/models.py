@@ -22,9 +22,17 @@ websubmit database models.
 """
 
 # General imports.
+from sqlalchemy.dialects import postgresql
 from invenio.ext.sqlalchemy import db
 
 # Create your models here.
+
+value_text_50 = db.Text(50)
+value_text_50 = value_text_50.with_variant(postgresql.TEXT(), 'postgresql')
+
+value_text_10 = db.Text(10)
+value_text_10 = value_text_10.with_variant(postgresql.TEXT(), 'postgresql')
+
 
 class SbmACTION(db.Model):
     """Represents a SbmACTION record."""
@@ -221,9 +229,9 @@ class SbmFIELDDESC(db.Model):
 class SbmFORMATEXTENSION(db.Model):
     """Represents a SbmFORMATEXTENSION record."""
     __tablename__ = 'sbmFORMATEXTENSION'
-    FILE_FORMAT = db.Column(db.Text(50), nullable=False,
+    FILE_FORMAT = db.Column(value_text_50, nullable=False,
                 primary_key=True)
-    FILE_EXTENSION = db.Column(db.Text(10), nullable=False,
+    FILE_EXTENSION = db.Column(value_text_10, nullable=False,
                 primary_key=True)
 
 
@@ -251,9 +259,9 @@ class SbmFUNDESC(db.Model):
 class SbmGFILERESULT(db.Model):
     """Represents a SbmGFILERESULT record."""
     __tablename__ = 'sbmGFILERESULT'
-    FORMAT = db.Column(db.Text(50), nullable=False,
+    FORMAT = db.Column(value_text_50, nullable=False,
                 primary_key=True)
-    RESULT = db.Column(db.Text(50), nullable=False,
+    RESULT = db.Column(value_text_50, nullable=False,
                 primary_key=True)
 
 class SbmIMPLEMENT(db.Model):

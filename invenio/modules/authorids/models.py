@@ -95,7 +95,7 @@ class AidPERSONIDPAPERS(db.Model):
 
     personid = db.Column(db.BigInteger(16, unsigned=True), primary_key=True,
                          nullable=False, index=True)
-    bibref_table = db.Column(db.Enum('100', '700'), primary_key=True,
+    bibref_table = db.Column(db.Enum('100', '700', name='aidperson_enum'), primary_key=True,
                              nullable=False, index=True)
     bibref_value = db.Column(db.Integer(11, unsigned=True), primary_key=True,
                              nullable=False, index=True)
@@ -120,7 +120,8 @@ class AidRESULTS(db.Model):
 
     personid = db.Column(db.String(128), primary_key=True, nullable=False,
                          index=True)
-    bibref_table = db.Column(db.Enum('100', '700'), primary_key=True,
+    bibref_table = db.Column(db.Enum('100', '700', name='aidresults_enum'),
+                             primary_key=True,
                              nullable=False, index=True)
     bibref_value = db.Column(db.MediumInteger(8, unsigned=True),
                              primary_key=True, nullable=False, index=True,

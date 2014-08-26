@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 ## This file is part of Invenio.
-## Copyright (C) 2011, 2012 CERN.
+## Copyright (C) 2011, 2012, 2014 CERN.
 ##
 ## Invenio is free software; you can redistribute it and/or
 ## modify it under the terms of the GNU General Public License as
@@ -22,6 +22,7 @@ bibknowledge database models.
 """
 
 # General imports.
+from sqlalchemy.dialects import postgresql
 from invenio.ext.sqlalchemy import db
 
 # Create your models here.
@@ -63,7 +64,7 @@ class KnwKBRVAL(db.Model):
                 autoincrement=True)
     m_key = db.Column(db.String(255), nullable=False, server_default='',
                 index=True)
-    m_value = db.Column(db.Text(30), nullable=False,
+    m_value = db.Column(db.Text(30).with_variant(postgresql.TEXT(), 'postgresql'), nullable=False,
                 index=True)
     id_knwKB = db.Column(db.MediumInteger(8), db.ForeignKey(KnwKB.id), nullable=False,
                 server_default='0')
