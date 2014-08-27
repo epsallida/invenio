@@ -20,6 +20,7 @@
 """Account database models."""
 
 # General imports.
+from sqlalchemy.dialects.postgresql import BYTEA
 from invenio.ext.sqlalchemy import db
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_utils.types.choice import ChoiceType
@@ -225,7 +226,7 @@ class UserEXT(db.Model):
 
     __tablename__ = 'userEXT'
 
-    id = db.Column(db.VARBINARY(255), primary_key=True, nullable=False)
+    id = db.Column(BYTEA, primary_key=True, nullable=False)
     method = db.Column(db.String(50), primary_key=True, nullable=False)
     id_user = db.Column(db.Integer(15, unsigned=True),
                         db.ForeignKey(User.id), nullable=False)
