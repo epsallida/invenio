@@ -103,6 +103,21 @@ def _include_sqlalchemy(obj, engine=None):
     MutableDict.update = update_mutable_dict
     obj.MutableDict = MutableDict
 
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy import types
+import sqlalchemy.dialects.postgresql
+
+
+@compiles(types.Text, 'postgresql')
+@compiles(sqlalchemy.dialects.postgresql.TEXT, 'postgresql')
+def compile_text(element, compiler, **kw):
+    return 'TEXT'
+
+
+@compiles(types.VARBINARY, 'postgresql')
+def compile_text(element, compiler, **kw):
+    return 'BYTEA'
+
 
 class PasswordComparator(Comparator):
     def __eq__(self, other):
